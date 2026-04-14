@@ -22,11 +22,7 @@
       --radius: 18px;
     }
 
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
 
     body {
       font-family: Arial, Helvetica, sans-serif;
@@ -35,13 +31,8 @@
       min-height: 100vh;
     }
 
-    button, input, select, textarea {
-      font: inherit;
-    }
-
-    .hidden {
-      display: none !important;
-    }
+    button, input, select, textarea { font: inherit; }
+    .hidden { display: none !important; }
 
     .app-shell {
       display: grid;
@@ -78,16 +69,8 @@
       box-shadow: var(--shadow);
     }
 
-    .brand h1 {
-      font-size: 1.1rem;
-      line-height: 1.2;
-    }
-
-    .brand p {
-      color: var(--muted);
-      font-size: .88rem;
-      margin-top: 4px;
-    }
+    .brand h1 { font-size: 1.1rem; line-height: 1.2; }
+    .brand p { color: var(--muted); font-size: .88rem; margin-top: 4px; }
 
     .nav-btn {
       width: 100%;
@@ -118,9 +101,7 @@
       border: 1px solid rgba(255,255,255,.06);
     }
 
-    .main {
-      padding: 24px;
-    }
+    .main { padding: 24px; }
 
     .topbar {
       display: flex;
@@ -131,20 +112,9 @@
       flex-wrap: wrap;
     }
 
-    .topbar h2 {
-      font-size: 1.8rem;
-    }
-
-    .topbar p {
-      color: var(--muted);
-      margin-top: 5px;
-    }
-
-    .topbar-actions {
-      display: flex;
-      gap: 10px;
-      flex-wrap: wrap;
-    }
+    .topbar h2 { font-size: 1.8rem; }
+    .topbar p { color: var(--muted); margin-top: 5px; }
+    .topbar-actions { display: flex; gap: 10px; flex-wrap: wrap; }
 
     .btn {
       border: none;
@@ -156,25 +126,16 @@
       box-shadow: var(--shadow);
     }
 
-    .btn:hover {
-      transform: translateY(-1px);
-      opacity: .95;
-    }
-
+    .btn:hover { transform: translateY(-1px); opacity: .95; }
     .btn-primary { background: linear-gradient(135deg, var(--primary), var(--primary-dark)); }
     .btn-success { background: linear-gradient(135deg, #16a34a, #22c55e); }
     .btn-danger { background: linear-gradient(135deg, #dc2626, #ef4444); }
     .btn-warning { background: linear-gradient(135deg, #d97706, #f59e0b); }
     .btn-dark { background: linear-gradient(135deg, #334155, #111827); }
+    .btn-violet { background: linear-gradient(135deg, #7c3aed, #8b5cf6); }
 
-    .grid {
-      display: grid;
-      gap: 18px;
-    }
-
-    .stats {
-      grid-template-columns: repeat(6, 1fr);
-    }
+    .grid { display: grid; gap: 18px; }
+    .stats { grid-template-columns: repeat(6, 1fr); }
 
     .card {
       background: rgba(17,24,39,.86);
@@ -185,26 +146,11 @@
       backdrop-filter: blur(10px);
     }
 
-    .stat-card h3 {
-      color: var(--muted);
-      font-size: .95rem;
-      margin-bottom: 8px;
-    }
+    .stat-card h3 { color: var(--muted); font-size: .95rem; margin-bottom: 8px; }
+    .stat-card .value { font-size: 1.8rem; font-weight: bold; }
+    .stat-card small { display: block; margin-top: 8px; color: #93c5fd; }
 
-    .stat-card .value {
-      font-size: 1.8rem;
-      font-weight: bold;
-    }
-
-    .stat-card small {
-      display: block;
-      margin-top: 8px;
-      color: #93c5fd;
-    }
-
-    .two-col {
-      grid-template-columns: 1.2fr .8fr;
-    }
+    .two-col { grid-template-columns: 1.2fr .8fr; }
 
     .section-title {
       margin-bottom: 14px;
@@ -215,30 +161,12 @@
       flex-wrap: wrap;
     }
 
-    .section-title h3 {
-      font-size: 1.15rem;
-    }
+    .section-title h3 { font-size: 1.15rem; }
+    .form-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px; }
+    .form-group { display: flex; flex-direction: column; gap: 8px; }
+    .form-group.full { grid-column: 1 / -1; }
 
-    .form-grid {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 14px;
-    }
-
-    .form-group {
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-    }
-
-    .form-group.full {
-      grid-column: 1 / -1;
-    }
-
-    label {
-      color: var(--muted);
-      font-size: .92rem;
-    }
+    label { color: var(--muted); font-size: .92rem; }
 
     input, select, textarea {
       width: 100%;
@@ -250,17 +178,10 @@
       outline: none;
     }
 
-    textarea {
-      min-height: 100px;
-      resize: vertical;
-    }
+    input::placeholder, textarea::placeholder { color: #94a3b8; }
+    textarea { min-height: 100px; resize: vertical; }
 
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-top: 12px;
-    }
-
+    table { width: 100%; border-collapse: collapse; margin-top: 12px; }
     th, td {
       padding: 12px 10px;
       text-align: left;
@@ -268,15 +189,8 @@
       font-size: .95rem;
       vertical-align: top;
     }
-
-    th {
-      color: #93c5fd;
-      font-weight: 600;
-    }
-
-    .table-wrap {
-      overflow-x: auto;
-    }
+    th { color: #93c5fd; font-weight: 600; }
+    .table-wrap { overflow-x: auto; }
 
     .badge {
       display: inline-flex;
@@ -286,12 +200,12 @@
       font-size: .82rem;
       font-weight: bold;
     }
-
     .badge.success { background: rgba(34,197,94,.18); color: #86efac; }
     .badge.warning { background: rgba(245,158,11,.18); color: #fcd34d; }
     .badge.danger { background: rgba(239,68,68,.18); color: #fca5a5; }
     .badge.info { background: rgba(56,189,248,.18); color: #7dd3fc; }
     .badge.pink { background: rgba(236,72,153,.18); color: #f9a8d4; }
+    .badge.violet { background: rgba(139,92,246,.18); color: #c4b5fd; }
 
     .products-grid {
       display: grid;
@@ -307,18 +221,8 @@
       padding: 16px;
     }
 
-    .product-card h4 {
-      font-size: 1.12rem;
-      margin-bottom: 7px;
-    }
-
-    .product-meta {
-      color: var(--muted);
-      font-size: .9rem;
-      margin-bottom: 12px;
-      display: grid;
-      gap: 6px;
-    }
+    .product-card h4 { font-size: 1.12rem; margin-bottom: 7px; }
+    .product-meta { color: var(--muted); font-size: .9rem; margin-bottom: 12px; display: grid; gap: 6px; }
 
     .product-price {
       display: flex;
@@ -328,18 +232,8 @@
       flex-wrap: wrap;
     }
 
-    .product-actions {
-      display: flex;
-      gap: 10px;
-      flex-wrap: wrap;
-      margin-top: 12px;
-    }
-
-    .product-actions .btn {
-      padding: 10px 12px;
-      font-size: .9rem;
-      flex: 1;
-    }
+    .product-actions { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 12px; }
+    .product-actions .btn { padding: 10px 12px; font-size: .9rem; flex: 1; }
 
     .toolbar {
       display: grid;
@@ -357,7 +251,7 @@
 
     .login-card {
       width: 100%;
-      max-width: 1050px;
+      max-width: 1100px;
       display: grid;
       grid-template-columns: 1.1fr .9fr;
       background: rgba(17,24,39,.88);
@@ -374,25 +268,10 @@
                   linear-gradient(135deg, rgba(15,23,42,1), rgba(17,24,39,1));
     }
 
-    .login-right {
-      padding: 34px;
-    }
-
-    .big-title {
-      font-size: 2.2rem;
-      line-height: 1.15;
-      margin-bottom: 12px;
-    }
-
-    .muted {
-      color: var(--muted);
-    }
-
-    .feature-list {
-      display: grid;
-      gap: 12px;
-      margin-top: 24px;
-    }
+    .login-right { padding: 34px; }
+    .big-title { font-size: 2.2rem; line-height: 1.15; margin-bottom: 12px; }
+    .muted { color: var(--muted); }
+    .feature-list { display: grid; gap: 12px; margin-top: 24px; }
 
     .feature-item {
       padding: 14px;
@@ -401,13 +280,7 @@
       border: 1px solid rgba(255,255,255,.07);
     }
 
-    .social-grid {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 10px;
-      margin-top: 14px;
-    }
-
+    .social-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-top: 14px; }
     .social-btn {
       padding: 12px;
       border-radius: 14px;
@@ -416,10 +289,7 @@
       color: var(--text);
       cursor: pointer;
     }
-
-    .social-btn:hover {
-      background: rgba(255,255,255,.08);
-    }
+    .social-btn:hover { background: rgba(255,255,255,.08); }
 
     .alert {
       padding: 12px 14px;
@@ -427,7 +297,6 @@
       margin-bottom: 14px;
       display: none;
     }
-
     .alert.show { display: block; }
     .alert.success { background: rgba(34,197,94,.18); color: #bbf7d0; }
     .alert.error { background: rgba(239,68,68,.18); color: #fecaca; }
@@ -441,10 +310,7 @@
       margin-top: 14px;
     }
 
-    .receipt-header {
-      text-align: center;
-      margin-bottom: 16px;
-    }
+    .receipt-header { text-align: center; margin-bottom: 16px; }
 
     .receipt-line {
       display: flex;
@@ -454,19 +320,9 @@
       border-bottom: 1px dashed #bbb;
     }
 
-    .receipt-total {
-      font-weight: bold;
-      font-size: 1.15rem;
-      margin-top: 14px;
-    }
-
-    .small {
-      font-size: .86rem;
-    }
-
-    .center {
-      text-align: center;
-    }
+    .receipt-total { font-weight: bold; font-size: 1.15rem; margin-top: 14px; }
+    .small { font-size: .86rem; }
+    .center { text-align: center; }
 
     .empty-state {
       padding: 26px;
@@ -477,21 +333,20 @@
       border-radius: 18px;
     }
 
-    .footer-note {
-      margin-top: 10px;
-      color: var(--muted);
-      font-size: .85rem;
+    .footer-note { margin-top: 10px; color: var(--muted); font-size: .85rem; }
+    .chart-wrap { position: relative; height: 340px; margin-top: 12px; }
+
+    .role-admin-only { display: block; }
+    .role-employee-only { display: none; }
+
+    .quick-box {
+      border: 1px solid rgba(255,255,255,.07);
+      background: rgba(255,255,255,.03);
+      border-radius: 16px;
+      padding: 14px;
     }
 
-    .chart-wrap {
-      position: relative;
-      height: 340px;
-      margin-top: 12px;
-    }
-
-    @media (max-width: 1300px) {
-      .stats { grid-template-columns: repeat(3, 1fr); }
-    }
+    @media (max-width: 1300px) { .stats { grid-template-columns: repeat(3, 1fr); } }
 
     @media (max-width: 1100px) {
       .two-col, .products-grid, .toolbar, .login-card { grid-template-columns: 1fr; }
@@ -534,45 +389,60 @@
             <p>Retail & Wholesale Management</p>
           </div>
         </div>
+
         <h2 class="big-title">One powerful shop website for <span style="color:#7dd3fc">retail</span> and <span style="color:#f9a8d4">wholesale</span>.</h2>
-        <p class="muted">Manage stock, prices, discounts, receipts, negotiated selling price, profit, profit margin and dashboard monitoring in one place.</p>
+        <p class="muted">Manage stock, barcode scanning, receipts, employees, discounts, negotiated price, profit and dashboard monitoring in one place.</p>
 
         <div class="feature-list">
           <div class="feature-item">📦 Add, edit and remove products with stock tracking</div>
-          <div class="feature-item">🧾 Generate printable receipts after every sale</div>
-          <div class="feature-item">💬 Set negotiated selling price during sale</div>
-          <div class="feature-item">📈 Track revenue, profit and margin with line graph</div>
+          <div class="feature-item">🔎 Barcode input and scanner-friendly sale search</div>
+          <div class="feature-item">🧾 Print and delete receipts anytime</div>
+          <div class="feature-item">👤 Admin and Employee login roles</div>
         </div>
       </div>
 
       <div class="login-right">
         <div class="section-title">
-          <h3>Admin Login</h3>
-          <span class="badge info">Password Protected</span>
+          <h3>Login</h3>
+          <span class="badge info">Multi Role Access</span>
         </div>
+
         <div id="loginAlert" class="alert"></div>
+
         <div class="form-grid">
           <div class="form-group full">
+            <label for="loginRole">Role</label>
+            <select id="loginRole">
+              <option value="admin">Admin</option>
+              <option value="employee">Employee</option>
+            </select>
+          </div>
+          <div class="form-group full">
             <label for="adminEmail">Email</label>
-            <input type="email" id="adminEmail" placeholder="admin@shop.com" />
+            <input type="email" id="adminEmail" placeholder="Enter your email" />
           </div>
           <div class="form-group full">
             <label for="adminPassword">Password</label>
-            <input type="password" id="adminPassword" placeholder="Enter admin password" />
+            <input type="password" id="adminPassword" placeholder="Enter password" />
           </div>
         </div>
+
         <div style="display:flex; gap:10px; margin-top:16px; flex-wrap:wrap;">
-          <button class="btn btn-primary" onclick="loginAdmin()">Login</button>
-          <button class="btn btn-dark" onclick="fillDemoLogin()">Use Demo Login</button>
+          <button class="btn btn-primary" onclick="loginUser()">Login</button>
+          <button class="btn btn-dark" onclick="fillAdminEmail()">Fill Admin Email</button>
+          <button class="btn btn-violet" onclick="fillDemoEmployee()">Use Employee Demo</button>
         </div>
 
-        <p class="footer-note">Demo admin email: <b>admin@shop.com</b> | Demo password: <b>admin123</b></p>
+        <p class="footer-note">
+          Admin login uses <b>Supabase Auth</b><br>
+          Demo Employee: <b>employee@shop.com</b> / <b>employee123</b>
+        </p>
 
         <div class="section-title" style="margin-top:26px;">
           <h3>Social Sign-In Buttons</h3>
           <span class="badge warning">UI Demo</span>
         </div>
-        <p class="muted small">These are design buttons only. Real social login needs provider setup after hosting.</p>
+        <p class="muted small">These are design buttons only. Real social login needs provider setup inside Supabase after hosting.</p>
         <div class="social-grid">
           <button class="social-btn" onclick="socialLoginNotice('Google')">🔵 Continue with Google</button>
           <button class="social-btn" onclick="socialLoginNotice('Facebook')">📘 Continue with Facebook</button>
@@ -600,12 +470,13 @@
         <button class="nav-btn" data-page="productsPage" onclick="showPage('productsPage', this)">📦 Products</button>
         <button class="nav-btn" data-page="salesPage" onclick="showPage('salesPage', this)">🛒 Make Sale</button>
         <button class="nav-btn" data-page="receiptsPage" onclick="showPage('receiptsPage', this)">🧾 Receipts</button>
-        <button class="nav-btn" data-page="settingsPage" onclick="showPage('settingsPage', this)">⚙️ Admin Settings</button>
+        <button class="nav-btn role-admin-only" data-page="employeesPage" onclick="showPage('employeesPage', this)">👥 Employees</button>
+        <button class="nav-btn role-admin-only" data-page="settingsPage" onclick="showPage('settingsPage', this)">⚙️ Admin Settings</button>
 
         <div class="sidebar-footer">
           <div class="small muted">Quick Actions</div>
           <div style="display:grid; gap:10px; margin-top:10px;">
-            <button class="btn btn-success" onclick="showPage('productsPage'); focusProductForm()">+ Add Product</button>
+            <button class="btn btn-success role-admin-only" onclick="showPage('productsPage'); focusProductForm()">+ Add Product</button>
             <button class="btn btn-warning" onclick="showPage('salesPage')">+ New Sale</button>
             <button class="btn btn-danger" onclick="logout()">Logout</button>
           </div>
@@ -622,10 +493,11 @@
               <p>Monitor sales, stock, discounts, profit and performance.</p>
             </div>
             <div class="topbar-actions">
-              <button class="btn btn-primary" onclick="seedSampleData()">Load Sample Data</button>
+              <button class="btn btn-primary role-admin-only" onclick="seedSampleData()">Load Sample Data</button>
               <button class="btn btn-dark" onclick="exportData()">Export Backup</button>
-              <label class="btn btn-success" for="importFile" style="display:inline-flex; align-items:center;">Import Backup</label>
+              <label class="btn btn-success role-admin-only" for="importFile" style="display:inline-flex; align-items:center;">Import Backup</label>
               <input id="importFile" type="file" accept="application/json" class="hidden" onchange="importData(event)" />
+              <button class="btn btn-danger role-admin-only" onclick="resetDashboardData()">Reset Dashboard To Zero</button>
             </div>
           </div>
 
@@ -653,7 +525,7 @@
             <div class="card stat-card">
               <h3>Avg Profit Margin</h3>
               <div class="value" id="statProfitMargin">0%</div>
-              <small>Average margin across sales</small>
+              <small id="statProfitMarginLabel">Based on day-by-day chart view</small>
             </div>
             <div class="card stat-card">
               <h3>Low Stock Items</h3>
@@ -664,8 +536,15 @@
 
           <div class="card" style="margin-top:18px;">
             <div class="section-title">
-              <h3>Sales Performance</h3>
-              <span class="badge info">Revenue & Profit Trend</span>
+              <h3>Sales Performance & Profit Margin</h3>
+              <div style="display:flex; gap:10px; flex-wrap:wrap; align-items:center;">
+                <span class="badge info">Day / Month / Year View</span>
+                <select id="chartViewType" onchange="renderDashboard()" style="min-width:160px;">
+                  <option value="day" selected>Day by Day</option>
+                  <option value="month">Month by Month</option>
+                  <option value="year">Year by Year</option>
+                </select>
+              </div>
             </div>
             <div class="chart-wrap">
               <canvas id="salesLineChart"></canvas>
@@ -715,7 +594,7 @@
           </div>
 
           <div class="grid two-col">
-            <div class="card">
+            <div class="card role-admin-only">
               <div class="section-title">
                 <h3 id="productFormTitle">Add New Product</h3>
                 <span class="badge success">Inventory Manager</span>
@@ -728,6 +607,14 @@
                 <div class="form-group">
                   <label for="productCategory">Category</label>
                   <input id="productCategory" placeholder="e.g. Grocery" />
+                </div>
+                <div class="form-group">
+                  <label for="productBarcode">Barcode</label>
+                  <input id="productBarcode" placeholder="Scan or type barcode" />
+                </div>
+                <div class="form-group">
+                  <label for="productUnit">Unit</label>
+                  <input id="productUnit" placeholder="e.g. pieces, rolls, boxes, kg" />
                 </div>
                 <div class="form-group">
                   <label for="costPrice">Cost Price (KSh)</label>
@@ -748,10 +635,6 @@
                 <div class="form-group">
                   <label for="productStock">Stock Quantity</label>
                   <input id="productStock" type="number" min="0" required />
-                </div>
-                <div class="form-group">
-                  <label for="productUnit">Unit</label>
-                  <input id="productUnit" placeholder="e.g. pieces, rolls, boxes, kg" />
                 </div>
                 <div class="form-group">
                   <label for="lowStockThreshold">Low Stock Threshold</label>
@@ -776,13 +659,13 @@
               </form>
             </div>
 
-            <div class="card">
+            <div class="card" style="grid-column: span 1;">
               <div class="section-title">
                 <h3>Find Products</h3>
                 <span class="badge pink">Smart Filter</span>
               </div>
               <div class="toolbar">
-                <input id="searchProducts" placeholder="Search product name..." oninput="renderProducts()" />
+                <input id="searchProducts" placeholder="Search product name or barcode..." oninput="renderProducts()" />
                 <select id="filterCategory" onchange="renderProducts()">
                   <option value="">All Categories</option>
                 </select>
@@ -819,6 +702,13 @@
                 <span class="badge success">Auto Stock Update</span>
               </div>
               <form id="saleForm" class="form-grid">
+                <div class="form-group full">
+                  <label for="barcodeInput">Barcode Input / Scanner</label>
+                  <input id="barcodeInput" placeholder="Click here and scan barcode using scanner" oninput="findProductByBarcode()" />
+                </div>
+                <div class="form-group full">
+                  <div class="quick-box small muted">Tip: Most barcode scanners type numbers like a keyboard. Click the barcode box first, then scan the product. The product will auto-select if barcode exists.</div>
+                </div>
                 <div class="form-group">
                   <label for="customerName">Customer Name</label>
                   <input id="customerName" placeholder="e.g. Benson" required />
@@ -888,7 +778,7 @@
           <div class="topbar">
             <div>
               <h2>Receipts</h2>
-              <p>View recent receipts and print any sold item receipt.</p>
+              <p>View recent receipts, print them, or delete them.</p>
             </div>
           </div>
 
@@ -920,7 +810,63 @@
           <div id="receiptPrintArea"></div>
         </section>
 
-        <section id="settingsPage" class="page hidden">
+        <section id="employeesPage" class="page hidden role-admin-only">
+          <div class="topbar">
+            <div>
+              <h2>Employees</h2>
+              <p>Add and manage employee accounts.</p>
+            </div>
+          </div>
+
+          <div class="grid two-col">
+            <div class="card">
+              <div class="section-title">
+                <h3>Add Employee</h3>
+                <span class="badge violet">Staff Access</span>
+              </div>
+              <form id="employeeForm" class="form-grid">
+                <div class="form-group">
+                  <label for="employeeName">Full Name</label>
+                  <input id="employeeName" placeholder="e.g. Jane Doe" />
+                </div>
+                <div class="form-group">
+                  <label for="employeeEmail">Email</label>
+                  <input id="employeeEmail" type="email" placeholder="employee@shop.com" />
+                </div>
+                <div class="form-group full">
+                  <label for="employeePassword">Password</label>
+                  <input id="employeePassword" type="password" placeholder="Employee password" />
+                </div>
+                <div class="form-group full" style="display:flex; gap:10px; flex-wrap:wrap;">
+                  <button type="submit" class="btn btn-primary">Save Employee</button>
+                  <button type="button" class="btn btn-dark" onclick="document.getElementById('employeeForm').reset()">Clear</button>
+                </div>
+              </form>
+            </div>
+
+            <div class="card">
+              <div class="section-title">
+                <h3>Employee List</h3>
+                <span class="badge info">Active Staff</span>
+              </div>
+              <div class="table-wrap">
+                <table>
+                  <thead>
+                    <tr>
+                      <th>Name</th>
+                      <th>Email</th>
+                      <th>Role</th>
+                      <th>Action</th>
+                    </tr>
+                  </thead>
+                  <tbody id="employeeTable"></tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section id="settingsPage" class="page hidden role-admin-only">
           <div class="topbar">
             <div>
               <h2>Admin Settings</h2>
@@ -975,6 +921,7 @@
                   <button type="submit" class="btn btn-warning">Update Password</button>
                 </div>
               </form>
+              <p class="footer-note">This changes only local admin password display. Real Supabase admin password is changed from Supabase Auth dashboard or reset flow.</p>
             </div>
           </div>
         </section>
@@ -982,15 +929,19 @@
     </div>
   </section>
 
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <script>
-    const SUPABASE_URL = "https://vzmhlhykafcahglkhljw.supabase.co";
-    const SUPABASE_KEY = "sb_publishable_AdW-VgSNHD2tjZ2kNhgtCA_N4WZcBva";
-    const client = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+  <script type="module">
+    import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
+
+    const SUPABASE_URL = 'https://vzmhlhykafcahglkhljw.supabase.co';
+    const SUPABASE_ANON_KEY = 'sb_publishable_AdW-VgSNHD2tjZ2kNhgtCA_N4WZcBva';
+
+    const ADMIN_EMAIL = 'kariukibenson731@gmail.com';
+
+    const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
     const STORAGE_KEYS = {
-      session: 'smartshop_session',
       data: 'smartshop_data'
     };
 
@@ -1001,12 +952,22 @@
         shopName: 'SmartShop Pro',
         currency: 'KSh',
         tagline: 'Retail & Wholesale Shop',
-        adminEmail: 'admin@shop.com',
-        adminPassword: 'admin123'
+        adminEmail: ADMIN_EMAIL,
+        adminPassword: ''
       },
+      employees: [
+        {
+          id: 'emp-demo-1',
+          name: 'Demo Employee',
+          email: 'employee@shop.com',
+          password: 'employee123',
+          role: 'employee'
+        }
+      ],
       products: [],
       sales: [],
-      editingProductId: null
+      editingProductId: null,
+      currentUser: null
     };
 
     function defaultData() {
@@ -1015,9 +976,18 @@
           shopName: 'SmartShop Pro',
           currency: 'KSh',
           tagline: 'Retail & Wholesale Shop',
-          adminEmail: 'admin@shop.com',
-          adminPassword: 'admin123'
+          adminEmail: ADMIN_EMAIL,
+          adminPassword: ''
         },
+        employees: [
+          {
+            id: 'emp-demo-1',
+            name: 'Demo Employee',
+            email: 'employee@shop.com',
+            password: 'employee123',
+            role: 'employee'
+          }
+        ],
         products: [],
         sales: []
       };
@@ -1029,112 +999,32 @@
         try {
           const parsed = JSON.parse(saved);
           state = {
-            settings: { ...defaultData().settings, ...(parsed.settings || {}) },
+            settings: { ...defaultData().settings, ...(parsed.settings || {}), adminEmail: ADMIN_EMAIL },
+            employees: Array.isArray(parsed.employees) && parsed.employees.length ? parsed.employees : defaultData().employees,
             products: Array.isArray(parsed.products) ? parsed.products : [],
             sales: Array.isArray(parsed.sales) ? parsed.sales : [],
-            editingProductId: null
+            editingProductId: null,
+            currentUser: null
           };
         } catch (e) {
-          state = { ...defaultData(), editingProductId: null };
+          state = { ...defaultData(), editingProductId: null, currentUser: null };
         }
       } else {
-        state = { ...defaultData(), editingProductId: null };
+        state = { ...defaultData(), editingProductId: null, currentUser: null };
         saveState();
       }
     }
 
     function saveState() {
       localStorage.setItem(STORAGE_KEYS.data, JSON.stringify({
-        settings: state.settings,
+        settings: {
+          ...state.settings,
+          adminEmail: ADMIN_EMAIL
+        },
+        employees: state.employees,
         products: state.products,
         sales: state.sales
       }));
-    }
-
-    async function loadProductsFromSupabase() {
-      const { data, error } = await client
-        .from('products')
-        .select('*')
-        .order('created_at', { ascending: false });
-
-      if (error) {
-        showAlert('globalAlert', error.message, 'error');
-        return;
-      }
-
-      state.products = (data || []).map(item => ({
-        id: String(item.id),
-        name: item.name,
-        category: item.category || '',
-        costPrice: Number(item.cost_price || 0),
-        markedPrice: Number(item.marked_price || 0),
-        retailPrice: Number(item.retail_price || 0),
-        wholesalePrice: Number(item.wholesale_price || 0),
-        stock: Number(item.stock || 0),
-        unit: item.unit || 'pcs',
-        lowStockThreshold: Number(item.low_stock_threshold || 0),
-        retailDiscount: Number(item.retail_discount || 0),
-        wholesaleDiscount: Number(item.wholesale_discount || 0),
-        description: item.description || '',
-        createdAt: item.created_at
-      }));
-
-      renderAll();
-    }
-
-    async function loadSalesFromSupabase() {
-      const { data, error } = await client
-        .from('sales')
-        .select('*')
-        .order('created_at', { ascending: false });
-
-      if (error) {
-        showAlert('globalAlert', error.message, 'error');
-        return;
-      }
-
-      state.sales = (data || []).map(item => ({
-        id: String(item.id),
-        receiptNo: item.receipt_no,
-        customerName: item.customer_name,
-        customerPhone: item.customer_phone || '',
-        notes: item.notes || '',
-        productId: item.product_id ? String(item.product_id) : '',
-        productName: item.product_name,
-        saleType: item.sale_type,
-        quantity: Number(item.quantity || 0),
-        unit: item.unit || 'pcs',
-        costPrice: Number(item.cost_price || 0),
-        markedPrice: Number(item.marked_price || 0),
-        sellingPrice: Number(item.selling_price || item.unit_price || 0),
-        unitPrice: Number(item.unit_price || 0),
-        baseUnitPrice: Number(item.base_unit_price || 0),
-        typeDiscount: Number(item.type_discount || 0),
-        extraDiscount: Number(item.extra_discount || 0),
-        total: Number(item.total || 0),
-        discountGiven: Number(item.discount_given || item.total_discount_saved || 0),
-        totalDiscountSaved: Number(item.total_discount_saved || item.discount_given || 0),
-        profitMade: Number(item.profit_made || 0),
-        profitMargin: Number(item.profit_margin || 0),
-        paymentMethod: item.payment_method || '',
-        paymentReference: item.payment_reference || '',
-        createdAt: item.created_at
-      }));
-
-      renderDashboard();
-      renderReceipts();
-    }
-
-    function setSession(loggedIn) {
-      localStorage.setItem(STORAGE_KEYS.session, JSON.stringify({ loggedIn }));
-    }
-
-    function getSession() {
-      try {
-        return JSON.parse(localStorage.getItem(STORAGE_KEYS.session)) || { loggedIn: false };
-      } catch {
-        return { loggedIn: false };
-      }
     }
 
     function formatMoney(value) {
@@ -1143,130 +1033,196 @@
 
     function showAlert(targetId, message, type = 'info') {
       const box = document.getElementById(targetId);
+      if (!box) return;
       box.className = `alert show ${type}`;
       box.textContent = message;
       setTimeout(() => {
         box.className = 'alert';
         box.textContent = '';
-      }, 3000);
+      }, 3500);
     }
 
     function socialLoginNotice(platform) {
-      showAlert('loginAlert', `${platform} sign-in button is added in UI. Real ${platform} login needs official API/backend setup after hosting.`, 'info');
+      showAlert('loginAlert', `${platform} sign-in button is added in UI. Real ${platform} login needs provider setup in Supabase Authentication.`, 'info');
     }
 
-    function fillDemoLogin() {
-      document.getElementById('adminEmail').value = state.settings.adminEmail;
-      document.getElementById('adminPassword').value = state.settings.adminPassword;
+    function fillAdminEmail() {
+      document.getElementById('loginRole').value = 'admin';
+      document.getElementById('adminEmail').value = ADMIN_EMAIL;
+      document.getElementById('adminPassword').focus();
     }
 
-    async function loginAdmin() {
-      const email = document.getElementById('adminEmail').value.trim();
+    function fillDemoEmployee() {
+      document.getElementById('loginRole').value = 'employee';
+      document.getElementById('adminEmail').value = 'employee@shop.com';
+      document.getElementById('adminPassword').value = 'employee123';
+    }
+
+    async function loginUser() {
+      const role = document.getElementById('loginRole').value;
+      const email = document.getElementById('adminEmail').value.trim().toLowerCase();
       const password = document.getElementById('adminPassword').value;
 
-      const { error } = await client.auth.signInWithPassword({
-        email,
-        password
-      });
-
-      if (error) {
-        showAlert('loginAlert', error.message, 'error');
+      if (!email || !password) {
+        showAlert('loginAlert', 'Email and password are required.', 'error');
         return;
       }
 
-      setSession(true);
-      state.settings.adminEmail = email;
+      if (role === 'admin') {
+        if (email !== ADMIN_EMAIL.toLowerCase()) {
+          showAlert('loginAlert', 'This email is not the configured admin email.', 'error');
+          return;
+        }
+
+        const { data, error } = await supabase.auth.signInWithPassword({
+          email,
+          password
+        });
+
+        if (error || !data.user) {
+          showAlert('loginAlert', error?.message || 'Admin login failed.', 'error');
+          return;
+        }
+
+        state.currentUser = {
+          name: 'Admin',
+          email: data.user.email,
+          role: 'admin'
+        };
+
+        showApp();
+        showAlert('globalAlert', 'Admin login successful with Supabase.', 'success');
+        return;
+      }
+
+      const employee = state.employees.find(emp => emp.email.toLowerCase() === email && emp.password === password);
+      if (!employee) {
+        showAlert('loginAlert', 'Wrong employee email or password.', 'error');
+        return;
+      }
+
+      state.currentUser = { name: employee.name, email: employee.email, role: 'employee' };
       showApp();
-      showAlert('globalAlert', 'Login successful. Welcome back admin.', 'success');
+      showAlert('globalAlert', `Welcome ${employee.name}.`, 'success');
     }
 
-    function logout() {
-      setSession(false);
+    async function logout() {
+      if (state.currentUser?.role === 'admin') {
+        await supabase.auth.signOut();
+      }
+      state.currentUser = null;
       document.getElementById('appScreen').classList.add('hidden');
       document.getElementById('loginScreen').classList.remove('hidden');
       document.getElementById('adminPassword').value = '';
     }
 
-    async function showApp() {
+    function applyRoleUI() {
+      const role = state.currentUser?.role || 'employee';
+      const isAdmin = role === 'admin';
+
+      document.querySelectorAll('.role-admin-only').forEach(el => {
+        el.style.display = isAdmin ? '' : 'none';
+      });
+
+      document.querySelectorAll('.role-employee-only').forEach(el => {
+        el.style.display = isAdmin ? 'none' : '';
+      });
+    }
+
+    function showApp() {
       document.getElementById('loginScreen').classList.add('hidden');
       document.getElementById('appScreen').classList.remove('hidden');
-      document.getElementById('loggedInUser').textContent = state.settings.adminEmail;
+      document.getElementById('loggedInUser').textContent = `${state.currentUser?.name || 'User'} • ${state.currentUser?.role || 'employee'}`;
       document.getElementById('shopName').value = state.settings.shopName;
       document.getElementById('shopCurrency').value = state.settings.currency;
       document.getElementById('shopTagline').value = state.settings.tagline;
       togglePaymentReferenceLabel();
-      await loadProductsFromSupabase();
-      await loadSalesFromSupabase();
+      applyRoleUI();
       renderAll();
+      renderEmployees();
     }
 
     function showPage(pageId, el = null) {
       document.querySelectorAll('.page').forEach(page => page.classList.add('hidden'));
-      document.getElementById(pageId).classList.remove('hidden');
+      const page = document.getElementById(pageId);
+      if (page) page.classList.remove('hidden');
       document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
       const matchedBtn = el || document.querySelector(`.nav-btn[data-page="${pageId}"]`);
       if (matchedBtn) matchedBtn.classList.add('active');
       if (pageId === 'salesPage') updateSalePricePreview();
-      if (pageId === 'dashboardPage') renderSalesChart();
+      if (pageId === 'dashboardPage') renderDashboard();
     }
 
     function focusProductForm() {
-      document.getElementById('productName').focus();
+      const field = document.getElementById('productName');
+      if (field) field.focus();
     }
 
-    async function seedSampleData() {
-      const sampleProducts = [
+    function requireAdmin() {
+      if (state.currentUser?.role !== 'admin') {
+        showAlert('globalAlert', 'Only admin can do this action.', 'error');
+        return false;
+      }
+      return true;
+    }
+
+    function seedSampleData() {
+      if (!requireAdmin()) return;
+      state.products = [
         {
+          id: uid(),
           name: 'Cooking Oil 1L',
           category: 'Grocery',
-          cost_price: 240,
-          marked_price: 350,
-          retail_price: 320,
-          wholesale_price: 280,
+          barcode: '1001001001',
+          costPrice: 240,
+          markedPrice: 350,
+          retailPrice: 320,
+          wholesalePrice: 280,
           stock: 45,
           unit: 'bottles',
-          low_stock_threshold: 6,
-          retail_discount: 5,
-          wholesale_discount: 8,
-          description: 'Fresh cooking oil bottle 1 litre.'
+          lowStockThreshold: 6,
+          retailDiscount: 5,
+          wholesaleDiscount: 8,
+          description: 'Fresh cooking oil bottle 1 litre.',
+          createdAt: new Date().toISOString()
         },
         {
+          id: uid(),
           name: 'Sugar 2KG',
           category: 'Grocery',
-          cost_price: 180,
-          marked_price: 280,
-          retail_price: 260,
-          wholesale_price: 230,
+          barcode: '1001001002',
+          costPrice: 180,
+          markedPrice: 280,
+          retailPrice: 260,
+          wholesalePrice: 230,
           stock: 18,
           unit: 'packs',
-          low_stock_threshold: 5,
-          retail_discount: 0,
-          wholesale_discount: 6,
-          description: 'White sugar 2KG pack.'
+          lowStockThreshold: 5,
+          retailDiscount: 0,
+          wholesaleDiscount: 6,
+          description: 'White sugar 2KG pack.',
+          createdAt: new Date().toISOString()
         },
         {
+          id: uid(),
           name: 'Soft Drink 500ml',
           category: 'Beverages',
-          cost_price: 35,
-          marked_price: 80,
-          retail_price: 70,
-          wholesale_price: 55,
+          barcode: '1001001003',
+          costPrice: 35,
+          markedPrice: 80,
+          retailPrice: 70,
+          wholesalePrice: 55,
           stock: 7,
           unit: 'bottles',
-          low_stock_threshold: 10,
-          retail_discount: 0,
-          wholesale_discount: 5,
-          description: 'Cold drink for retail and wholesale.'
+          lowStockThreshold: 10,
+          retailDiscount: 0,
+          wholesaleDiscount: 5,
+          description: 'Cold drink for retail and wholesale.',
+          createdAt: new Date().toISOString()
         }
       ];
-
-      const { error } = await client.from('products').insert(sampleProducts);
-      if (error) {
-        showAlert('globalAlert', error.message, 'error');
-        return;
-      }
-
-      await loadProductsFromSupabase();
+      saveState();
+      renderAll();
       showAlert('globalAlert', 'Sample data added successfully.', 'success');
     }
 
@@ -1277,8 +1233,7 @@
     function refreshCategoryOptions() {
       const categoryFilter = document.getElementById('filterCategory');
       const current = categoryFilter.value;
-      categoryFilter.innerHTML =
-        '<option value="">All Categories</option>' +
+      categoryFilter.innerHTML = '<option value="">All Categories</option>' +
         getCategories().map(cat => `<option value="${escapeHtml(cat)}">${escapeHtml(cat)}</option>`).join('');
       categoryFilter.value = current;
     }
@@ -1323,7 +1278,8 @@
           p.name.toLowerCase().includes(query) ||
           (p.category || '').toLowerCase().includes(query) ||
           (p.description || '').toLowerCase().includes(query) ||
-          (p.unit || '').toLowerCase().includes(query)
+          (p.unit || '').toLowerCase().includes(query) ||
+          (p.barcode || '').toLowerCase().includes(query)
         );
       }
 
@@ -1342,6 +1298,8 @@
         return;
       }
 
+      const isAdmin = state.currentUser?.role === 'admin';
+
       grid.innerHTML = filtered.map(product => `
         <div class="product-card">
           <div style="display:flex; justify-content:space-between; gap:10px; align-items:flex-start;">
@@ -1350,6 +1308,7 @@
           </div>
           <div class="product-meta">
             <div>Category: <b>${escapeHtml(product.category || 'General')}</b></div>
+            <div>Barcode: <b>${escapeHtml(product.barcode || '—')}</b></div>
             <div>Cost Price: <b>${formatMoney(product.costPrice)}</b></div>
             <div>Marked Price: <b>${formatMoney(product.markedPrice)}</b></div>
             <div>Retail Price: <b>${formatMoney(product.retailPrice)}</b></div>
@@ -1364,10 +1323,11 @@
           <div class="small muted">Retail Discount: ${product.retailDiscount || 0}% | Wholesale Discount: ${product.wholesaleDiscount || 0}%</div>
           <p class="footer-note">${escapeHtml(product.description || 'No description')}</p>
           <div class="footer-note">Unit: <b>${escapeHtml(product.unit || 'pcs')}</b></div>
+          ${isAdmin ? `
           <div class="product-actions">
             <button class="btn btn-primary" onclick="editProduct('${product.id}')">Edit</button>
             <button class="btn btn-danger" onclick="deleteProduct('${product.id}')">Delete</button>
-          </div>
+          </div>` : ''}
         </div>
       `).join('');
     }
@@ -1392,6 +1352,7 @@
     }
 
     function editProduct(id) {
+      if (!requireAdmin()) return;
       const product = state.products.find(p => p.id === id);
       if (!product) return;
       state.editingProductId = id;
@@ -1399,6 +1360,7 @@
       document.getElementById('saveProductBtn').textContent = 'Update Product';
       document.getElementById('productName').value = product.name;
       document.getElementById('productCategory').value = product.category;
+      document.getElementById('productBarcode').value = product.barcode || '';
       document.getElementById('costPrice').value = product.costPrice;
       document.getElementById('markedPrice').value = product.markedPrice;
       document.getElementById('retailPrice').value = product.retailPrice;
@@ -1413,73 +1375,64 @@
       focusProductForm();
     }
 
-    async function deleteProduct(id) {
+    function deleteProduct(id) {
+      if (!requireAdmin()) return;
       const product = state.products.find(p => p.id === id);
       if (!product) return;
       if (!confirm(`Delete ${product.name}?`)) return;
-
-      const { error } = await client.from('products').delete().eq('id', Number(id));
-      if (error) {
-        showAlert('globalAlert', error.message, 'error');
-        return;
-      }
-
-      await loadProductsFromSupabase();
+      state.products = state.products.filter(p => p.id !== id);
+      saveState();
+      renderAll();
       showAlert('globalAlert', 'Product deleted successfully.', 'success');
     }
 
-    async function handleProductSubmit(event) {
+    function handleProductSubmit(event) {
       event.preventDefault();
+      if (!requireAdmin()) return;
 
       const product = {
         name: document.getElementById('productName').value.trim(),
         category: document.getElementById('productCategory').value.trim(),
-        cost_price: Number(document.getElementById('costPrice').value),
-        marked_price: Number(document.getElementById('markedPrice').value),
-        retail_price: Number(document.getElementById('retailPrice').value),
-        wholesale_price: Number(document.getElementById('wholesalePrice').value),
+        barcode: document.getElementById('productBarcode').value.trim(),
+        costPrice: Number(document.getElementById('costPrice').value),
+        markedPrice: Number(document.getElementById('markedPrice').value),
+        retailPrice: Number(document.getElementById('retailPrice').value),
+        wholesalePrice: Number(document.getElementById('wholesalePrice').value),
         stock: Number(document.getElementById('productStock').value),
         unit: document.getElementById('productUnit').value.trim() || 'pcs',
-        low_stock_threshold: Number(document.getElementById('lowStockThreshold').value || 0),
-        retail_discount: Number(document.getElementById('retailDiscount').value || 0),
-        wholesale_discount: Number(document.getElementById('wholesaleDiscount').value || 0),
+        lowStockThreshold: Number(document.getElementById('lowStockThreshold').value || 0),
+        retailDiscount: Number(document.getElementById('retailDiscount').value || 0),
+        wholesaleDiscount: Number(document.getElementById('wholesaleDiscount').value || 0),
         description: document.getElementById('productDescription').value.trim()
       };
 
-      if (!product.name) {
-        return showAlert('globalAlert', 'Product name is required.', 'error');
-      }
-
-      if (
-        product.cost_price < 0 ||
-        product.marked_price < 0 ||
-        product.retail_price < 0 ||
-        product.wholesale_price < 0 ||
-        product.stock < 0
-      ) {
+      if (!product.name) return showAlert('globalAlert', 'Product name is required.', 'error');
+      if ([product.costPrice, product.markedPrice, product.retailPrice, product.wholesalePrice, product.stock].some(v => Number.isNaN(v) || v < 0)) {
         return showAlert('globalAlert', 'Invalid product values.', 'error');
       }
 
-      let error;
+      const barcodeUsedByAnother = product.barcode && state.products.some(p => p.barcode === product.barcode && p.id !== state.editingProductId);
+      if (barcodeUsedByAnother) return showAlert('globalAlert', 'This barcode already exists.', 'error');
+
       if (state.editingProductId) {
-        ({ error } = await client
-          .from('products')
-          .update(product)
-          .eq('id', Number(state.editingProductId)));
+        state.products = state.products.map(p => p.id === state.editingProductId ? { ...p, ...product } : p);
       } else {
-        ({ error } = await client
-          .from('products')
-          .insert([product]));
+        state.products.unshift({ id: uid(), ...product, createdAt: new Date().toISOString() });
       }
 
-      if (error) {
-        showAlert('globalAlert', error.message, 'error');
-        return;
-      }
-
+      saveState();
       showAlert('globalAlert', state.editingProductId ? 'Product updated successfully.' : 'Product added successfully.', 'success');
       resetProductForm();
-      await loadProductsFromSupabase();
+      renderAll();
+    }
+
+    function findProductByBarcode() {
+      const code = document.getElementById('barcodeInput').value.trim();
+      if (!code) return;
+      const found = state.products.find(p => String(p.barcode || '').trim() === code);
+      if (!found) return;
+      document.getElementById('saleProduct').value = found.id;
+      updateSalePricePreview();
     }
 
     function calculateSalePreview() {
@@ -1494,21 +1447,13 @@
       if (!product || qty <= 0) return null;
 
       const markedPrice = Number(product.markedPrice || 0);
-      const basePrice = saleType === 'wholesale'
-        ? Number(product.wholesalePrice || 0)
-        : Number(product.retailPrice || 0);
+      const basePrice = saleType === 'wholesale' ? Number(product.wholesalePrice || 0) : Number(product.retailPrice || 0);
       const costPrice = Number(product.costPrice || 0);
-
-      const typeDiscount = saleType === 'wholesale'
-        ? Number(product.wholesaleDiscount || 0)
-        : Number(product.retailDiscount || 0);
-
+      const typeDiscount = saleType === 'wholesale' ? Number(product.wholesaleDiscount || 0) : Number(product.retailDiscount || 0);
       const afterTypeDiscount = getDiscountedPrice(basePrice, typeDiscount);
       const autoFinalUnitPrice = getDiscountedPrice(afterTypeDiscount, extraDiscount);
-
       const negotiatedMode = customSellingPrice !== null && !Number.isNaN(customSellingPrice);
       const finalUnitPrice = negotiatedMode ? customSellingPrice : autoFinalUnitPrice;
-
       const markedTotal = markedPrice * qty;
       const finalTotal = finalUnitPrice * qty;
       const costTotal = costPrice * qty;
@@ -1554,6 +1499,7 @@
             <h3>${escapeHtml(info.product.name)}</h3>
             ${enoughStock ? '<span class="badge success">Stock Available</span>' : '<span class="badge danger">Insufficient Stock</span>'}
           </div>
+          <div class="receipt-line"><span>Barcode</span><strong>${escapeHtml(info.product.barcode || '—')}</strong></div>
           <div class="receipt-line"><span>Sale Type</span><strong>${capitalize(info.saleType)}</strong></div>
           <div class="receipt-line"><span>Cost Price</span><strong>${formatMoney(info.costPrice)}</strong></div>
           <div class="receipt-line"><span>Marked Price</span><strong>${formatMoney(info.markedPrice)}</strong></div>
@@ -1578,12 +1524,13 @@
       document.getElementById('saleQty').value = 1;
       document.getElementById('manualExtraDiscount').value = 0;
       document.getElementById('customSellingPrice').value = '';
+      document.getElementById('barcodeInput').value = '';
       refreshSaleProductOptions();
       togglePaymentReferenceLabel();
       updateSalePricePreview();
     }
 
-    async function handleSaleSubmit(event) {
+    function handleSaleSubmit(event) {
       event.preventDefault();
       const customerName = document.getElementById('customerName').value.trim();
       const customerPhone = document.getElementById('customerPhone').value.trim();
@@ -1599,97 +1546,123 @@
 
       const receiptNo = `RCPT-${Date.now()}`;
       const sale = {
-        receipt_no: receiptNo,
-        customer_name: customerName,
-        customer_phone: customerPhone,
+        id: uid(),
+        receiptNo,
+        customerName,
+        customerPhone,
         notes: saleNotes,
-        product_id: Number(preview.product.id),
-        product_name: preview.product.name,
-        sale_type: preview.saleType,
+        productId: preview.product.id,
+        productName: preview.product.name,
+        barcode: preview.product.barcode || '',
+        saleType: preview.saleType,
         quantity: preview.qty,
         unit: preview.product.unit || 'pcs',
-        cost_price: preview.costPrice,
-        marked_price: preview.markedPrice,
-        selling_price: preview.finalUnitPrice,
-        unit_price: preview.finalUnitPrice,
-        base_unit_price: preview.basePrice,
-        type_discount: preview.typeDiscount,
-        extra_discount: preview.extraDiscount,
+        costPrice: preview.costPrice,
+        markedPrice: preview.markedPrice,
+        sellingPrice: preview.finalUnitPrice,
+        unitPrice: preview.finalUnitPrice,
+        baseUnitPrice: preview.basePrice,
+        typeDiscount: preview.typeDiscount,
+        extraDiscount: preview.extraDiscount,
         total: preview.finalTotal,
-        discount_given: preview.discountGiven,
-        total_discount_saved: preview.discountGiven,
-        profit_made: preview.profitMade,
-        profit_margin: preview.profitMargin,
-        payment_method: paymentMethod,
-        payment_reference: paymentReference
+        discountGiven: preview.discountGiven,
+        totalDiscountSaved: preview.discountGiven,
+        profitMade: preview.profitMade,
+        profitMargin: preview.profitMargin,
+        paymentMethod,
+        paymentReference,
+        createdBy: state.currentUser?.email || 'unknown',
+        createdAt: new Date().toISOString()
       };
 
-      const newStock = preview.product.stock - preview.qty;
-
-      const { error: saleError } = await client.from('sales').insert([sale]);
-      if (saleError) {
-        showAlert('globalAlert', saleError.message, 'error');
-        return;
-      }
-
-      const { error: stockError } = await client
-        .from('products')
-        .update({ stock: newStock })
-        .eq('id', Number(preview.product.id));
-
-      if (stockError) {
-        showAlert('globalAlert', stockError.message, 'error');
-        return;
-      }
-
-      await loadProductsFromSupabase();
-      await loadSalesFromSupabase();
-      const createdSale = state.sales.find(s => s.receiptNo === receiptNo);
-      if (createdSale) generateReceiptHTML(createdSale, true);
+      state.sales.unshift(sale);
+      state.products = state.products.map(p => p.id === preview.product.id ? { ...p, stock: p.stock - preview.qty } : p);
+      saveState();
+      renderAll();
+      generateReceiptHTML(sale, true);
       showPage('receiptsPage');
       showAlert('globalAlert', 'Sale completed and receipt generated.', 'success');
       resetSaleForm();
+    }
+
+    function getGroupedSalesData() {
+      const viewType = document.getElementById('chartViewType')?.value || 'day';
+      const grouped = {};
+
+      state.sales.slice().reverse().forEach(sale => {
+        const saleDate = new Date(sale.createdAt);
+        let label = '';
+
+        if (viewType === 'day') {
+          label = saleDate.toLocaleDateString();
+        } else if (viewType === 'month') {
+          label = `${saleDate.getFullYear()}-${String(saleDate.getMonth() + 1).padStart(2, '0')}`;
+        } else {
+          label = `${saleDate.getFullYear()}`;
+        }
+
+        if (!grouped[label]) {
+          grouped[label] = {
+            revenue: 0,
+            profit: 0,
+            marginTotal: 0,
+            count: 0
+          };
+        }
+
+        grouped[label].revenue += Number(sale.total || 0);
+        grouped[label].profit += Number(sale.profitMade || 0);
+        grouped[label].marginTotal += Number(sale.profitMargin || 0);
+        grouped[label].count += 1;
+      });
+
+      const labels = Object.keys(grouped);
+      const revenueData = labels.map(label => grouped[label].revenue);
+      const profitData = labels.map(label => grouped[label].profit);
+      const marginData = labels.map(label => {
+        const item = grouped[label];
+        return item.count ? Number((item.marginTotal / item.count).toFixed(2)) : 0;
+      });
+
+      return { labels, revenueData, profitData, marginData, viewType };
     }
 
     function renderSalesChart() {
       const canvas = document.getElementById('salesLineChart');
       if (!canvas) return;
 
-      const grouped = {};
-
-      state.sales.slice().reverse().forEach(sale => {
-        const date = new Date(sale.createdAt).toLocaleDateString();
-        if (!grouped[date]) {
-          grouped[date] = { revenue: 0, profit: 0 };
-        }
-        grouped[date].revenue += Number(sale.total || 0);
-        grouped[date].profit += Number(sale.profitMade || 0);
-      });
-
-      const labels = Object.keys(grouped);
-      const revenueData = labels.map(date => grouped[date].revenue);
-      const profitData = labels.map(date => grouped[date].profit);
+      const { labels, revenueData, profitData, marginData } = getGroupedSalesData();
 
       if (salesChart) salesChart.destroy();
 
       salesChart = new Chart(canvas, {
-        type: 'line',
         data: {
           labels,
           datasets: [
             {
+              type: 'line',
               label: 'Revenue',
               data: revenueData,
               borderWidth: 3,
               tension: 0.3,
-              fill: false
+              fill: false,
+              yAxisID: 'y'
             },
             {
+              type: 'line',
               label: 'Profit',
               data: profitData,
               borderWidth: 3,
               tension: 0.3,
-              fill: false
+              fill: false,
+              yAxisID: 'y'
+            },
+            {
+              type: 'bar',
+              label: 'Avg Profit Margin %',
+              data: marginData,
+              borderWidth: 1,
+              yAxisID: 'y1'
             }
           ]
         },
@@ -1698,26 +1671,49 @@
           maintainAspectRatio: false,
           plugins: {
             legend: {
-              labels: {
-                color: '#f8fafc'
+              labels: { color: '#f8fafc' }
+            },
+            tooltip: {
+              callbacks: {
+                label: function(context) {
+                  const label = context.dataset.label || '';
+                  const value = context.raw || 0;
+
+                  if (label.includes('Margin')) {
+                    return `${label}: ${value}%`;
+                  }
+
+                  return `${label}: ${formatMoney(value)}`;
+                }
               }
             }
           },
           scales: {
             x: {
-              ticks: {
-                color: '#cbd5e1'
-              },
-              grid: {
-                color: 'rgba(255,255,255,0.08)'
-              }
+              ticks: { color: '#cbd5e1' },
+              grid: { color: 'rgba(255,255,255,0.08)' }
             },
             y: {
+              position: 'left',
               ticks: {
-                color: '#cbd5e1'
+                color: '#cbd5e1',
+                callback: function(value) {
+                  return formatMoney(value);
+                }
+              },
+              grid: { color: 'rgba(255,255,255,0.08)' }
+            },
+            y1: {
+              position: 'right',
+              beginAtZero: true,
+              ticks: {
+                color: '#cbd5e1',
+                callback: function(value) {
+                  return value + '%';
+                }
               },
               grid: {
-                color: 'rgba(255,255,255,0.08)'
+                drawOnChartArea: false
               }
             }
           }
@@ -1731,11 +1727,20 @@
       document.getElementById('statRevenue').textContent = formatMoney(state.sales.reduce((sum, s) => sum + Number(s.total || 0), 0));
       document.getElementById('statProfit').textContent = formatMoney(state.sales.reduce((sum, s) => sum + Number(s.profitMade || 0), 0));
 
-      const avgProfitMargin = state.sales.length
-        ? state.sales.reduce((sum, s) => sum + Number(s.profitMargin || 0), 0) / state.sales.length
+      const groupedData = getGroupedSalesData();
+      const avgMarginForView = groupedData.marginData.length
+        ? groupedData.marginData.reduce((sum, value) => sum + Number(value || 0), 0) / groupedData.marginData.length
         : 0;
 
-      document.getElementById('statProfitMargin').textContent = `${avgProfitMargin.toFixed(1)}%`;
+      document.getElementById('statProfitMargin').textContent = `${avgMarginForView.toFixed(1)}%`;
+
+      const labelMap = {
+        day: 'Based on day-by-day chart view',
+        month: 'Based on month-by-month chart view',
+        year: 'Based on year-by-year chart view'
+      };
+      document.getElementById('statProfitMarginLabel').textContent = labelMap[groupedData.viewType] || 'Based on selected chart view';
+
       document.getElementById('statLowStock').textContent = state.products.filter(p => getStockStatus(p) === 'low' || getStockStatus(p) === 'out').length;
 
       const recentSalesTable = document.getElementById('recentSalesTable');
@@ -1778,6 +1783,8 @@
         return;
       }
 
+      const isAdmin = state.currentUser?.role === 'admin';
+
       table.innerHTML = state.sales.map(sale => `
         <tr>
           <td>${sale.receiptNo}</td>
@@ -1788,7 +1795,10 @@
           <td>${formatMoney(sale.profitMade)}</td>
           <td>${Number(sale.profitMargin || 0).toFixed(2)}%</td>
           <td>${formatDate(sale.createdAt)}</td>
-          <td><button class="btn btn-primary" style="padding:8px 12px;" onclick="printReceipt('${sale.id}')">View / Print</button></td>
+          <td style="display:flex; gap:8px; flex-wrap:wrap;">
+            <button class="btn btn-primary" style="padding:8px 12px;" onclick="printReceipt('${sale.id}')">View / Print</button>
+            ${isAdmin ? `<button class="btn btn-danger" style="padding:8px 12px;" onclick="deleteReceipt('${sale.id}')">Delete</button>` : ''}
+          </td>
         </tr>
       `).join('');
     }
@@ -1803,22 +1813,10 @@
             <div class="small">Receipt No: <strong>${sale.receiptNo}</strong></div>
             <div class="small">Date: ${formatDateTime(sale.createdAt)}</div>
           </div>
-          <div class="receipt-line"><span>Customer</span><strong>${escapeHtml(sale.customerName)}</strong></div>
-          <div class="receipt-line"><span>Phone</span><strong>${escapeHtml(sale.customerPhone || '-')}</strong></div>
-          <div class="receipt-line"><span>Item</span><strong>${escapeHtml(sale.productName)}</strong></div>
-          <div class="receipt-line"><span>Sale Type</span><strong>${capitalize(sale.saleType)}</strong></div>
+          <div class="receipt-line"><span>Name</span><strong>${escapeHtml(sale.customerName)}</strong></div>
+          <div class="receipt-line"><span>Item Bought</span><strong>${escapeHtml(sale.productName)}</strong></div>
           <div class="receipt-line"><span>Quantity</span><strong>${sale.quantity} ${escapeHtml(sale.unit || 'pcs')}</strong></div>
-          <div class="receipt-line"><span>Cost Price</span><strong>${formatMoney(sale.costPrice)}</strong></div>
-          <div class="receipt-line"><span>Marked Price</span><strong>${formatMoney(sale.markedPrice)}</strong></div>
-          <div class="receipt-line"><span>Final Selling Price</span><strong>${formatMoney(sale.sellingPrice || sale.unitPrice)}</strong></div>
-          <div class="receipt-line"><span>Product Discount</span><strong>${sale.typeDiscount}%</strong></div>
-          <div class="receipt-line"><span>Extra Discount</span><strong>${sale.extraDiscount}%</strong></div>
-          <div class="receipt-line"><span>Discount Given</span><strong>${formatMoney(sale.discountGiven || sale.totalDiscountSaved)}</strong></div>
-          <div class="receipt-line"><span>Profit Made</span><strong>${formatMoney(sale.profitMade)}</strong></div>
-          <div class="receipt-line"><span>Profit Margin</span><strong>${Number(sale.profitMargin || 0).toFixed(2)}%</strong></div>
-          <div class="receipt-line"><span>Payment Method</span><strong>${escapeHtml((sale.paymentMethod || '').replaceAll('_', ' ') || '-')}</strong></div>
-          <div class="receipt-line"><span>Payment Ref</span><strong>${escapeHtml(sale.paymentReference || '-')}</strong></div>
-          <div class="receipt-total">Total Paid: ${formatMoney(sale.total)}</div>
+          <div class="receipt-line"><span>Final Price</span><strong>${formatMoney(sale.total)}</strong></div>
           <p class="center small" style="margin-top:20px;">Thank you for shopping with us.</p>
         </div>
       `;
@@ -1832,11 +1830,38 @@
       generateReceiptHTML(sale, true);
     }
 
+    function deleteReceipt(saleId) {
+      if (!requireAdmin()) return;
+      const sale = state.sales.find(s => s.id === saleId);
+      if (!sale) return;
+      if (!confirm(`Delete receipt ${sale.receiptNo}? Stock will not be returned automatically.`)) return;
+      state.sales = state.sales.filter(s => s.id !== saleId);
+      saveState();
+      renderAll();
+      document.getElementById('receiptPrintArea').innerHTML = '';
+      showAlert('globalAlert', 'Receipt deleted successfully.', 'success');
+    }
+
+    function resetDashboardData() {
+      if (!requireAdmin()) return;
+      const sure = confirm('Reset dashboard to zero? This will delete all products and all sales.');
+      if (!sure) return;
+      state.products = [];
+      state.sales = [];
+      state.editingProductId = null;
+      saveState();
+      renderAll();
+      document.getElementById('receiptPrintArea').innerHTML = '';
+      showAlert('globalAlert', 'Dashboard reset complete. Everything is now zero.', 'success');
+    }
+
     function handleSettingsSubmit(event) {
       event.preventDefault();
+      if (!requireAdmin()) return;
       state.settings.shopName = document.getElementById('shopName').value.trim() || 'SmartShop Pro';
       state.settings.currency = document.getElementById('shopCurrency').value.trim() || 'KSh';
       state.settings.tagline = document.getElementById('shopTagline').value.trim() || 'Retail & Wholesale Shop';
+      state.settings.adminEmail = ADMIN_EMAIL;
       saveState();
       document.title = state.settings.shopName;
       renderAll();
@@ -1862,23 +1887,64 @@
 
     function handlePasswordSubmit(event) {
       event.preventDefault();
-      const current = document.getElementById('currentPassword').value;
-      const next = document.getElementById('newPassword').value;
-      const confirmPass = document.getElementById('confirmPassword').value;
-
-      if (current !== state.settings.adminPassword) return showAlert('globalAlert', 'Current password is wrong.', 'error');
-      if (next.length < 4) return showAlert('globalAlert', 'New password must be at least 4 characters.', 'error');
-      if (next !== confirmPass) return showAlert('globalAlert', 'Passwords do not match.', 'error');
-
-      state.settings.adminPassword = next;
-      saveState();
+      if (!requireAdmin()) return;
+      showAlert('globalAlert', 'Supabase Auth password is not changed from this local form. Change it in Supabase Authentication or add a reset-password flow.', 'info');
       document.getElementById('passwordForm').reset();
-      showAlert('globalAlert', 'Admin password changed successfully.', 'success');
+    }
+
+    function handleEmployeeSubmit(event) {
+      event.preventDefault();
+      if (!requireAdmin()) return;
+      const name = document.getElementById('employeeName').value.trim();
+      const email = document.getElementById('employeeEmail').value.trim().toLowerCase();
+      const password = document.getElementById('employeePassword').value;
+
+      if (!name || !email || !password) return showAlert('globalAlert', 'Fill all employee fields.', 'error');
+      if (email === ADMIN_EMAIL.toLowerCase()) return showAlert('globalAlert', 'This email is already used by admin.', 'error');
+      if (state.employees.some(emp => emp.email.toLowerCase() === email)) return showAlert('globalAlert', 'Employee email already exists.', 'error');
+
+      state.employees.push({ id: uid(), name, email, password, role: 'employee' });
+      saveState();
+      document.getElementById('employeeForm').reset();
+      renderEmployees();
+      showAlert('globalAlert', 'Employee added successfully.', 'success');
+    }
+
+    function renderEmployees() {
+      const table = document.getElementById('employeeTable');
+      if (!table) return;
+      if (!state.employees.length) {
+        table.innerHTML = '<tr><td colspan="4" class="muted center">No employees yet.</td></tr>';
+        return;
+      }
+      table.innerHTML = state.employees.map(emp => `
+        <tr>
+          <td>${escapeHtml(emp.name)}</td>
+          <td>${escapeHtml(emp.email)}</td>
+          <td><span class="badge violet">Employee</span></td>
+          <td><button class="btn btn-danger" style="padding:8px 12px;" onclick="deleteEmployee('${emp.id}')">Delete</button></td>
+        </tr>
+      `).join('');
+    }
+
+    function deleteEmployee(id) {
+      if (!requireAdmin()) return;
+      const emp = state.employees.find(e => e.id === id);
+      if (!emp) return;
+      if (!confirm(`Delete employee ${emp.name}?`)) return;
+      state.employees = state.employees.filter(e => e.id !== id);
+      saveState();
+      renderEmployees();
+      showAlert('globalAlert', 'Employee deleted successfully.', 'success');
     }
 
     function exportData() {
       const dataStr = JSON.stringify({
-        settings: state.settings,
+        settings: {
+          ...state.settings,
+          adminEmail: ADMIN_EMAIL
+        },
+        employees: state.employees,
         products: state.products,
         sales: state.sales
       }, null, 2);
@@ -1892,17 +1958,20 @@
     }
 
     function importData(event) {
+      if (!requireAdmin()) return;
       const file = event.target.files[0];
       if (!file) return;
       const reader = new FileReader();
       reader.onload = function(e) {
         try {
           const imported = JSON.parse(e.target.result);
-          state.settings = { ...state.settings, ...(imported.settings || {}) };
+          state.settings = { ...state.settings, ...(imported.settings || {}), adminEmail: ADMIN_EMAIL };
+          state.employees = Array.isArray(imported.employees) ? imported.employees : state.employees;
           state.products = Array.isArray(imported.products) ? imported.products : [];
           state.sales = Array.isArray(imported.sales) ? imported.sales : [];
           saveState();
           renderAll();
+          renderEmployees();
           showAlert('globalAlert', 'Backup imported successfully.', 'success');
         } catch {
           showAlert('globalAlert', 'Invalid backup file.', 'error');
@@ -1921,25 +1990,16 @@
         .replace(/'/g, '&#039;');
     }
 
-    function formatDate(iso) {
-      return new Date(iso).toLocaleDateString();
-    }
-
-    function formatDateTime(iso) {
-      return new Date(iso).toLocaleString();
-    }
-
-    function capitalize(text) {
-      return text ? text.charAt(0).toUpperCase() + text.slice(1) : '';
-    }
+    function formatDate(iso) { return new Date(iso).toLocaleDateString(); }
+    function formatDateTime(iso) { return new Date(iso).toLocaleString(); }
+    function capitalize(text) { return text ? text.charAt(0).toUpperCase() + text.slice(1) : ''; }
+    function uid() { return `id-${Date.now()}-${Math.random().toString(36).slice(2, 9)}`; }
 
     function renderAll() {
       document.title = state.settings.shopName;
       document.querySelectorAll('.brand h1').forEach(el => el.textContent = state.settings.shopName);
-
       const brandParagraphs = document.querySelectorAll('.brand p');
       if (brandParagraphs[0]) brandParagraphs[0].textContent = state.settings.tagline;
-
       renderDashboard();
       refreshCategoryOptions();
       refreshSaleProductOptions();
@@ -1948,20 +2008,59 @@
       updateSalePricePreview();
     }
 
-    document.getElementById('productForm').addEventListener('submit', handleProductSubmit);
-    document.getElementById('saleForm').addEventListener('submit', handleSaleSubmit);
-    document.getElementById('settingsForm').addEventListener('submit', handleSettingsSubmit);
-    document.getElementById('passwordForm').addEventListener('submit', handlePasswordSubmit);
+    document.getElementById('productForm')?.addEventListener('submit', handleProductSubmit);
+    document.getElementById('saleForm')?.addEventListener('submit', handleSaleSubmit);
+    document.getElementById('settingsForm')?.addEventListener('submit', handleSettingsSubmit);
+    document.getElementById('passwordForm')?.addEventListener('submit', handlePasswordSubmit);
+    document.getElementById('employeeForm')?.addEventListener('submit', handleEmployeeSubmit);
     document.getElementById('adminPassword').addEventListener('keydown', (e) => {
-      if (e.key === 'Enter') loginAdmin();
+      if (e.key === 'Enter') loginUser();
     });
 
-    loadState();
-    fillDemoLogin();
+    window.loginUser = loginUser;
+    window.logout = logout;
+    window.showPage = showPage;
+    window.focusProductForm = focusProductForm;
+    window.seedSampleData = seedSampleData;
+    window.renderProducts = renderProducts;
+    window.resetProductForm = resetProductForm;
+    window.editProduct = editProduct;
+    window.deleteProduct = deleteProduct;
+    window.findProductByBarcode = findProductByBarcode;
+    window.updateSalePricePreview = updateSalePricePreview;
+    window.resetSaleForm = resetSaleForm;
+    window.printReceipt = printReceipt;
+    window.deleteReceipt = deleteReceipt;
+    window.resetDashboardData = resetDashboardData;
+    window.deleteEmployee = deleteEmployee;
+    window.exportData = exportData;
+    window.importData = importData;
+    window.togglePaymentReferenceLabel = togglePaymentReferenceLabel;
+    window.socialLoginNotice = socialLoginNotice;
+    window.fillAdminEmail = fillAdminEmail;
+    window.fillDemoEmployee = fillDemoEmployee;
+    window.renderDashboard = renderDashboard;
 
-    if (getSession().loggedIn) {
-      showApp();
+    async function initApp() {
+      loadState();
+
+      const { data } = await supabase.auth.getSession();
+      const session = data.session;
+
+      if (session?.user?.email && session.user.email.toLowerCase() === ADMIN_EMAIL.toLowerCase()) {
+        state.currentUser = {
+          name: 'Admin',
+          email: session.user.email,
+          role: 'admin'
+        };
+        showApp();
+      } else {
+        document.getElementById('loginRole').value = 'admin';
+        document.getElementById('adminEmail').value = ADMIN_EMAIL;
+      }
     }
+
+    initApp();
   </script>
 </body>
 </html>
