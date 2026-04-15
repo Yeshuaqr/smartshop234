@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Retail & Wholesale Shop</title>
+  <title>SmartShop Pro</title>
   <style>
     :root {
       --bg: #0f172a;
@@ -178,8 +178,8 @@
       outline: none;
     }
 
-    input::placeholder, textarea::placeholder { color: #94a3b8; }
     textarea { min-height: 100px; resize: vertical; }
+    input::placeholder, textarea::placeholder { color: #94a3b8; }
 
     table { width: 100%; border-collapse: collapse; margin-top: 12px; }
     th, td {
@@ -280,17 +280,6 @@
       border: 1px solid rgba(255,255,255,.07);
     }
 
-    .social-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-top: 14px; }
-    .social-btn {
-      padding: 12px;
-      border-radius: 14px;
-      background: rgba(255,255,255,.05);
-      border: 1px solid rgba(255,255,255,.08);
-      color: var(--text);
-      cursor: pointer;
-    }
-    .social-btn:hover { background: rgba(255,255,255,.08); }
-
     .alert {
       padding: 12px 14px;
       border-radius: 14px;
@@ -337,13 +326,33 @@
     .chart-wrap { position: relative; height: 340px; margin-top: 12px; }
 
     .role-admin-only { display: block; }
-    .role-employee-only { display: none; }
 
     .quick-box {
       border: 1px solid rgba(255,255,255,.07);
       background: rgba(255,255,255,.03);
       border-radius: 16px;
       padding: 14px;
+    }
+
+    .loading-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(2, 6, 23, 0.7);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+      backdrop-filter: blur(6px);
+    }
+
+    .loading-overlay.show { display: flex; }
+
+    .loading-box {
+      background: rgba(17,24,39,.95);
+      border: 1px solid rgba(255,255,255,.08);
+      border-radius: 20px;
+      padding: 18px 22px;
+      box-shadow: var(--shadow);
     }
 
     @media (max-width: 1300px) { .stats { grid-template-columns: repeat(3, 1fr); } }
@@ -357,7 +366,6 @@
 
     @media (max-width: 720px) {
       .form-grid { grid-template-columns: 1fr; }
-      .social-grid { grid-template-columns: 1fr; }
       .main { padding: 16px; }
       .login-left, .login-right { padding: 22px; }
       .topbar h2 { font-size: 1.35rem; }
@@ -379,6 +387,10 @@
   </style>
 </head>
 <body>
+  <div id="loadingOverlay" class="loading-overlay">
+    <div class="loading-box">Please wait...</div>
+  </div>
+
   <section id="loginScreen" class="login-screen">
     <div class="login-card">
       <div class="login-left">
@@ -391,20 +403,20 @@
         </div>
 
         <h2 class="big-title">One powerful shop website for <span style="color:#7dd3fc">retail</span> and <span style="color:#f9a8d4">wholesale</span>.</h2>
-        <p class="muted">Manage stock, barcode scanning, receipts, employees, discounts, negotiated price, profit and dashboard monitoring in one place.</p>
+        <p class="muted">This version saves products and sales in Supabase, so the same data appears on every device.</p>
 
         <div class="feature-list">
-          <div class="feature-item">📦 Add, edit and remove products with stock tracking</div>
-          <div class="feature-item">🔎 Barcode input and scanner-friendly sale search</div>
-          <div class="feature-item">🧾 Print and delete receipts anytime</div>
-          <div class="feature-item">👤 Admin and Employee login roles</div>
+          <div class="feature-item">📦 Products shared across all devices</div>
+          <div class="feature-item">🧾 Sales and receipts saved online</div>
+          <div class="feature-item">🔎 Barcode search and scanner-friendly sale entry</div>
+          <div class="feature-item">📊 Live dashboard with revenue, profit and stock tracking</div>
         </div>
       </div>
 
       <div class="login-right">
         <div class="section-title">
-          <h3>Login</h3>
-          <span class="badge info">Multi Role Access</span>
+          <h3>Admin Login</h3>
+          <span class="badge info">Supabase Auth</span>
         </div>
 
         <div id="loginAlert" class="alert"></div>
@@ -419,7 +431,7 @@
           </div>
           <div class="form-group full">
             <label for="adminEmail">Email</label>
-            <input type="email" id="adminEmail" placeholder="Enter your email" />
+            <input type="email" id="adminEmail" placeholder="Enter admin email" />
           </div>
           <div class="form-group full">
             <label for="adminPassword">Password</label>
@@ -434,23 +446,9 @@
         </div>
 
         <p class="footer-note">
-          Admin login uses <b>Supabase Auth</b><br>
-          Demo Employee: <b>employee@shop.com</b> / <b>employee123</b>
+          Admin uses Supabase Auth.<br>
+          Employee demo: <b>employee@shop.com</b> / <b>employee123</b>
         </p>
-
-        <div class="section-title" style="margin-top:26px;">
-          <h3>Social Sign-In Buttons</h3>
-          <span class="badge warning">UI Demo</span>
-        </div>
-        <p class="muted small">These are design buttons only. Real social login needs provider setup inside Supabase after hosting.</p>
-        <div class="social-grid">
-          <button class="social-btn" onclick="socialLoginNotice('Google')">🔵 Continue with Google</button>
-          <button class="social-btn" onclick="socialLoginNotice('Facebook')">📘 Continue with Facebook</button>
-          <button class="social-btn" onclick="socialLoginNotice('Instagram')">📸 Continue with Instagram</button>
-          <button class="social-btn" onclick="socialLoginNotice('X / Twitter')">✖️ Continue with X</button>
-          <button class="social-btn" onclick="socialLoginNotice('TikTok')">🎵 Continue with TikTok</button>
-          <button class="social-btn" onclick="socialLoginNotice('LinkedIn')">💼 Continue with LinkedIn</button>
-        </div>
       </div>
     </div>
   </section>
@@ -461,7 +459,7 @@
         <div class="brand">
           <div class="brand-logo">S</div>
           <div>
-            <h1>SmartShop Pro</h1>
+            <h1 id="brandNameSidebar">SmartShop Pro</h1>
             <p id="loggedInUser">Admin Panel</p>
           </div>
         </div>
@@ -471,12 +469,12 @@
         <button class="nav-btn" data-page="salesPage" onclick="showPage('salesPage', this)">🛒 Make Sale</button>
         <button class="nav-btn" data-page="receiptsPage" onclick="showPage('receiptsPage', this)">🧾 Receipts</button>
         <button class="nav-btn role-admin-only" data-page="employeesPage" onclick="showPage('employeesPage', this)">👥 Employees</button>
-        <button class="nav-btn role-admin-only" data-page="settingsPage" onclick="showPage('settingsPage', this)">⚙️ Admin Settings</button>
+        <button class="nav-btn" data-page="settingsPage" onclick="showPage('settingsPage', this)">⚙️ Settings</button>
 
         <div class="sidebar-footer">
           <div class="small muted">Quick Actions</div>
           <div style="display:grid; gap:10px; margin-top:10px;">
-            <button class="btn btn-success role-admin-only" onclick="showPage('productsPage'); focusProductForm()">+ Add Product</button>
+            <button class="btn btn-success" onclick="showPage('productsPage'); focusProductForm()">+ Add Product</button>
             <button class="btn btn-warning" onclick="showPage('salesPage')">+ New Sale</button>
             <button class="btn btn-danger" onclick="logout()">Logout</button>
           </div>
@@ -493,10 +491,8 @@
               <p>Monitor sales, stock, discounts, profit and performance.</p>
             </div>
             <div class="topbar-actions">
-              <button class="btn btn-primary role-admin-only" onclick="seedSampleData()">Load Sample Data</button>
-              <button class="btn btn-dark" onclick="exportData()">Export Backup</button>
-              <label class="btn btn-success role-admin-only" for="importFile" style="display:inline-flex; align-items:center;">Import Backup</label>
-              <input id="importFile" type="file" accept="application/json" class="hidden" onchange="importData(event)" />
+              <button class="btn btn-primary" onclick="seedSampleData()">Load Sample Data</button>
+              <button class="btn btn-dark" onclick="reloadAllData()">Refresh From Database</button>
               <button class="btn btn-danger role-admin-only" onclick="resetDashboardData()">Reset Dashboard To Zero</button>
             </div>
           </div>
@@ -594,10 +590,10 @@
           </div>
 
           <div class="grid two-col">
-            <div class="card role-admin-only">
+            <div class="card">
               <div class="section-title">
                 <h3 id="productFormTitle">Add New Product</h3>
-                <span class="badge success">Inventory Manager</span>
+                <span class="badge success">Database Storage</span>
               </div>
               <form id="productForm" class="form-grid">
                 <div class="form-group">
@@ -662,7 +658,7 @@
             <div class="card" style="grid-column: span 1;">
               <div class="section-title">
                 <h3>Find Products</h3>
-                <span class="badge pink">Smart Filter</span>
+                <span class="badge pink">Shared Online Data</span>
               </div>
               <div class="toolbar">
                 <input id="searchProducts" placeholder="Search product name or barcode..." oninput="renderProducts()" />
@@ -699,7 +695,7 @@
             <div class="card">
               <div class="section-title">
                 <h3>Sale Entry</h3>
-                <span class="badge success">Auto Stock Update</span>
+                <span class="badge success">Saved To Supabase</span>
               </div>
               <form id="saleForm" class="form-grid">
                 <div class="form-group full">
@@ -866,11 +862,11 @@
           </div>
         </section>
 
-        <section id="settingsPage" class="page hidden role-admin-only">
+        <section id="settingsPage" class="page hidden">
           <div class="topbar">
             <div>
-              <h2>Admin Settings</h2>
-              <p>Update shop name, currency and admin password.</p>
+              <h2>Settings</h2>
+              <p>Update shop name, currency and tagline. These are local display settings for this browser.</p>
             </div>
           </div>
 
@@ -901,27 +897,58 @@
 
             <div class="card">
               <div class="section-title">
-                <h3>Change Admin Password</h3>
-                <span class="badge warning">Secure Access</span>
+                <h3>Database Setup</h3>
+                <span class="badge warning">Run SQL First</span>
               </div>
-              <form id="passwordForm" class="form-grid">
-                <div class="form-group full">
-                  <label for="currentPassword">Current Password</label>
-                  <input id="currentPassword" type="password" />
-                </div>
-                <div class="form-group full">
-                  <label for="newPassword">New Password</label>
-                  <input id="newPassword" type="password" />
-                </div>
-                <div class="form-group full">
-                  <label for="confirmPassword">Confirm New Password</label>
-                  <input id="confirmPassword" type="password" />
-                </div>
-                <div class="form-group full">
-                  <button type="submit" class="btn btn-warning">Update Password</button>
-                </div>
-              </form>
-              <p class="footer-note">This changes only local admin password display. Real Supabase admin password is changed from Supabase Auth dashboard or reset flow.</p>
+              <div class="quick-box small" style="white-space:pre-wrap; line-height:1.55;">
+Run these tables in Supabase SQL Editor:
+
+products
+- id bigint generated by default as identity primary key
+- name text not null
+- category text
+- barcode text unique
+- cost_price numeric default 0
+- marked_price numeric default 0
+- retail_price numeric default 0
+- wholesale_price numeric default 0
+- stock integer default 0
+- unit text default 'pcs'
+- low_stock_threshold integer default 5
+- retail_discount numeric default 0
+- wholesale_discount numeric default 0
+- description text
+- created_at timestamptz default now()
+
+sales
+- id bigint generated by default as identity primary key
+- receipt_no text not null unique
+- customer_name text not null
+- customer_phone text
+- notes text
+- product_id bigint
+- product_name text not null
+- barcode text
+- sale_type text not null
+- quantity integer not null
+- unit text
+- cost_price numeric default 0
+- marked_price numeric default 0
+- selling_price numeric default 0
+- unit_price numeric default 0
+- base_unit_price numeric default 0
+- type_discount numeric default 0
+- extra_discount numeric default 0
+- total numeric default 0
+- discount_given numeric default 0
+- total_discount_saved numeric default 0
+- profit_made numeric default 0
+- profit_margin numeric default 0
+- payment_method text
+- payment_reference text
+- created_by text
+- created_at timestamptz default now()
+              </div>
             </div>
           </div>
         </section>
@@ -936,14 +963,11 @@
 
     const SUPABASE_URL = 'https://vzmhlhykafcahglkhljw.supabase.co';
     const SUPABASE_ANON_KEY = 'sb_publishable_AdW-VgSNHD2tjZ2kNhgtCA_N4WZcBva';
-
     const ADMIN_EMAIL = 'kariukibenson731@gmail.com';
 
     const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-    const STORAGE_KEYS = {
-      data: 'smartshop_data'
-    };
+    const LOCAL_SETTINGS_KEY = 'smartshop_local_settings_v2';
 
     let salesChart = null;
 
@@ -951,9 +975,7 @@
       settings: {
         shopName: 'SmartShop Pro',
         currency: 'KSh',
-        tagline: 'Retail & Wholesale Shop',
-        adminEmail: ADMIN_EMAIL,
-        adminPassword: ''
+        tagline: 'Retail & Wholesale Shop'
       },
       employees: [
         {
@@ -970,61 +992,34 @@
       currentUser: null
     };
 
-    function defaultData() {
-      return {
-        settings: {
-          shopName: 'SmartShop Pro',
-          currency: 'KSh',
-          tagline: 'Retail & Wholesale Shop',
-          adminEmail: ADMIN_EMAIL,
-          adminPassword: ''
-        },
-        employees: [
-          {
-            id: 'emp-demo-1',
-            name: 'Demo Employee',
-            email: 'employee@shop.com',
-            password: 'employee123',
-            role: 'employee'
-          }
-        ],
-        products: [],
-        sales: []
-      };
-    }
-
-    function loadState() {
-      const saved = localStorage.getItem(STORAGE_KEYS.data);
-      if (saved) {
-        try {
-          const parsed = JSON.parse(saved);
-          state = {
-            settings: { ...defaultData().settings, ...(parsed.settings || {}), adminEmail: ADMIN_EMAIL },
-            employees: Array.isArray(parsed.employees) && parsed.employees.length ? parsed.employees : defaultData().employees,
-            products: Array.isArray(parsed.products) ? parsed.products : [],
-            sales: Array.isArray(parsed.sales) ? parsed.sales : [],
-            editingProductId: null,
-            currentUser: null
-          };
-        } catch (e) {
-          state = { ...defaultData(), editingProductId: null, currentUser: null };
+    function loadLocalSettings() {
+      try {
+        const raw = localStorage.getItem(LOCAL_SETTINGS_KEY);
+        if (!raw) return;
+        const parsed = JSON.parse(raw);
+        state.settings = {
+          ...state.settings,
+          ...(parsed.settings || parsed || {})
+        };
+        if (Array.isArray(parsed.employees) && parsed.employees.length) {
+          state.employees = parsed.employees;
         }
-      } else {
-        state = { ...defaultData(), editingProductId: null, currentUser: null };
-        saveState();
+      } catch (error) {
+        console.error('Failed to load settings', error);
       }
     }
 
-    function saveState() {
-      localStorage.setItem(STORAGE_KEYS.data, JSON.stringify({
-        settings: {
-          ...state.settings,
-          adminEmail: ADMIN_EMAIL
-        },
-        employees: state.employees,
-        products: state.products,
-        sales: state.sales
+    function saveLocalSettings() {
+      localStorage.setItem(LOCAL_SETTINGS_KEY, JSON.stringify({
+        settings: state.settings,
+        employees: state.employees
       }));
+    }
+
+    function setLoading(show, text = 'Please wait...') {
+      const overlay = document.getElementById('loadingOverlay');
+      overlay.classList.toggle('show', !!show);
+      overlay.querySelector('.loading-box').textContent = text;
     }
 
     function formatMoney(value) {
@@ -1042,20 +1037,9 @@
       }, 3500);
     }
 
-    function socialLoginNotice(platform) {
-      showAlert('loginAlert', `${platform} sign-in button is added in UI. Real ${platform} login needs provider setup in Supabase Authentication.`, 'info');
-    }
-
     function fillAdminEmail() {
-      document.getElementById('loginRole').value = 'admin';
       document.getElementById('adminEmail').value = ADMIN_EMAIL;
       document.getElementById('adminPassword').focus();
-    }
-
-    function fillDemoEmployee() {
-      document.getElementById('loginRole').value = 'employee';
-      document.getElementById('adminEmail').value = 'employee@shop.com';
-      document.getElementById('adminPassword').value = 'employee123';
     }
 
     async function loginUser() {
@@ -1068,42 +1052,48 @@
         return;
       }
 
-      if (role === 'admin') {
-        if (email !== ADMIN_EMAIL.toLowerCase()) {
-          showAlert('loginAlert', 'This email is not the configured admin email.', 'error');
-          return;
-        }
-
-        const { data, error } = await supabase.auth.signInWithPassword({
-          email,
-          password
-        });
-
-        if (error || !data.user) {
-          showAlert('loginAlert', error?.message || 'Admin login failed.', 'error');
+      if (role === 'employee') {
+        const employee = state.employees.find(emp => emp.email.toLowerCase() === email && emp.password === password);
+        if (!employee) {
+          showAlert('loginAlert', 'Wrong employee email or password.', 'error');
           return;
         }
 
         state.currentUser = {
-          name: 'Admin',
-          email: data.user.email,
-          role: 'admin'
+          name: employee.name,
+          email: employee.email,
+          role: 'employee'
         };
 
+        await reloadAllData();
         showApp();
-        showAlert('globalAlert', 'Admin login successful with Supabase.', 'success');
+        showAlert('globalAlert', `Welcome ${employee.name}.`, 'success');
         return;
       }
 
-      const employee = state.employees.find(emp => emp.email.toLowerCase() === email && emp.password === password);
-      if (!employee) {
-        showAlert('loginAlert', 'Wrong employee email or password.', 'error');
+      if (email !== ADMIN_EMAIL.toLowerCase()) {
+        showAlert('loginAlert', 'This email is not the configured admin email.', 'error');
         return;
       }
 
-      state.currentUser = { name: employee.name, email: employee.email, role: 'employee' };
+      setLoading(true, 'Logging in...');
+      const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+      setLoading(false);
+
+      if (error || !data.user) {
+        showAlert('loginAlert', error?.message || 'Admin login failed.', 'error');
+        return;
+      }
+
+      state.currentUser = {
+        name: 'Admin',
+        email: data.user.email,
+        role: 'admin'
+      };
+
+      await reloadAllData();
       showApp();
-      showAlert('globalAlert', `Welcome ${employee.name}.`, 'success');
+      showAlert('globalAlert', 'Admin login successful with Supabase.', 'success');
     }
 
     async function logout() {
@@ -1114,19 +1104,28 @@
       document.getElementById('appScreen').classList.add('hidden');
       document.getElementById('loginScreen').classList.remove('hidden');
       document.getElementById('adminPassword').value = '';
+      document.getElementById('loginRole').value = 'admin';
     }
 
     function applyRoleUI() {
-      const role = state.currentUser?.role || 'employee';
-      const isAdmin = role === 'admin';
-
+      const isAdmin = state.currentUser?.role === 'admin';
       document.querySelectorAll('.role-admin-only').forEach(el => {
         el.style.display = isAdmin ? '' : 'none';
       });
+    }
 
-      document.querySelectorAll('.role-employee-only').forEach(el => {
-        el.style.display = isAdmin ? 'none' : '';
-      });
+    function requireAdmin() {
+      if (state.currentUser?.role !== 'admin') {
+        showAlert('globalAlert', 'Only admin can do this action.', 'error');
+        return false;
+      }
+      return true;
+    }
+
+    function fillDemoEmployee() {
+      document.getElementById('loginRole').value = 'employee';
+      document.getElementById('adminEmail').value = 'employee@shop.com';
+      document.getElementById('adminPassword').value = 'employee123';
     }
 
     function showApp() {
@@ -1139,7 +1138,6 @@
       togglePaymentReferenceLabel();
       applyRoleUI();
       renderAll();
-      renderEmployees();
     }
 
     function showPage(pageId, el = null) {
@@ -1154,76 +1152,168 @@
     }
 
     function focusProductForm() {
-      const field = document.getElementById('productName');
-      if (field) field.focus();
+      document.getElementById('productName')?.focus();
     }
 
-    function requireAdmin() {
-      if (state.currentUser?.role !== 'admin') {
-        showAlert('globalAlert', 'Only admin can do this action.', 'error');
-        return false;
+    async function loadProductsFromSupabase() {
+      const { data, error } = await supabase
+        .from('products')
+        .select('*')
+        .order('created_at', { ascending: false });
+
+      if (error) {
+        console.error(error);
+        throw new Error(error.message || 'Failed to load products');
       }
-      return true;
+
+      state.products = (data || []).map(item => ({
+        id: item.id,
+        name: item.name,
+        category: item.category || '',
+        barcode: item.barcode || '',
+        costPrice: Number(item.cost_price || 0),
+        markedPrice: Number(item.marked_price || 0),
+        retailPrice: Number(item.retail_price || 0),
+        wholesalePrice: Number(item.wholesale_price || 0),
+        stock: Number(item.stock || 0),
+        unit: item.unit || 'pcs',
+        lowStockThreshold: Number(item.low_stock_threshold || 0),
+        retailDiscount: Number(item.retail_discount || 0),
+        wholesaleDiscount: Number(item.wholesale_discount || 0),
+        description: item.description || '',
+        createdAt: item.created_at || new Date().toISOString()
+      }));
     }
 
-    function seedSampleData() {
-      if (!requireAdmin()) return;
-      state.products = [
+    async function loadSalesFromSupabase() {
+      const { data, error } = await supabase
+        .from('sales')
+        .select('*')
+        .order('created_at', { ascending: false });
+
+      if (error) {
+        console.error(error);
+        throw new Error(error.message || 'Failed to load sales');
+      }
+
+      state.sales = (data || []).map(item => ({
+        id: item.id,
+        receiptNo: item.receipt_no,
+        customerName: item.customer_name,
+        customerPhone: item.customer_phone || '',
+        notes: item.notes || '',
+        productId: item.product_id || '',
+        productName: item.product_name || '',
+        barcode: item.barcode || '',
+        saleType: item.sale_type || 'retail',
+        quantity: Number(item.quantity || 0),
+        unit: item.unit || 'pcs',
+        costPrice: Number(item.cost_price || 0),
+        markedPrice: Number(item.marked_price || 0),
+        sellingPrice: Number(item.selling_price || 0),
+        unitPrice: Number(item.unit_price || 0),
+        baseUnitPrice: Number(item.base_unit_price || 0),
+        typeDiscount: Number(item.type_discount || 0),
+        extraDiscount: Number(item.extra_discount || 0),
+        total: Number(item.total || 0),
+        discountGiven: Number(item.discount_given || 0),
+        totalDiscountSaved: Number(item.total_discount_saved || 0),
+        profitMade: Number(item.profit_made || 0),
+        profitMargin: Number(item.profit_margin || 0),
+        paymentMethod: item.payment_method || '',
+        paymentReference: item.payment_reference || '',
+        createdBy: item.created_by || '',
+        createdAt: item.created_at || new Date().toISOString()
+      }));
+    }
+
+    async function reloadAllData() {
+      try {
+        setLoading(true, 'Loading database data...');
+        await Promise.all([loadProductsFromSupabase(), loadSalesFromSupabase()]);
+        renderAll();
+      } catch (error) {
+        showAlert('globalAlert', error.message || 'Failed to load data from database.', 'error');
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    async function seedSampleData() {
+      const { count, error: countError } = await supabase
+        .from('products')
+        .select('*', { count: 'exact', head: true });
+
+      if (countError) {
+        showAlert('globalAlert', countError.message || 'Could not check products.', 'error');
+        return;
+      }
+
+      if ((count || 0) > 0) {
+        showAlert('globalAlert', 'Products already exist. Sample data was not added.', 'info');
+        return;
+      }
+
+      const sampleProducts = [
         {
-          id: uid(),
           name: 'Cooking Oil 1L',
           category: 'Grocery',
           barcode: '1001001001',
-          costPrice: 240,
-          markedPrice: 350,
-          retailPrice: 320,
-          wholesalePrice: 280,
+          cost_price: 240,
+          marked_price: 350,
+          retail_price: 320,
+          wholesale_price: 280,
           stock: 45,
           unit: 'bottles',
-          lowStockThreshold: 6,
-          retailDiscount: 5,
-          wholesaleDiscount: 8,
-          description: 'Fresh cooking oil bottle 1 litre.',
-          createdAt: new Date().toISOString()
+          low_stock_threshold: 6,
+          retail_discount: 5,
+          wholesale_discount: 8,
+          description: 'Fresh cooking oil bottle 1 litre.'
         },
         {
-          id: uid(),
           name: 'Sugar 2KG',
           category: 'Grocery',
           barcode: '1001001002',
-          costPrice: 180,
-          markedPrice: 280,
-          retailPrice: 260,
-          wholesalePrice: 230,
+          cost_price: 180,
+          marked_price: 280,
+          retail_price: 260,
+          wholesale_price: 230,
           stock: 18,
           unit: 'packs',
-          lowStockThreshold: 5,
-          retailDiscount: 0,
-          wholesaleDiscount: 6,
-          description: 'White sugar 2KG pack.',
-          createdAt: new Date().toISOString()
+          low_stock_threshold: 5,
+          retail_discount: 0,
+          wholesale_discount: 6,
+          description: 'White sugar 2KG pack.'
         },
         {
-          id: uid(),
           name: 'Soft Drink 500ml',
           category: 'Beverages',
           barcode: '1001001003',
-          costPrice: 35,
-          markedPrice: 80,
-          retailPrice: 70,
-          wholesalePrice: 55,
+          cost_price: 35,
+          marked_price: 80,
+          retail_price: 70,
+          wholesale_price: 55,
           stock: 7,
           unit: 'bottles',
-          lowStockThreshold: 10,
-          retailDiscount: 0,
-          wholesaleDiscount: 5,
-          description: 'Cold drink for retail and wholesale.',
-          createdAt: new Date().toISOString()
+          low_stock_threshold: 10,
+          retail_discount: 0,
+          wholesale_discount: 5,
+          description: 'Cold drink for retail and wholesale.'
         }
       ];
-      saveState();
-      renderAll();
-      showAlert('globalAlert', 'Sample data added successfully.', 'success');
+
+      setLoading(true, 'Adding sample data...');
+      const { error } = await supabase.from('products').insert(sampleProducts);
+      setLoading(false);
+
+      if (error) {
+        console.error(error);
+        showAlert('globalAlert', error.message || 'Failed to add sample data.', 'error');
+        return;
+      }
+
+      await reloadAllData();
+      showAlert('globalAlert', 'Sample products added successfully.', 'success');
     }
 
     function getCategories() {
@@ -1248,7 +1338,7 @@
       select.innerHTML = state.products.map(p =>
         `<option value="${p.id}">${escapeHtml(p.name)} (${p.stock} ${escapeHtml(p.unit || 'pcs')} in stock)</option>`
       ).join('');
-      if (state.products.some(p => p.id === current)) select.value = current;
+      if (state.products.some(p => String(p.id) === String(current))) select.value = current;
     }
 
     function getStockStatus(product) {
@@ -1298,8 +1388,6 @@
         return;
       }
 
-      const isAdmin = state.currentUser?.role === 'admin';
-
       grid.innerHTML = filtered.map(product => `
         <div class="product-card">
           <div style="display:flex; justify-content:space-between; gap:10px; align-items:flex-start;">
@@ -1323,11 +1411,10 @@
           <div class="small muted">Retail Discount: ${product.retailDiscount || 0}% | Wholesale Discount: ${product.wholesaleDiscount || 0}%</div>
           <p class="footer-note">${escapeHtml(product.description || 'No description')}</p>
           <div class="footer-note">Unit: <b>${escapeHtml(product.unit || 'pcs')}</b></div>
-          ${isAdmin ? `
           <div class="product-actions">
-            <button class="btn btn-primary" onclick="editProduct('${product.id}')">Edit</button>
-            <button class="btn btn-danger" onclick="deleteProduct('${product.id}')">Delete</button>
-          </div>` : ''}
+            <button class="btn btn-primary" onclick="editProduct(${product.id})">Edit</button>
+            <button class="btn btn-danger" onclick="deleteProduct(${product.id})">Delete</button>
+          </div>
         </div>
       `).join('');
     }
@@ -1344,16 +1431,12 @@
       document.getElementById('lowStockThreshold').value = 5;
       document.getElementById('retailDiscount').value = 0;
       document.getElementById('wholesaleDiscount').value = 0;
-      document.getElementById('productUnit').value = '';
-      document.getElementById('costPrice').value = '';
-      document.getElementById('markedPrice').value = '';
       document.getElementById('productFormTitle').textContent = 'Add New Product';
       document.getElementById('saveProductBtn').textContent = 'Save Product';
     }
 
     function editProduct(id) {
-      if (!requireAdmin()) return;
-      const product = state.products.find(p => p.id === id);
+      const product = state.products.find(p => String(p.id) === String(id));
       if (!product) return;
       state.editingProductId = id;
       document.getElementById('productFormTitle').textContent = 'Edit Product';
@@ -1375,55 +1458,76 @@
       focusProductForm();
     }
 
-    function deleteProduct(id) {
+    async function deleteProduct(id) {
       if (!requireAdmin()) return;
-      const product = state.products.find(p => p.id === id);
+      const product = state.products.find(p => String(p.id) === String(id));
       if (!product) return;
       if (!confirm(`Delete ${product.name}?`)) return;
-      state.products = state.products.filter(p => p.id !== id);
-      saveState();
-      renderAll();
+
+      setLoading(true, 'Deleting product...');
+      const { error } = await supabase.from('products').delete().eq('id', id);
+      setLoading(false);
+
+      if (error) {
+        console.error(error);
+        showAlert('globalAlert', error.message || 'Failed to delete product.', 'error');
+        return;
+      }
+
+      await reloadAllData();
       showAlert('globalAlert', 'Product deleted successfully.', 'success');
     }
 
-    function handleProductSubmit(event) {
+    async function handleProductSubmit(event) {
       event.preventDefault();
       if (!requireAdmin()) return;
 
       const product = {
         name: document.getElementById('productName').value.trim(),
         category: document.getElementById('productCategory').value.trim(),
-        barcode: document.getElementById('productBarcode').value.trim(),
-        costPrice: Number(document.getElementById('costPrice').value),
-        markedPrice: Number(document.getElementById('markedPrice').value),
-        retailPrice: Number(document.getElementById('retailPrice').value),
-        wholesalePrice: Number(document.getElementById('wholesalePrice').value),
+        barcode: document.getElementById('productBarcode').value.trim() || null,
+        cost_price: Number(document.getElementById('costPrice').value),
+        marked_price: Number(document.getElementById('markedPrice').value),
+        retail_price: Number(document.getElementById('retailPrice').value),
+        wholesale_price: Number(document.getElementById('wholesalePrice').value),
         stock: Number(document.getElementById('productStock').value),
         unit: document.getElementById('productUnit').value.trim() || 'pcs',
-        lowStockThreshold: Number(document.getElementById('lowStockThreshold').value || 0),
-        retailDiscount: Number(document.getElementById('retailDiscount').value || 0),
-        wholesaleDiscount: Number(document.getElementById('wholesaleDiscount').value || 0),
+        low_stock_threshold: Number(document.getElementById('lowStockThreshold').value || 0),
+        retail_discount: Number(document.getElementById('retailDiscount').value || 0),
+        wholesale_discount: Number(document.getElementById('wholesaleDiscount').value || 0),
         description: document.getElementById('productDescription').value.trim()
       };
 
-      if (!product.name) return showAlert('globalAlert', 'Product name is required.', 'error');
-      if ([product.costPrice, product.markedPrice, product.retailPrice, product.wholesalePrice, product.stock].some(v => Number.isNaN(v) || v < 0)) {
-        return showAlert('globalAlert', 'Invalid product values.', 'error');
+      if (!product.name) {
+        showAlert('globalAlert', 'Product name is required.', 'error');
+        return;
       }
 
-      const barcodeUsedByAnother = product.barcode && state.products.some(p => p.barcode === product.barcode && p.id !== state.editingProductId);
-      if (barcodeUsedByAnother) return showAlert('globalAlert', 'This barcode already exists.', 'error');
+      if ([product.cost_price, product.marked_price, product.retail_price, product.wholesale_price, product.stock].some(v => Number.isNaN(v) || v < 0)) {
+        showAlert('globalAlert', 'Invalid product values.', 'error');
+        return;
+      }
+
+      let result;
+      setLoading(true, state.editingProductId ? 'Updating product...' : 'Saving product...');
 
       if (state.editingProductId) {
-        state.products = state.products.map(p => p.id === state.editingProductId ? { ...p, ...product } : p);
+        result = await supabase.from('products').update(product).eq('id', state.editingProductId);
       } else {
-        state.products.unshift({ id: uid(), ...product, createdAt: new Date().toISOString() });
+        result = await supabase.from('products').insert([product]);
       }
 
-      saveState();
+      setLoading(false);
+
+      if (result.error) {
+        console.error(result.error);
+        showAlert('globalAlert', result.error.message || 'Failed to save product.', 'error');
+        return;
+      }
+
+      await reloadAllData();
       showAlert('globalAlert', state.editingProductId ? 'Product updated successfully.' : 'Product added successfully.', 'success');
       resetProductForm();
-      renderAll();
     }
 
     function findProductByBarcode() {
@@ -1442,7 +1546,7 @@
       const extraDiscount = Number(document.getElementById('manualExtraDiscount').value || 0);
       const customSellingPriceInput = document.getElementById('customSellingPrice').value;
       const customSellingPrice = customSellingPriceInput === '' ? null : Number(customSellingPriceInput);
-      const product = state.products.find(p => p.id === productId);
+      const product = state.products.find(p => String(p.id) === String(productId));
 
       if (!product || qty <= 0) return null;
 
@@ -1530,7 +1634,7 @@
       updateSalePricePreview();
     }
 
-    function handleSaleSubmit(event) {
+    async function handleSaleSubmit(event) {
       event.preventDefault();
       const customerName = document.getElementById('customerName').value.trim();
       const customerPhone = document.getElementById('customerPhone').value.trim();
@@ -1545,41 +1649,59 @@
       if (preview.finalUnitPrice < 0) return showAlert('globalAlert', 'Selling price cannot be negative.', 'error');
 
       const receiptNo = `RCPT-${Date.now()}`;
-      const sale = {
-        id: uid(),
-        receiptNo,
-        customerName,
-        customerPhone,
+      const saleInsert = {
+        receipt_no: receiptNo,
+        customer_name: customerName,
+        customer_phone: customerPhone,
         notes: saleNotes,
-        productId: preview.product.id,
-        productName: preview.product.name,
+        product_id: preview.product.id,
+        product_name: preview.product.name,
         barcode: preview.product.barcode || '',
-        saleType: preview.saleType,
+        sale_type: preview.saleType,
         quantity: preview.qty,
         unit: preview.product.unit || 'pcs',
-        costPrice: preview.costPrice,
-        markedPrice: preview.markedPrice,
-        sellingPrice: preview.finalUnitPrice,
-        unitPrice: preview.finalUnitPrice,
-        baseUnitPrice: preview.basePrice,
-        typeDiscount: preview.typeDiscount,
-        extraDiscount: preview.extraDiscount,
+        cost_price: preview.costPrice,
+        marked_price: preview.markedPrice,
+        selling_price: preview.finalUnitPrice,
+        unit_price: preview.finalUnitPrice,
+        base_unit_price: preview.basePrice,
+        type_discount: preview.typeDiscount,
+        extra_discount: preview.extraDiscount,
         total: preview.finalTotal,
-        discountGiven: preview.discountGiven,
-        totalDiscountSaved: preview.discountGiven,
-        profitMade: preview.profitMade,
-        profitMargin: preview.profitMargin,
-        paymentMethod,
-        paymentReference,
-        createdBy: state.currentUser?.email || 'unknown',
-        createdAt: new Date().toISOString()
+        discount_given: preview.discountGiven,
+        total_discount_saved: preview.discountGiven,
+        profit_made: preview.profitMade,
+        profit_margin: preview.profitMargin,
+        payment_method: paymentMethod,
+        payment_reference: paymentReference,
+        created_by: state.currentUser?.email || ADMIN_EMAIL
       };
 
-      state.sales.unshift(sale);
-      state.products = state.products.map(p => p.id === preview.product.id ? { ...p, stock: p.stock - preview.qty } : p);
-      saveState();
-      renderAll();
-      generateReceiptHTML(sale, true);
+      setLoading(true, 'Completing sale...');
+
+      const { error: insertSaleError } = await supabase.from('sales').insert([saleInsert]);
+      if (insertSaleError) {
+        setLoading(false);
+        console.error(insertSaleError);
+        return showAlert('globalAlert', insertSaleError.message || 'Failed to save sale.', 'error');
+      }
+
+      const newStock = preview.product.stock - preview.qty;
+      const { error: updateStockError } = await supabase
+        .from('products')
+        .update({ stock: newStock })
+        .eq('id', preview.product.id);
+
+      setLoading(false);
+
+      if (updateStockError) {
+        console.error(updateStockError);
+        return showAlert('globalAlert', updateStockError.message || 'Sale saved but stock update failed.', 'error');
+      }
+
+      await reloadAllData();
+      const savedSale = state.sales.find(s => s.receiptNo === receiptNo);
+      if (savedSale) generateReceiptHTML(savedSale, true);
       showPage('receiptsPage');
       showAlert('globalAlert', 'Sale completed and receipt generated.', 'success');
       resetSaleForm();
@@ -1670,19 +1792,13 @@
           responsive: true,
           maintainAspectRatio: false,
           plugins: {
-            legend: {
-              labels: { color: '#f8fafc' }
-            },
+            legend: { labels: { color: '#f8fafc' } },
             tooltip: {
               callbacks: {
                 label: function(context) {
                   const label = context.dataset.label || '';
                   const value = context.raw || 0;
-
-                  if (label.includes('Margin')) {
-                    return `${label}: ${value}%`;
-                  }
-
+                  if (label.includes('Margin')) return `${label}: ${value}%`;
                   return `${label}: ${formatMoney(value)}`;
                 }
               }
@@ -1697,9 +1813,7 @@
               position: 'left',
               ticks: {
                 color: '#cbd5e1',
-                callback: function(value) {
-                  return formatMoney(value);
-                }
+                callback: function(value) { return formatMoney(value); }
               },
               grid: { color: 'rgba(255,255,255,0.08)' }
             },
@@ -1708,13 +1822,9 @@
               beginAtZero: true,
               ticks: {
                 color: '#cbd5e1',
-                callback: function(value) {
-                  return value + '%';
-                }
+                callback: function(value) { return value + '%'; }
               },
-              grid: {
-                drawOnChartArea: false
-              }
+              grid: { drawOnChartArea: false }
             }
           }
         }
@@ -1783,8 +1893,6 @@
         return;
       }
 
-      const isAdmin = state.currentUser?.role === 'admin';
-
       table.innerHTML = state.sales.map(sale => `
         <tr>
           <td>${sale.receiptNo}</td>
@@ -1796,8 +1904,8 @@
           <td>${Number(sale.profitMargin || 0).toFixed(2)}%</td>
           <td>${formatDate(sale.createdAt)}</td>
           <td style="display:flex; gap:8px; flex-wrap:wrap;">
-            <button class="btn btn-primary" style="padding:8px 12px;" onclick="printReceipt('${sale.id}')">View / Print</button>
-            ${isAdmin ? `<button class="btn btn-danger" style="padding:8px 12px;" onclick="deleteReceipt('${sale.id}')">Delete</button>` : ''}
+            <button class="btn btn-primary" style="padding:8px 12px;" onclick="printReceipt(${sale.id})">View / Print</button>
+            <button class="btn btn-danger" style="padding:8px 12px;" onclick="deleteReceipt(${sale.id})">Delete</button>
           </td>
         </tr>
       `).join('');
@@ -1825,76 +1933,36 @@
     }
 
     function printReceipt(saleId) {
-      const sale = state.sales.find(s => s.id === saleId);
+      const sale = state.sales.find(s => String(s.id) === String(saleId));
       if (!sale) return;
       generateReceiptHTML(sale, true);
     }
 
-    function deleteReceipt(saleId) {
+    async function deleteReceipt(saleId) {
       if (!requireAdmin()) return;
-      const sale = state.sales.find(s => s.id === saleId);
+      const sale = state.sales.find(s => String(s.id) === String(saleId));
       if (!sale) return;
       if (!confirm(`Delete receipt ${sale.receiptNo}? Stock will not be returned automatically.`)) return;
-      state.sales = state.sales.filter(s => s.id !== saleId);
-      saveState();
-      renderAll();
+
+      setLoading(true, 'Deleting receipt...');
+      const { error } = await supabase.from('sales').delete().eq('id', saleId);
+      setLoading(false);
+
+      if (error) {
+        console.error(error);
+        showAlert('globalAlert', error.message || 'Failed to delete receipt.', 'error');
+        return;
+      }
+
+      await reloadAllData();
       document.getElementById('receiptPrintArea').innerHTML = '';
       showAlert('globalAlert', 'Receipt deleted successfully.', 'success');
-    }
-
-    function resetDashboardData() {
-      if (!requireAdmin()) return;
-      const sure = confirm('Reset dashboard to zero? This will delete all products and all sales.');
-      if (!sure) return;
-      state.products = [];
-      state.sales = [];
-      state.editingProductId = null;
-      saveState();
-      renderAll();
-      document.getElementById('receiptPrintArea').innerHTML = '';
-      showAlert('globalAlert', 'Dashboard reset complete. Everything is now zero.', 'success');
-    }
-
-    function handleSettingsSubmit(event) {
-      event.preventDefault();
-      if (!requireAdmin()) return;
-      state.settings.shopName = document.getElementById('shopName').value.trim() || 'SmartShop Pro';
-      state.settings.currency = document.getElementById('shopCurrency').value.trim() || 'KSh';
-      state.settings.tagline = document.getElementById('shopTagline').value.trim() || 'Retail & Wholesale Shop';
-      state.settings.adminEmail = ADMIN_EMAIL;
-      saveState();
-      document.title = state.settings.shopName;
-      renderAll();
-      showAlert('globalAlert', 'Shop settings updated.', 'success');
-    }
-
-    function togglePaymentReferenceLabel() {
-      const method = document.getElementById('paymentMethod')?.value || 'mpesa';
-      const label = document.getElementById('paymentReferenceLabel');
-      const input = document.getElementById('paymentReference');
-      if (!label || !input) return;
-      if (method === 'paypal') {
-        label.textContent = 'PayPal Transaction ID / Email';
-        input.placeholder = 'e.g. PAYID-12345 or buyer@email.com';
-      } else if (method === 'cash') {
-        label.textContent = 'Cash Reference';
-        input.placeholder = 'e.g. CASH-001 or Paid in cash';
-      } else {
-        label.textContent = 'Phone / Transaction Ref';
-        input.placeholder = 'e.g. 0712345678 or TXN123';
-      }
-    }
-
-    function handlePasswordSubmit(event) {
-      event.preventDefault();
-      if (!requireAdmin()) return;
-      showAlert('globalAlert', 'Supabase Auth password is not changed from this local form. Change it in Supabase Authentication or add a reset-password flow.', 'info');
-      document.getElementById('passwordForm').reset();
     }
 
     function handleEmployeeSubmit(event) {
       event.preventDefault();
       if (!requireAdmin()) return;
+
       const name = document.getElementById('employeeName').value.trim();
       const email = document.getElementById('employeeEmail').value.trim().toLowerCase();
       const password = document.getElementById('employeePassword').value;
@@ -1903,8 +1971,8 @@
       if (email === ADMIN_EMAIL.toLowerCase()) return showAlert('globalAlert', 'This email is already used by admin.', 'error');
       if (state.employees.some(emp => emp.email.toLowerCase() === email)) return showAlert('globalAlert', 'Employee email already exists.', 'error');
 
-      state.employees.push({ id: uid(), name, email, password, role: 'employee' });
-      saveState();
+      state.employees.push({ id: `emp-${Date.now()}`, name, email, password, role: 'employee' });
+      saveLocalSettings();
       document.getElementById('employeeForm').reset();
       renderEmployees();
       showAlert('globalAlert', 'Employee added successfully.', 'success');
@@ -1933,52 +2001,67 @@
       if (!emp) return;
       if (!confirm(`Delete employee ${emp.name}?`)) return;
       state.employees = state.employees.filter(e => e.id !== id);
-      saveState();
+      saveLocalSettings();
       renderEmployees();
       showAlert('globalAlert', 'Employee deleted successfully.', 'success');
     }
 
-    function exportData() {
-      const dataStr = JSON.stringify({
-        settings: {
-          ...state.settings,
-          adminEmail: ADMIN_EMAIL
-        },
-        employees: state.employees,
-        products: state.products,
-        sales: state.sales
-      }, null, 2);
-      const blob = new Blob([dataStr], { type: 'application/json' });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = 'smartshop-backup.json';
-      a.click();
-      URL.revokeObjectURL(url);
+    async function resetDashboardData() {
+      if (!requireAdmin()) return;
+      const sure = confirm('Reset dashboard to zero? This will delete all products and all sales from Supabase.');
+      if (!sure) return;
+
+      setLoading(true, 'Resetting dashboard...');
+
+      const salesDelete = await supabase
+        .from('sales')
+        .delete()
+        .gt('id', 0);
+
+      const productsDelete = await supabase
+        .from('products')
+        .delete()
+        .gt('id', 0);
+
+      setLoading(false);
+
+      if (salesDelete.error || productsDelete.error) {
+        console.error(salesDelete.error || productsDelete.error);
+        showAlert('globalAlert', salesDelete.error?.message || productsDelete.error?.message || 'Reset failed.', 'error');
+        return;
+      }
+
+      await reloadAllData();
+      document.getElementById('receiptPrintArea').innerHTML = '';
+      showAlert('globalAlert', 'Dashboard reset complete. Everything is now zero.', 'success');
     }
 
-    function importData(event) {
-      if (!requireAdmin()) return;
-      const file = event.target.files[0];
-      if (!file) return;
-      const reader = new FileReader();
-      reader.onload = function(e) {
-        try {
-          const imported = JSON.parse(e.target.result);
-          state.settings = { ...state.settings, ...(imported.settings || {}), adminEmail: ADMIN_EMAIL };
-          state.employees = Array.isArray(imported.employees) ? imported.employees : state.employees;
-          state.products = Array.isArray(imported.products) ? imported.products : [];
-          state.sales = Array.isArray(imported.sales) ? imported.sales : [];
-          saveState();
-          renderAll();
-          renderEmployees();
-          showAlert('globalAlert', 'Backup imported successfully.', 'success');
-        } catch {
-          showAlert('globalAlert', 'Invalid backup file.', 'error');
-        }
-      };
-      reader.readAsText(file);
-      event.target.value = '';
+    function handleSettingsSubmit(event) {
+      event.preventDefault();
+      state.settings.shopName = document.getElementById('shopName').value.trim() || 'SmartShop Pro';
+      state.settings.currency = document.getElementById('shopCurrency').value.trim() || 'KSh';
+      state.settings.tagline = document.getElementById('shopTagline').value.trim() || 'Retail & Wholesale Shop';
+      saveLocalSettings();
+      document.title = state.settings.shopName;
+      renderAll();
+      showAlert('globalAlert', 'Local display settings updated.', 'success');
+    }
+
+    function togglePaymentReferenceLabel() {
+      const method = document.getElementById('paymentMethod')?.value || 'mpesa';
+      const label = document.getElementById('paymentReferenceLabel');
+      const input = document.getElementById('paymentReference');
+      if (!label || !input) return;
+      if (method === 'paypal') {
+        label.textContent = 'PayPal Transaction ID / Email';
+        input.placeholder = 'e.g. PAYID-12345 or buyer@email.com';
+      } else if (method === 'cash') {
+        label.textContent = 'Cash Reference';
+        input.placeholder = 'e.g. CASH-001 or Paid in cash';
+      } else {
+        label.textContent = 'Phone / Transaction Ref';
+        input.placeholder = 'e.g. 0712345678 or TXN123';
+      }
     }
 
     function escapeHtml(value) {
@@ -1993,25 +2076,22 @@
     function formatDate(iso) { return new Date(iso).toLocaleDateString(); }
     function formatDateTime(iso) { return new Date(iso).toLocaleString(); }
     function capitalize(text) { return text ? text.charAt(0).toUpperCase() + text.slice(1) : ''; }
-    function uid() { return `id-${Date.now()}-${Math.random().toString(36).slice(2, 9)}`; }
 
     function renderAll() {
       document.title = state.settings.shopName;
-      document.querySelectorAll('.brand h1').forEach(el => el.textContent = state.settings.shopName);
-      const brandParagraphs = document.querySelectorAll('.brand p');
-      if (brandParagraphs[0]) brandParagraphs[0].textContent = state.settings.tagline;
+      document.getElementById('brandNameSidebar').textContent = state.settings.shopName;
       renderDashboard();
       refreshCategoryOptions();
       refreshSaleProductOptions();
       renderProducts();
       renderReceipts();
+      renderEmployees();
       updateSalePricePreview();
     }
 
     document.getElementById('productForm')?.addEventListener('submit', handleProductSubmit);
     document.getElementById('saleForm')?.addEventListener('submit', handleSaleSubmit);
     document.getElementById('settingsForm')?.addEventListener('submit', handleSettingsSubmit);
-    document.getElementById('passwordForm')?.addEventListener('submit', handlePasswordSubmit);
     document.getElementById('employeeForm')?.addEventListener('submit', handleEmployeeSubmit);
     document.getElementById('adminPassword').addEventListener('keydown', (e) => {
       if (e.key === 'Enter') loginUser();
@@ -2031,18 +2111,17 @@
     window.resetSaleForm = resetSaleForm;
     window.printReceipt = printReceipt;
     window.deleteReceipt = deleteReceipt;
-    window.resetDashboardData = resetDashboardData;
-    window.deleteEmployee = deleteEmployee;
-    window.exportData = exportData;
-    window.importData = importData;
     window.togglePaymentReferenceLabel = togglePaymentReferenceLabel;
-    window.socialLoginNotice = socialLoginNotice;
     window.fillAdminEmail = fillAdminEmail;
-    window.fillDemoEmployee = fillDemoEmployee;
     window.renderDashboard = renderDashboard;
+    window.reloadAllData = reloadAllData;
+    window.fillDemoEmployee = fillDemoEmployee;
+    window.deleteEmployee = deleteEmployee;
+    window.resetDashboardData = resetDashboardData;
 
     async function initApp() {
-      loadState();
+      loadLocalSettings();
+      document.getElementById('adminEmail').value = ADMIN_EMAIL;
 
       const { data } = await supabase.auth.getSession();
       const session = data.session;
@@ -2053,10 +2132,8 @@
           email: session.user.email,
           role: 'admin'
         };
+        await reloadAllData();
         showApp();
-      } else {
-        document.getElementById('loginRole').value = 'admin';
-        document.getElementById('adminEmail').value = ADMIN_EMAIL;
       }
     }
 
