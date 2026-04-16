@@ -6,70 +6,30 @@
   <title>SmartShop Pro Multi-Shop</title>
   <style>
     :root{
-      --bg:#0f172a;
-      --panel:#111827;
-      --panel2:#1f2937;
-      --text:#f8fafc;
-      --muted:#cbd5e1;
-      --primary:#38bdf8;
-      --primary-dark:#0284c7;
-      --success:#22c55e;
-      --warning:#f59e0b;
-      --danger:#ef4444;
-      --pink:#ec4899;
-      --violet:#8b5cf6;
-      --shadow:0 10px 25px rgba(0,0,0,.25);
-      --radius:18px;
+      --bg:#0f172a; --panel:#111827; --text:#f8fafc; --muted:#cbd5e1;
+      --primary:#38bdf8; --primary-dark:#0284c7; --success:#22c55e;
+      --warning:#f59e0b; --danger:#ef4444; --pink:#ec4899; --violet:#8b5cf6;
+      --shadow:0 10px 25px rgba(0,0,0,.25); --radius:18px;
     }
     *{box-sizing:border-box;margin:0;padding:0}
-    body{
-      font-family:Arial,Helvetica,sans-serif;
-      background:linear-gradient(135deg,#020617,#0f172a,#111827);
-      color:var(--text);
-      min-height:100vh;
-    }
+    body{font-family:Arial,Helvetica,sans-serif;background:linear-gradient(135deg,#020617,#0f172a,#111827);color:var(--text);min-height:100vh}
     button,input,select,textarea{font:inherit}
     .hidden{display:none!important}
     .app-shell{display:grid;grid-template-columns:260px 1fr;min-height:100vh}
-    .sidebar{
-      background:rgba(17,24,39,.95);
-      border-right:1px solid rgba(255,255,255,.08);
-      padding:24px 16px;
-      position:sticky;top:0;height:100vh;
-      backdrop-filter:blur(12px);
-    }
+    .sidebar{background:rgba(17,24,39,.95);border-right:1px solid rgba(255,255,255,.08);padding:24px 16px;position:sticky;top:0;height:100vh;backdrop-filter:blur(12px)}
     .brand{display:flex;align-items:center;gap:12px;margin-bottom:28px}
-    .brand-logo{
-      width:48px;height:48px;border-radius:14px;
-      background:linear-gradient(135deg,var(--primary),var(--violet),var(--pink));
-      display:grid;place-items:center;font-size:22px;font-weight:bold;box-shadow:var(--shadow)
-    }
+    .brand-logo{width:48px;height:48px;border-radius:14px;background:linear-gradient(135deg,var(--primary),var(--violet),var(--pink));display:grid;place-items:center;font-size:22px;font-weight:bold;box-shadow:var(--shadow)}
     .brand h1{font-size:1.1rem}
     .brand p{color:var(--muted);font-size:.88rem;margin-top:4px}
-    .nav-btn{
-      width:100%;margin-bottom:10px;border:none;border-radius:14px;padding:14px;
-      text-align:left;color:var(--text);background:rgba(255,255,255,.04);cursor:pointer;transition:.2s ease
-    }
-    .nav-btn:hover,.nav-btn.active{
-      background:linear-gradient(135deg,rgba(56,189,248,.25),rgba(139,92,246,.22));
-      transform:translateY(-1px)
-    }
-    .sidebar-footer{
-      position:absolute;left:16px;right:16px;bottom:20px;padding:14px;border-radius:16px;
-      background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.06)
-    }
+    .nav-btn{width:100%;margin-bottom:10px;border:none;border-radius:14px;padding:14px;text-align:left;color:var(--text);background:rgba(255,255,255,.04);cursor:pointer;transition:.2s ease}
+    .nav-btn:hover,.nav-btn.active{background:linear-gradient(135deg,rgba(56,189,248,.25),rgba(139,92,246,.22));transform:translateY(-1px)}
+    .sidebar-footer{position:absolute;left:16px;right:16px;bottom:20px;padding:14px;border-radius:16px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.06)}
     .main{padding:24px}
-    .topbar{
-      display:flex;justify-content:space-between;align-items:center;gap:16px;
-      margin-bottom:22px;flex-wrap:wrap
-    }
+    .topbar{display:flex;justify-content:space-between;align-items:center;gap:16px;margin-bottom:22px;flex-wrap:wrap}
     .topbar h2{font-size:1.8rem}
     .topbar p{color:var(--muted);margin-top:5px}
     .topbar-actions{display:flex;gap:10px;flex-wrap:wrap}
-    .btn{
-      border:none;border-radius:14px;padding:12px 16px;cursor:pointer;color:white;
-      transition:.2s ease;box-shadow:var(--shadow)
-    }
+    .btn{border:none;border-radius:14px;padding:12px 16px;cursor:pointer;color:white;transition:.2s ease;box-shadow:var(--shadow)}
     .btn:hover{transform:translateY(-1px);opacity:.95}
     .btn-primary{background:linear-gradient(135deg,var(--primary),var(--primary-dark))}
     .btn-success{background:linear-gradient(135deg,#16a34a,#22c55e)}
@@ -79,44 +39,28 @@
     .btn-violet{background:linear-gradient(135deg,#7c3aed,#8b5cf6)}
     .grid{display:grid;gap:18px}
     .stats{grid-template-columns:repeat(8,1fr)}
+    .branch-stats{grid-template-columns:repeat(3,1fr)}
     .two-col{grid-template-columns:1.1fr .9fr}
-    .card{
-      background:rgba(17,24,39,.86);
-      border:1px solid rgba(255,255,255,.07);
-      border-radius:var(--radius);
-      box-shadow:var(--shadow);
-      padding:18px;
-      backdrop-filter:blur(10px)
-    }
+    .card{background:rgba(17,24,39,.86);border:1px solid rgba(255,255,255,.07);border-radius:var(--radius);box-shadow:var(--shadow);padding:18px;backdrop-filter:blur(10px)}
     .stat-card h3{color:var(--muted);font-size:.95rem;margin-bottom:8px}
-    .stat-card .value{font-size:1.55rem;font-weight:bold}
+    .stat-card .value{font-size:1.45rem;font-weight:bold}
     .stat-card small{display:block;margin-top:8px;color:#93c5fd}
-    .section-title{
-      margin-bottom:14px;display:flex;justify-content:space-between;align-items:center;
-      gap:12px;flex-wrap:wrap
-    }
+    .branch-card h4{font-size:1rem;margin-bottom:8px}
+    .branch-card .mini{display:grid;gap:6px;color:var(--muted);font-size:.9rem}
+    .section-title{margin-bottom:14px;display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
     .section-title h3{font-size:1.15rem}
     .form-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}
     .form-group{display:flex;flex-direction:column;gap:8px}
     .form-group.full{grid-column:1 / -1}
     label{color:var(--muted);font-size:.92rem}
-    input,select,textarea{
-      width:100%;padding:12px 13px;border-radius:12px;border:1px solid rgba(255,255,255,.1);
-      background:rgba(255,255,255,.06);color:var(--text);outline:none
-    }
+    input,select,textarea{width:100%;padding:12px 13px;border-radius:12px;border:1px solid rgba(255,255,255,.1);background:rgba(255,255,255,.06);color:var(--text);outline:none}
     textarea{min-height:100px;resize:vertical}
     input::placeholder,textarea::placeholder{color:#94a3b8}
     table{width:100%;border-collapse:collapse;margin-top:12px}
-    th,td{
-      padding:12px 10px;text-align:left;border-bottom:1px solid rgba(255,255,255,.08);
-      font-size:.95rem;vertical-align:top
-    }
+    th,td{padding:12px 10px;text-align:left;border-bottom:1px solid rgba(255,255,255,.08);font-size:.95rem;vertical-align:top}
     th{color:#93c5fd;font-weight:600}
     .table-wrap{overflow-x:auto}
-    .badge{
-      display:inline-flex;align-items:center;padding:6px 10px;border-radius:999px;
-      font-size:.82rem;font-weight:bold
-    }
+    .badge{display:inline-flex;align-items:center;padding:6px 10px;border-radius:999px;font-size:.82rem;font-weight:bold}
     .badge.success{background:rgba(34,197,94,.18);color:#86efac}
     .badge.warning{background:rgba(245,158,11,.18);color:#fcd34d}
     .badge.danger{background:rgba(239,68,68,.18);color:#fca5a5}
@@ -124,36 +68,20 @@
     .badge.pink{background:rgba(236,72,153,.18);color:#f9a8d4}
     .badge.violet{background:rgba(139,92,246,.18);color:#c4b5fd}
     .products-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:14px}
-    .product-card{
-      border-radius:18px;background:linear-gradient(180deg,rgba(255,255,255,.06),rgba(255,255,255,.03));
-      border:1px solid rgba(255,255,255,.07);padding:16px
-    }
+    .product-card{border-radius:18px;background:linear-gradient(180deg,rgba(255,255,255,.06),rgba(255,255,255,.03));border:1px solid rgba(255,255,255,.07);padding:16px}
     .product-card h4{font-size:1.12rem;margin-bottom:7px}
     .product-meta{color:var(--muted);font-size:.9rem;margin-bottom:12px;display:grid;gap:6px}
     .product-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px}
     .product-actions .btn{padding:10px 12px;font-size:.9rem;flex:1}
     .toolbar{display:grid;grid-template-columns:1.2fr .8fr .8fr .8fr;gap:12px;margin-bottom:14px}
     .login-screen{min-height:100vh;display:grid;place-items:center;padding:18px}
-    .login-card{
-      width:100%;max-width:1100px;display:grid;grid-template-columns:1.1fr .9fr;
-      background:rgba(17,24,39,.88);border:1px solid rgba(255,255,255,.08);border-radius:28px;
-      overflow:hidden;box-shadow:0 25px 50px rgba(0,0,0,.35)
-    }
-    .login-left{
-      padding:40px;
-      background:
-        radial-gradient(circle at top left, rgba(56,189,248,.25), transparent 35%),
-        radial-gradient(circle at bottom right, rgba(236,72,153,.18), transparent 35%),
-        linear-gradient(135deg, rgba(15,23,42,1), rgba(17,24,39,1));
-    }
+    .login-card{width:100%;max-width:1100px;display:grid;grid-template-columns:1.1fr .9fr;background:rgba(17,24,39,.88);border:1px solid rgba(255,255,255,.08);border-radius:28px;overflow:hidden;box-shadow:0 25px 50px rgba(0,0,0,.35)}
+    .login-left{padding:40px;background:radial-gradient(circle at top left, rgba(56,189,248,.25), transparent 35%),radial-gradient(circle at bottom right, rgba(236,72,153,.18), transparent 35%),linear-gradient(135deg, rgba(15,23,42,1), rgba(17,24,39,1))}
     .login-right{padding:34px}
     .big-title{font-size:2.2rem;line-height:1.15;margin-bottom:12px}
     .muted{color:var(--muted)}
     .feature-list{display:grid;gap:12px;margin-top:24px}
-    .feature-item{
-      padding:14px;border-radius:16px;background:rgba(255,255,255,.05);
-      border:1px solid rgba(255,255,255,.07)
-    }
+    .feature-item{padding:14px;border-radius:16px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.07)}
     .alert{padding:12px 14px;border-radius:14px;margin-bottom:14px;display:none}
     .alert.show{display:block}
     .alert.success{background:rgba(34,197,94,.18);color:#bbf7d0}
@@ -161,55 +89,22 @@
     .alert.info{background:rgba(56,189,248,.18);color:#bae6fd}
     .receipt-preview{background:white;color:black;border-radius:18px;padding:22px;margin-top:14px}
     .receipt-header{text-align:center;margin-bottom:16px}
-    .receipt-line{
-      display:flex;justify-content:space-between;gap:12px;padding:8px 0;border-bottom:1px dashed #bbb
-    }
+    .receipt-line{display:flex;justify-content:space-between;gap:12px;padding:8px 0;border-bottom:1px dashed #bbb}
     .receipt-total{font-weight:bold;font-size:1.15rem;margin-top:14px}
     .small{font-size:.86rem}
     .center{text-align:center}
-    .empty-state{
-      padding:26px;text-align:center;color:var(--muted);background:rgba(255,255,255,.03);
-      border:1px dashed rgba(255,255,255,.12);border-radius:18px
-    }
+    .empty-state{padding:26px;text-align:center;color:var(--muted);background:rgba(255,255,255,.03);border:1px dashed rgba(255,255,255,.12);border-radius:18px}
     .footer-note{margin-top:10px;color:var(--muted);font-size:.85rem}
     .chart-wrap{position:relative;height:340px;margin-top:12px}
-    .quick-box{
-      border:1px solid rgba(255,255,255,.07);background:rgba(255,255,255,.03);
-      border-radius:16px;padding:14px
-    }
-    .loading-overlay{
-      position:fixed;inset:0;background:rgba(2,6,23,.7);display:none;align-items:center;
-      justify-content:center;z-index:1000;backdrop-filter:blur(6px)
-    }
+    .quick-box{border:1px solid rgba(255,255,255,.07);background:rgba(255,255,255,.03);border-radius:16px;padding:14px}
+    .loading-overlay{position:fixed;inset:0;background:rgba(2,6,23,.7);display:none;align-items:center;justify-content:center;z-index:1000;backdrop-filter:blur(6px)}
     .loading-overlay.show{display:flex}
-    .loading-box{
-      background:rgba(17,24,39,.95);border:1px solid rgba(255,255,255,.08);border-radius:20px;
-      padding:18px 22px;box-shadow:var(--shadow)
-    }
-    .cart-item{
-      border:1px solid rgba(255,255,255,.08);border-radius:14px;padding:12px;
-      background:rgba(255,255,255,.03);display:grid;gap:6px;margin-bottom:12px
-    }
-    @media (max-width:1500px){.stats{grid-template-columns:repeat(4,1fr)}}
-    @media (max-width:1100px){
-      .two-col,.products-grid,.toolbar,.login-card{grid-template-columns:1fr}
-      .app-shell{grid-template-columns:1fr}
-      .sidebar{position:relative;height:auto}
-      .sidebar-footer{position:relative;left:auto;right:auto;bottom:auto;margin-top:16px}
-    }
-    @media (max-width:720px){
-      .form-grid{grid-template-columns:1fr}
-      .main{padding:16px}
-      .login-left,.login-right{padding:22px}
-      .topbar h2{font-size:1.35rem}
-      .big-title{font-size:1.6rem}
-      .stats{grid-template-columns:1fr}
-    }
-    @media print{
-      body *{visibility:hidden}
-      #receiptPrintArea,#receiptPrintArea *{visibility:visible}
-      #receiptPrintArea{position:absolute;left:0;top:0;width:100%;background:white}
-    }
+    .loading-box{background:rgba(17,24,39,.95);border:1px solid rgba(255,255,255,.08);border-radius:20px;padding:18px 22px;box-shadow:var(--shadow)}
+    .cart-item{border:1px solid rgba(255,255,255,.08);border-radius:14px;padding:12px;background:rgba(255,255,255,.03);display:grid;gap:6px;margin-bottom:12px}
+    @media (max-width:1500px){.stats{grid-template-columns:repeat(4,1fr)} .branch-stats{grid-template-columns:1fr}}
+    @media (max-width:1100px){.two-col,.products-grid,.toolbar,.login-card{grid-template-columns:1fr}.app-shell{grid-template-columns:1fr}.sidebar{position:relative;height:auto}.sidebar-footer{position:relative;left:auto;right:auto;bottom:auto;margin-top:16px}}
+    @media (max-width:720px){.form-grid{grid-template-columns:1fr}.main{padding:16px}.login-left,.login-right{padding:22px}.topbar h2{font-size:1.35rem}.big-title{font-size:1.6rem}.stats{grid-template-columns:1fr}}
+    @media print{body *{visibility:hidden} #receiptPrintArea,#receiptPrintArea *{visibility:visible} #receiptPrintArea{position:absolute;left:0;top:0;width:100%;background:white}}
   </style>
 </head>
 <body>
@@ -229,26 +124,26 @@
         </div>
 
         <h2 class="big-title">
-          Manage <span style="color:#7dd3fc">Gakindu</span>,
+          Database-backed employees for
+          <span style="color:#7dd3fc">Gakindu</span>,
           <span style="color:#f9a8d4">Oythaya</span> and
-          <span style="color:#c4b5fd">Shop C</span>
-          with separate stock and one admin.
+          <span style="color:#c4b5fd">Shop C</span>.
         </h2>
 
-        <p class="muted">This version keeps each shop's stock separate, supports multi-item sales, reset dashboard, profit chart and margin tracking.</p>
+        <p class="muted">Admin sees everything. Each employee is loaded from Supabase and locked to their assigned shop.</p>
 
         <div class="feature-list">
-          <div class="feature-item">🏪 Gakindu, Oythaya and Shop C with separate stock</div>
-          <div class="feature-item">🛒 Multi-item cart in one sale</div>
-          <div class="feature-item">📈 Revenue, profit and margin dashboard</div>
-          <div class="feature-item">🧹 Admin reset dashboard</div>
+          <div class="feature-item">👑 Admin monitors all shops</div>
+          <div class="feature-item">🗄️ Employees saved in Supabase</div>
+          <div class="feature-item">🏪 Shop-specific dashboard access</div>
+          <div class="feature-item">🛒 Multi-item cart per shop</div>
         </div>
       </div>
 
       <div class="login-right">
         <div class="section-title">
-          <h3>Admin Login</h3>
-          <span class="badge info">Supabase Auth</span>
+          <h3>Login</h3>
+          <span class="badge info">Admin / Employee</span>
         </div>
 
         <div id="loginAlert" class="alert"></div>
@@ -263,7 +158,7 @@
           </div>
           <div class="form-group full">
             <label for="adminEmail">Email</label>
-            <input type="email" id="adminEmail" placeholder="Enter admin email" />
+            <input type="email" id="adminEmail" placeholder="Enter email" />
           </div>
           <div class="form-group full">
             <label for="adminPassword">Password</label>
@@ -274,12 +169,12 @@
         <div style="display:flex; gap:10px; margin-top:16px; flex-wrap:wrap;">
           <button class="btn btn-primary" onclick="loginUser()">Login</button>
           <button class="btn btn-dark" onclick="fillAdminEmail()">Fill Admin Email</button>
-          <button class="btn btn-violet" onclick="fillDemoEmployee()">Use Employee Demo</button>
+          <button class="btn btn-violet" onclick="fillDemoEmployee()">Use Demo Employee</button>
         </div>
 
         <p class="footer-note">
           Admin uses Supabase Auth.<br>
-          Employee demo: <b>employee@shop.com</b> / <b>employee123</b>
+          Demo employee: <b>employee@gakindu.com</b> / <b>employee123</b>
         </p>
       </div>
     </div>
@@ -321,56 +216,36 @@
           <div class="topbar">
             <div>
               <h2>Dashboard</h2>
-              <p>Monitor products, shop stock, revenue, profit and margin across all branches.</p>
+              <p id="dashboardSubtitle">Monitor all shops or a single shop.</p>
             </div>
             <div class="topbar-actions">
-              <button class="btn btn-primary" onclick="seedSampleData()">Load Sample Data</button>
+              <select id="dashboardShopFilter" onchange="renderDashboard()" style="min-width:170px;">
+                <option value="ALL">All Shops</option>
+                <option value="Gakindu">Gakindu</option>
+                <option value="Oythaya">Oythaya</option>
+                <option value="Shop C">Shop C</option>
+              </select>
+              <button class="btn btn-primary role-admin-only" onclick="seedSampleData()">Load Sample Data</button>
               <button class="btn btn-dark" onclick="reloadAllData()">Refresh From Database</button>
               <button class="btn btn-danger role-admin-only" onclick="resetDashboardData()">Reset Dashboard To Zero</button>
             </div>
           </div>
 
           <div class="grid stats">
-            <div class="card stat-card">
-              <h3>Total Products</h3>
-              <div class="value" id="statProducts">0</div>
-              <small>Base products saved</small>
-            </div>
-            <div class="card stat-card">
-              <h3>Total Shop Stocks</h3>
-              <div class="value" id="statStockRows">0</div>
-              <small>Stock records by shop</small>
-            </div>
-            <div class="card stat-card">
-              <h3>Total Units</h3>
-              <div class="value" id="statStock">0</div>
-              <small>Units across all shops</small>
-            </div>
-            <div class="card stat-card">
-              <h3>Total Revenue</h3>
-              <div class="value" id="statRevenue">KSh 0</div>
-              <small>All completed sales</small>
-            </div>
-            <div class="card stat-card">
-              <h3>Total Profit</h3>
-              <div class="value" id="statProfit">KSh 0</div>
-              <small>All completed sales</small>
-            </div>
-            <div class="card stat-card">
-              <h3>Avg Profit Margin</h3>
-              <div class="value" id="statProfitMargin">0%</div>
-              <small id="statProfitMarginLabel">Across all receipts</small>
-            </div>
-            <div class="card stat-card">
-              <h3>Gakindu Units</h3>
-              <div class="value" id="statGakindu">0</div>
-              <small>Stock in Gakindu</small>
-            </div>
-            <div class="card stat-card">
-              <h3>Low Stock Records</h3>
-              <div class="value" id="statLowStock">0</div>
-              <small>Below threshold in any shop</small>
-            </div>
+            <div class="card stat-card"><h3>Total Products</h3><div class="value" id="statProducts">0</div><small>Base products saved</small></div>
+            <div class="card stat-card"><h3>Total Shop Stocks</h3><div class="value" id="statStockRows">0</div><small>Stock rows in current view</small></div>
+            <div class="card stat-card"><h3>Total Units</h3><div class="value" id="statStock">0</div><small>Units in current view</small></div>
+            <div class="card stat-card"><h3>Total Revenue</h3><div class="value" id="statRevenue">KSh 0</div><small>Current view</small></div>
+            <div class="card stat-card"><h3>Total Profit</h3><div class="value" id="statProfit">KSh 0</div><small>Current view</small></div>
+            <div class="card stat-card"><h3>Avg Profit Margin</h3><div class="value" id="statProfitMargin">0%</div><small id="statProfitMarginLabel">Across current view</small></div>
+            <div class="card stat-card"><h3>Low Stock Records</h3><div class="value" id="statLowStock">0</div><small>Below threshold</small></div>
+            <div class="card stat-card"><h3>Total Receipts</h3><div class="value" id="statReceipts">0</div><small>In current view</small></div>
+          </div>
+
+          <div class="grid branch-stats role-admin-only" style="margin-top:18px;">
+            <div class="card branch-card"><h4>Gakindu</h4><div class="mini"><div>Revenue: <b id="gakinduRevenue">KSh 0</b></div><div>Profit: <b id="gakinduProfit">KSh 0</b></div><div>Units: <b id="gakinduUnits">0</b></div><div>Low Stock: <b id="gakinduLow">0</b></div></div></div>
+            <div class="card branch-card"><h4>Oythaya</h4><div class="mini"><div>Revenue: <b id="oythayaRevenue">KSh 0</b></div><div>Profit: <b id="oythayaProfit">KSh 0</b></div><div>Units: <b id="oythayaUnits">0</b></div><div>Low Stock: <b id="oythayaLow">0</b></div></div></div>
+            <div class="card branch-card"><h4>Shop C</h4><div class="mini"><div>Revenue: <b id="shopCRevenue">KSh 0</b></div><div>Profit: <b id="shopCProfit">KSh 0</b></div><div>Units: <b id="shopCUnits">0</b></div><div>Low Stock: <b id="shopCLow">0</b></div></div></div>
           </div>
 
           <div class="card" style="margin-top:18px;">
@@ -385,109 +260,44 @@
                 </select>
               </div>
             </div>
-            <div class="chart-wrap">
-              <canvas id="salesLineChart"></canvas>
-            </div>
+            <div class="chart-wrap"><canvas id="salesLineChart"></canvas></div>
           </div>
 
           <div class="grid two-col" style="margin-top:18px;">
             <div class="card">
-              <div class="section-title">
-                <h3>Recent Sales</h3>
-                <span class="badge info">Latest Transactions</span>
-              </div>
+              <div class="section-title"><h3>Recent Sales</h3><span class="badge info">Latest Transactions</span></div>
               <div class="table-wrap">
                 <table>
-                  <thead>
-                    <tr>
-                      <th>Receipt</th>
-                      <th>Customer</th>
-                      <th>Shop</th>
-                      <th>Items</th>
-                      <th>Total</th>
-                      <th>Profit</th>
-                      <th>Margin</th>
-                      <th>Date</th>
-                    </tr>
-                  </thead>
+                  <thead><tr><th>Receipt</th><th>Customer</th><th>Shop</th><th>Items</th><th>Total</th><th>Profit</th><th>Margin</th><th>Date</th></tr></thead>
                   <tbody id="recentSalesTable"></tbody>
                 </table>
               </div>
             </div>
-
             <div class="card">
-              <div class="section-title">
-                <h3>Low Stock Alert</h3>
-                <span class="badge danger">Needs Attention</span>
-              </div>
+              <div class="section-title"><h3>Low Stock Alert</h3><span class="badge danger">Needs Attention</span></div>
               <div id="lowStockList"></div>
             </div>
           </div>
         </section>
 
         <section id="productsPage" class="page hidden">
-          <div class="topbar">
-            <div>
-              <h2>Products</h2>
-              <p>Add and manage base products. Stock per shop is handled separately.</p>
-            </div>
-          </div>
-
+          <div class="topbar"><div><h2>Products</h2><p>Add and manage base products. Stock per shop is handled separately.</p></div></div>
           <div class="grid two-col">
-            <div class="card">
-              <div class="section-title">
-                <h3 id="productFormTitle">Add New Product</h3>
-                <span class="badge success">Product Master</span>
-              </div>
+            <div class="card role-admin-only">
+              <div class="section-title"><h3 id="productFormTitle">Add New Product</h3><span class="badge success">Product Master</span></div>
               <form id="productForm" class="form-grid">
-                <div class="form-group">
-                  <label for="productName">Product Name</label>
-                  <input id="productName" required placeholder="e.g. Coil" />
-                </div>
-                <div class="form-group">
-                  <label for="productCategory">Category</label>
-                  <input id="productCategory" placeholder="e.g. Hardware" />
-                </div>
-                <div class="form-group">
-                  <label for="productBarcode">Barcode</label>
-                  <input id="productBarcode" placeholder="Scan or type barcode" />
-                </div>
-                <div class="form-group">
-                  <label for="productUnit">Unit</label>
-                  <input id="productUnit" placeholder="e.g. pieces, boxes" />
-                </div>
-                <div class="form-group">
-                  <label for="costPrice">Cost Price (KSh)</label>
-                  <input id="costPrice" type="number" min="0" step="0.01" required />
-                </div>
-                <div class="form-group">
-                  <label for="markedPrice">Marked Price (KSh)</label>
-                  <input id="markedPrice" type="number" min="0" step="0.01" required />
-                </div>
-                <div class="form-group">
-                  <label for="retailPrice">Retail Price (KSh)</label>
-                  <input id="retailPrice" type="number" min="0" step="0.01" required />
-                </div>
-                <div class="form-group">
-                  <label for="wholesalePrice">Wholesale Price (KSh)</label>
-                  <input id="wholesalePrice" type="number" min="0" step="0.01" required />
-                </div>
-                <div class="form-group">
-                  <label for="lowStockThreshold">Default Low Stock Threshold</label>
-                  <input id="lowStockThreshold" type="number" min="0" value="5" />
-                </div>
-                <div class="form-group">
-                  <label for="retailDiscount">Retail Discount %</label>
-                  <input id="retailDiscount" type="number" min="0" max="100" value="0" />
-                </div>
-                <div class="form-group">
-                  <label for="wholesaleDiscount">Wholesale Discount %</label>
-                  <input id="wholesaleDiscount" type="number" min="0" max="100" value="0" />
-                </div>
-                <div class="form-group full">
-                  <label for="productDescription">Description</label>
-                  <textarea id="productDescription" placeholder="Write product details..."></textarea>
-                </div>
+                <div class="form-group"><label for="productName">Product Name</label><input id="productName" required placeholder="e.g. Coil" /></div>
+                <div class="form-group"><label for="productCategory">Category</label><input id="productCategory" placeholder="e.g. Hardware" /></div>
+                <div class="form-group"><label for="productBarcode">Barcode</label><input id="productBarcode" placeholder="Scan or type barcode" /></div>
+                <div class="form-group"><label for="productUnit">Unit</label><input id="productUnit" placeholder="e.g. pieces, boxes" /></div>
+                <div class="form-group"><label for="costPrice">Cost Price (KSh)</label><input id="costPrice" type="number" min="0" step="0.01" required /></div>
+                <div class="form-group"><label for="markedPrice">Marked Price (KSh)</label><input id="markedPrice" type="number" min="0" step="0.01" required /></div>
+                <div class="form-group"><label for="retailPrice">Retail Price (KSh)</label><input id="retailPrice" type="number" min="0" step="0.01" required /></div>
+                <div class="form-group"><label for="wholesalePrice">Wholesale Price (KSh)</label><input id="wholesalePrice" type="number" min="0" step="0.01" required /></div>
+                <div class="form-group"><label for="lowStockThreshold">Default Low Stock Threshold</label><input id="lowStockThreshold" type="number" min="0" value="5" /></div>
+                <div class="form-group"><label for="retailDiscount">Retail Discount %</label><input id="retailDiscount" type="number" min="0" max="100" value="0" /></div>
+                <div class="form-group"><label for="wholesaleDiscount">Wholesale Discount %</label><input id="wholesaleDiscount" type="number" min="0" max="100" value="0" /></div>
+                <div class="form-group full"><label for="productDescription">Description</label><textarea id="productDescription" placeholder="Write product details..."></textarea></div>
                 <div class="form-group full" style="display:flex; gap:10px; flex-wrap:wrap;">
                   <button type="submit" class="btn btn-primary" id="saveProductBtn">Save Product</button>
                   <button type="button" class="btn btn-dark" onclick="resetProductForm()">Clear Form</button>
@@ -495,21 +305,14 @@
               </form>
             </div>
 
-            <div class="card">
-              <div class="section-title">
-                <h3>Find Products</h3>
-                <span class="badge pink">Shared Online Data</span>
-              </div>
+            <div class="card" id="productListCard">
+              <div class="section-title"><h3>Find Products</h3><span class="badge pink">Shared Online Data</span></div>
               <div class="toolbar">
                 <input id="searchProducts" placeholder="Search product name or barcode..." oninput="renderProducts()" />
-                <select id="filterCategory" onchange="renderProducts()">
-                  <option value="">All Categories</option>
-                </select>
+                <select id="filterCategory" onchange="renderProducts()"><option value="">All Categories</option></select>
                 <select id="sortProducts" onchange="renderProducts()">
-                  <option value="latest">Latest</option>
-                  <option value="name">Name</option>
-                  <option value="retail">Retail Price</option>
-                  <option value="wholesale">Wholesale Price</option>
+                  <option value="latest">Latest</option><option value="name">Name</option>
+                  <option value="retail">Retail Price</option><option value="wholesale">Wholesale Price</option>
                 </select>
                 <div class="quick-box small center">Stock is managed in Shop Stock page.</div>
               </div>
@@ -519,62 +322,26 @@
         </section>
 
         <section id="stockPage" class="page hidden">
-          <div class="topbar">
-            <div>
-              <h2>Shop Stock</h2>
-              <p>Assign each product to Gakindu, Oythaya or Shop C with separate stock values.</p>
-            </div>
-          </div>
-
+          <div class="topbar"><div><h2>Shop Stock</h2><p>Admin manages all shops. Employees only see their own shop stock.</p></div></div>
           <div class="grid two-col">
-            <div class="card">
-              <div class="section-title">
-                <h3>Set Stock By Shop</h3>
-                <span class="badge success">Multi-Shop</span>
-              </div>
+            <div class="card role-admin-only">
+              <div class="section-title"><h3>Set Stock By Shop</h3><span class="badge success">Multi-Shop</span></div>
               <form id="stockForm" class="form-grid">
-                <div class="form-group">
-                  <label for="stockProduct">Product</label>
-                  <select id="stockProduct"></select>
+                <div class="form-group"><label for="stockProduct">Product</label><select id="stockProduct"></select></div>
+                <div class="form-group"><label for="stockShop">Shop</label>
+                  <select id="stockShop"><option value="Gakindu">Gakindu</option><option value="Oythaya">Oythaya</option><option value="Shop C">Shop C</option></select>
                 </div>
-                <div class="form-group">
-                  <label for="stockShop">Shop</label>
-                  <select id="stockShop">
-                    <option value="Gakindu">Gakindu</option>
-                    <option value="Oythaya">Oythaya</option>
-                    <option value="Shop C">Shop C</option>
-                  </select>
-                </div>
-                <div class="form-group">
-                  <label for="shopStockQty">Stock Quantity</label>
-                  <input id="shopStockQty" type="number" min="0" value="0" />
-                </div>
-                <div class="form-group">
-                  <label for="shopStockThreshold">Low Stock Threshold</label>
-                  <input id="shopStockThreshold" type="number" min="0" value="5" />
-                </div>
-                <div class="form-group full">
-                  <button type="submit" class="btn btn-primary">Save Shop Stock</button>
-                </div>
+                <div class="form-group"><label for="shopStockQty">Stock Quantity</label><input id="shopStockQty" type="number" min="0" value="0" /></div>
+                <div class="form-group"><label for="shopStockThreshold">Low Stock Threshold</label><input id="shopStockThreshold" type="number" min="0" value="5" /></div>
+                <div class="form-group full"><button type="submit" class="btn btn-primary">Save Shop Stock</button></div>
               </form>
             </div>
 
             <div class="card">
-              <div class="section-title">
-                <h3>Stock Records</h3>
-                <span class="badge info">Per Shop</span>
-              </div>
+              <div class="section-title"><h3>Stock Records</h3><span class="badge info">Per Shop</span></div>
               <div class="table-wrap">
                 <table>
-                  <thead>
-                    <tr>
-                      <th>Product</th>
-                      <th>Shop</th>
-                      <th>Stock</th>
-                      <th>Threshold</th>
-                      <th>Status</th>
-                    </tr>
-                  </thead>
+                  <thead><tr><th>Product</th><th>Shop</th><th>Stock</th><th>Threshold</th><th>Status</th></tr></thead>
                   <tbody id="shopStockTable"></tbody>
                 </table>
               </div>
@@ -583,80 +350,34 @@
         </section>
 
         <section id="salesPage" class="page hidden">
-          <div class="topbar">
-            <div>
-              <h2>Make Sale</h2>
-              <p>Choose a shop, add multiple products to cart, then complete one receipt.</p>
-            </div>
-          </div>
-
+          <div class="topbar"><div><h2>Make Sale</h2><p>Admin can choose any shop. Employee is locked to their assigned shop.</p></div></div>
           <div class="grid two-col">
             <div class="card">
-              <div class="section-title">
-                <h3>Sale Entry</h3>
-                <span class="badge success">Multi-Item Sale</span>
-              </div>
+              <div class="section-title"><h3>Sale Entry</h3><span class="badge success">Multi-Item Sale</span></div>
               <form id="saleForm" class="form-grid">
-                <div class="form-group full">
-                  <label for="saleShop">Shop</label>
+                <div class="form-group full"><label for="saleShop">Shop</label>
                   <select id="saleShop" onchange="refreshSaleProductOptions(); updateSalePricePreview(); renderCart();">
-                    <option value="Gakindu">Gakindu</option>
-                    <option value="Oythaya">Oythaya</option>
-                    <option value="Shop C">Shop C</option>
+                    <option value="Gakindu">Gakindu</option><option value="Oythaya">Oythaya</option><option value="Shop C">Shop C</option>
                   </select>
                 </div>
-                <div class="form-group">
-                  <label for="customerName">Customer Name</label>
-                  <input id="customerName" placeholder="e.g. Benson" required />
+                <div class="form-group"><label for="customerName">Customer Name</label><input id="customerName" placeholder="e.g. Benson" required /></div>
+                <div class="form-group"><label for="customerPhone">Phone</label><input id="customerPhone" placeholder="e.g. 0712345678" /></div>
+                <div class="form-group"><label for="saleType">Sale Type</label>
+                  <select id="saleType" onchange="updateSalePricePreview()"><option value="retail">Retail</option><option value="wholesale">Wholesale</option></select>
                 </div>
-                <div class="form-group">
-                  <label for="customerPhone">Phone</label>
-                  <input id="customerPhone" placeholder="e.g. 0712345678" />
+                <div class="form-group"><label for="saleProduct">Product</label><select id="saleProduct" onchange="updateSalePricePreview()"></select></div>
+                <div class="form-group"><label for="saleQty">Quantity</label><input id="saleQty" type="number" min="1" value="1" oninput="updateSalePricePreview()" /></div>
+                <div class="form-group"><label for="manualExtraDiscount">Extra Discount %</label><input id="manualExtraDiscount" type="number" min="0" max="100" value="0" oninput="updateSalePricePreview()" /></div>
+                <div class="form-group"><label for="customSellingPrice">Negotiated Selling Price (Optional)</label><input id="customSellingPrice" type="number" min="0" step="0.01" placeholder="Leave empty to use automatic price" oninput="updateSalePricePreview()" /></div>
+                <div class="form-group"><label for="paymentMethod">Payment Method</label>
+                  <select id="paymentMethod" onchange="togglePaymentReferenceLabel()"><option value="mpesa">M-Pesa</option><option value="airtel_money">Airtel Money</option><option value="paypal">PayPal</option><option value="cash">Cash</option></select>
                 </div>
-                <div class="form-group">
-                  <label for="saleType">Sale Type</label>
-                  <select id="saleType" onchange="updateSalePricePreview()">
-                    <option value="retail">Retail</option>
-                    <option value="wholesale">Wholesale</option>
-                  </select>
-                </div>
-                <div class="form-group">
-                  <label for="saleProduct">Product</label>
-                  <select id="saleProduct" onchange="updateSalePricePreview()"></select>
-                </div>
-                <div class="form-group">
-                  <label for="saleQty">Quantity</label>
-                  <input id="saleQty" type="number" min="1" value="1" oninput="updateSalePricePreview()" />
-                </div>
-                <div class="form-group">
-                  <label for="manualExtraDiscount">Extra Discount %</label>
-                  <input id="manualExtraDiscount" type="number" min="0" max="100" value="0" oninput="updateSalePricePreview()" />
-                </div>
-                <div class="form-group">
-                  <label for="customSellingPrice">Negotiated Selling Price (Optional)</label>
-                  <input id="customSellingPrice" type="number" min="0" step="0.01" placeholder="Leave empty to use automatic price" oninput="updateSalePricePreview()" />
-                </div>
-                <div class="form-group">
-                  <label for="paymentMethod">Payment Method</label>
-                  <select id="paymentMethod" onchange="togglePaymentReferenceLabel()">
-                    <option value="mpesa">M-Pesa</option>
-                    <option value="airtel_money">Airtel Money</option>
-                    <option value="paypal">PayPal</option>
-                    <option value="cash">Cash</option>
-                  </select>
-                </div>
-                <div class="form-group full">
-                  <label for="paymentReference" id="paymentReferenceLabel">Phone / Transaction Ref</label>
-                  <input id="paymentReference" placeholder="e.g. 0712345678 or TXN123" />
-                </div>
+                <div class="form-group full"><label for="paymentReference" id="paymentReferenceLabel">Phone / Transaction Ref</label><input id="paymentReference" placeholder="e.g. 0712345678 or TXN123" /></div>
                 <div class="form-group full" style="display:flex; gap:10px; flex-wrap:wrap;">
                   <button type="button" class="btn btn-violet" onclick="addCurrentItemToCart()">Add Item To Cart</button>
                   <button type="button" class="btn btn-dark" onclick="resetSaleLineInputs()">Clear Item</button>
                 </div>
-                <div class="form-group full">
-                  <label for="saleNotes">Sale Notes</label>
-                  <textarea id="saleNotes" placeholder="Optional notes..."></textarea>
-                </div>
+                <div class="form-group full"><label for="saleNotes">Sale Notes</label><textarea id="saleNotes" placeholder="Optional notes..."></textarea></div>
                 <div class="form-group full" style="display:flex; gap:10px; flex-wrap:wrap;">
                   <button type="submit" class="btn btn-primary">Complete Sale</button>
                   <button type="button" class="btn btn-dark" onclick="resetSaleForm()">Clear All</button>
@@ -665,10 +386,7 @@
             </div>
 
             <div class="card">
-              <div class="section-title">
-                <h3>Cart & Summary</h3>
-                <span class="badge info">Live Preview</span>
-              </div>
+              <div class="section-title"><h3>Cart & Summary</h3><span class="badge info">Live Preview</span></div>
               <div id="salePreview" class="empty-state">Choose a stocked product to see item pricing.</div>
               <div style="height:12px"></div>
               <div id="cartList"></div>
@@ -678,90 +396,40 @@
         </section>
 
         <section id="receiptsPage" class="page hidden">
-          <div class="topbar">
-            <div>
-              <h2>Receipts</h2>
-              <p>View recent receipts, print them, or delete them.</p>
-            </div>
-          </div>
-
+          <div class="topbar"><div><h2>Receipts</h2><p>Admin sees all receipts. Employees only see receipts from their own shop.</p></div></div>
           <div class="card">
-            <div class="section-title">
-              <h3>All Receipts</h3>
-              <span class="badge pink">Printable</span>
-            </div>
+            <div class="section-title"><h3>All Receipts</h3><span class="badge pink">Printable</span></div>
             <div class="table-wrap">
               <table>
-                <thead>
-                  <tr>
-                    <th>Receipt No</th>
-                    <th>Customer</th>
-                    <th>Shop</th>
-                    <th>Items</th>
-                    <th>Total</th>
-                    <th>Profit</th>
-                    <th>Margin</th>
-                    <th>Date</th>
-                    <th>Action</th>
-                  </tr>
-                </thead>
+                <thead><tr><th>Receipt No</th><th>Customer</th><th>Shop</th><th>Items</th><th>Total</th><th>Profit</th><th>Margin</th><th>Date</th><th>Action</th></tr></thead>
                 <tbody id="receiptsTable"></tbody>
               </table>
             </div>
           </div>
-
           <div id="receiptPrintArea"></div>
         </section>
 
         <section id="employeesPage" class="page hidden role-admin-only">
-          <div class="topbar">
-            <div>
-              <h2>Employees</h2>
-              <p>Add and manage employee accounts.</p>
-            </div>
-          </div>
-
+          <div class="topbar"><div><h2>Employees</h2><p>Add and manage employee accounts by shop.</p></div></div>
           <div class="grid two-col">
             <div class="card">
-              <div class="section-title">
-                <h3>Add Employee</h3>
-                <span class="badge violet">Staff Access</span>
-              </div>
+              <div class="section-title"><h3>Add Employee</h3><span class="badge violet">Staff Access</span></div>
               <form id="employeeForm" class="form-grid">
-                <div class="form-group">
-                  <label for="employeeName">Full Name</label>
-                  <input id="employeeName" placeholder="e.g. Jane Doe" />
+                <div class="form-group"><label for="employeeName">Full Name</label><input id="employeeName" placeholder="e.g. Jane Doe" /></div>
+                <div class="form-group"><label for="employeeEmail">Email</label><input id="employeeEmail" type="email" placeholder="employee@shop.com" /></div>
+                <div class="form-group"><label for="employeePassword">Password</label><input id="employeePassword" type="password" placeholder="Employee password" /></div>
+                <div class="form-group"><label for="employeeShop">Assigned Shop</label>
+                  <select id="employeeShop"><option value="Gakindu">Gakindu</option><option value="Oythaya">Oythaya</option><option value="Shop C">Shop C</option></select>
                 </div>
-                <div class="form-group">
-                  <label for="employeeEmail">Email</label>
-                  <input id="employeeEmail" type="email" placeholder="employee@shop.com" />
-                </div>
-                <div class="form-group full">
-                  <label for="employeePassword">Password</label>
-                  <input id="employeePassword" type="password" placeholder="Employee password" />
-                </div>
-                <div class="form-group full" style="display:flex; gap:10px; flex-wrap:wrap;">
-                  <button type="submit" class="btn btn-primary">Save Employee</button>
-                  <button type="button" class="btn btn-dark" onclick="document.getElementById('employeeForm').reset()">Clear</button>
-                </div>
+                <div class="form-group full"><button type="submit" class="btn btn-primary">Save Employee</button></div>
               </form>
             </div>
 
             <div class="card">
-              <div class="section-title">
-                <h3>Employee List</h3>
-                <span class="badge info">Active Staff</span>
-              </div>
+              <div class="section-title"><h3>Employee List</h3><span class="badge info">Active Staff</span></div>
               <div class="table-wrap">
                 <table>
-                  <thead>
-                    <tr>
-                      <th>Name</th>
-                      <th>Email</th>
-                      <th>Role</th>
-                      <th>Action</th>
-                    </tr>
-                  </thead>
+                  <thead><tr><th>Name</th><th>Email</th><th>Shop</th><th>Role</th><th>Action</th></tr></thead>
                   <tbody id="employeeTable"></tbody>
                 </table>
               </div>
@@ -770,87 +438,32 @@
         </section>
 
         <section id="settingsPage" class="page hidden">
-          <div class="topbar">
-            <div>
-              <h2>Settings</h2>
-              <p>Update shop name, currency and tagline. These are local display settings for this browser.</p>
-            </div>
-          </div>
-
+          <div class="topbar"><div><h2>Settings</h2><p>Update shop branding and review database structure.</p></div></div>
           <div class="grid two-col">
             <div class="card">
-              <div class="section-title">
-                <h3>Shop Details</h3>
-                <span class="badge info">Branding</span>
-              </div>
+              <div class="section-title"><h3>Shop Details</h3><span class="badge info">Branding</span></div>
               <form id="settingsForm" class="form-grid">
-                <div class="form-group">
-                  <label for="shopName">Shop Name</label>
-                  <input id="shopName" />
-                </div>
-                <div class="form-group">
-                  <label for="shopCurrency">Currency</label>
-                  <input id="shopCurrency" />
-                </div>
-                <div class="form-group full">
-                  <label for="shopTagline">Shop Tagline</label>
-                  <input id="shopTagline" />
-                </div>
-                <div class="form-group full">
-                  <button type="submit" class="btn btn-primary">Save Settings</button>
-                </div>
+                <div class="form-group"><label for="shopName">Shop Name</label><input id="shopName" /></div>
+                <div class="form-group"><label for="shopCurrency">Currency</label><input id="shopCurrency" /></div>
+                <div class="form-group full"><label for="shopTagline">Shop Tagline</label><input id="shopTagline" /></div>
+                <div class="form-group full"><button type="submit" class="btn btn-primary">Save Settings</button></div>
               </form>
             </div>
 
             <div class="card">
-              <div class="section-title">
-                <h3>Database Setup</h3>
-                <span class="badge warning">Run SQL First</span>
-              </div>
+              <div class="section-title"><h3>Database Backed Employees</h3><span class="badge warning">Supabase</span></div>
               <div class="quick-box small" style="white-space:pre-wrap; line-height:1.55;">
-Required tables in Supabase SQL Editor:
+This version stores employees in the public.employees table.
 
-products
-- id bigint generated by default as identity primary key
-- name text not null
-- category text
-- barcode text unique
-- cost_price numeric default 0
-- marked_price numeric default 0
-- retail_price numeric default 0
-- wholesale_price numeric default 0
-- unit text default 'pcs'
-- low_stock_threshold integer default 5
-- retail_discount numeric default 0
-- wholesale_discount numeric default 0
-- description text
-- created_at timestamptz default now()
+Each employee has:
+- full_name
+- email
+- password
+- role
+- shop_name
+- is_active
 
-shop_stock
-- id bigint generated by default as identity primary key
-- product_id bigint not null
-- shop_name text not null
-- stock integer default 0
-- low_stock_threshold integer default 5
-- created_at timestamptz default now()
-- unique(product_id, shop_name)
-
-sales
-- id bigint generated by default as identity primary key
-- receipt_no text not null unique
-- customer_name text not null
-- customer_phone text
-- notes text
-- shop_name text not null
-- items_json text not null
-- item_count integer default 0
-- total numeric default 0
-- total_profit numeric default 0
-- total_margin numeric default 0
-- payment_method text
-- payment_reference text
-- created_by text
-- created_at timestamptz default now()
+Employees can now log in from any device that uses the same Supabase database.
               </div>
             </div>
           </div>
@@ -866,8 +479,10 @@ sales
     const SUPABASE_URL = 'https://vzmhlhykafcahglkhljw.supabase.co';
     const SUPABASE_ANON_KEY = 'sb_publishable_AdW-VgSNHD2tjZ2kNhgtCA_N4WZcBva';
     const ADMIN_EMAIL = 'kariukibenson731@gmail.com';
+    const SHOPS = ['Gakindu', 'Oythaya', 'Shop C'];
+
     const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-    const LOCAL_SETTINGS_KEY = 'smartshop_local_settings_multishop_v2';
+    const LOCAL_SETTINGS_KEY = 'smartshop_local_settings_multishop_v5';
     let salesChart = null;
 
     let state = {
@@ -876,9 +491,7 @@ sales
         currency: 'KSh',
         tagline: 'Retail & Wholesale Shop'
       },
-      employees: [
-        { id: 'emp-demo-1', name: 'Demo Employee', email: 'employee@shop.com', password: 'employee123', role: 'employee' }
-      ],
+      employees: [],
       products: [],
       shopStocks: [],
       sales: [],
@@ -893,17 +506,13 @@ sales
         if (!raw) return;
         const parsed = JSON.parse(raw);
         state.settings = { ...state.settings, ...(parsed.settings || parsed || {}) };
-        if (Array.isArray(parsed.employees) && parsed.employees.length) state.employees = parsed.employees;
       } catch (error) {
         console.error('Failed to load settings', error);
       }
     }
 
     function saveLocalSettings() {
-      localStorage.setItem(LOCAL_SETTINGS_KEY, JSON.stringify({
-        settings: state.settings,
-        employees: state.employees
-      }));
+      localStorage.setItem(LOCAL_SETTINGS_KEY, JSON.stringify({ settings: state.settings }));
     }
 
     function setLoading(show, text = 'Please wait...') {
@@ -939,10 +548,32 @@ sales
     function formatDate(iso) { return new Date(iso).toLocaleDateString(); }
     function formatDateTime(iso) { return new Date(iso).toLocaleString(); }
     function capitalize(text) { return text ? text.charAt(0).toUpperCase() + text.slice(1) : ''; }
+    function isAdmin() { return state.currentUser?.role === 'admin'; }
+    function getCurrentUserShop() { return state.currentUser?.shopName || null; }
 
     function fillAdminEmail() {
       document.getElementById('adminEmail').value = ADMIN_EMAIL;
       document.getElementById('adminPassword').focus();
+    }
+
+    function fillDemoEmployee() {
+      document.getElementById('loginRole').value = 'employee';
+      document.getElementById('adminEmail').value = 'employee@gakindu.com';
+      document.getElementById('adminPassword').value = 'employee123';
+    }
+
+    async function loadEmployeesFromSupabase() {
+      const { data, error } = await supabase.from('employees').select('*').eq('is_active', true).order('created_at', { ascending: false });
+      if (error) throw new Error(error.message || 'Failed to load employees');
+      state.employees = (data || []).map(item => ({
+        id: item.id,
+        name: item.full_name,
+        email: item.email,
+        password: item.password,
+        role: item.role || 'employee',
+        shopName: item.shop_name,
+        isActive: item.is_active
+      }));
     }
 
     async function loginUser() {
@@ -956,12 +587,34 @@ sales
       }
 
       if (role === 'employee') {
-        const employee = state.employees.find(emp => emp.email.toLowerCase() === email && emp.password === password);
+        try {
+          setLoading(true, 'Checking employee...');
+          await loadEmployeesFromSupabase();
+          setLoading(false);
+        } catch (error) {
+          setLoading(false);
+          showAlert('loginAlert', error.message || 'Failed to load employees.', 'error');
+          return;
+        }
+
+        const employee = state.employees.find(emp =>
+          emp.email.toLowerCase() === email &&
+          emp.password === password &&
+          emp.isActive !== false
+        );
+
         if (!employee) {
           showAlert('loginAlert', 'Wrong employee email or password.', 'error');
           return;
         }
-        state.currentUser = { name: employee.name, email: employee.email, role: 'employee' };
+
+        state.currentUser = {
+          name: employee.name,
+          email: employee.email,
+          role: 'employee',
+          shopName: employee.shopName
+        };
+
         await reloadAllData();
         showApp();
         showAlert('globalAlert', `Welcome ${employee.name}.`, 'success');
@@ -982,14 +635,14 @@ sales
         return;
       }
 
-      state.currentUser = { name: 'Admin', email: data.user.email, role: 'admin' };
+      state.currentUser = { name: 'Admin', email: data.user.email, role: 'admin', shopName: null };
       await reloadAllData();
       showApp();
       showAlert('globalAlert', 'Admin login successful with Supabase.', 'success');
     }
 
     async function logout() {
-      if (state.currentUser?.role === 'admin') await supabase.auth.signOut();
+      if (isAdmin()) await supabase.auth.signOut();
       state.currentUser = null;
       state.cart = [];
       document.getElementById('appScreen').classList.add('hidden');
@@ -999,34 +652,60 @@ sales
     }
 
     function requireAdmin() {
-      if (state.currentUser?.role !== 'admin') {
+      if (!isAdmin()) {
         showAlert('globalAlert', 'Only admin can do this action.', 'error');
         return false;
       }
       return true;
     }
 
-    function fillDemoEmployee() {
-      document.getElementById('loginRole').value = 'employee';
-      document.getElementById('adminEmail').value = 'employee@shop.com';
-      document.getElementById('adminPassword').value = 'employee123';
-    }
-
     function showApp() {
       document.getElementById('loginScreen').classList.add('hidden');
       document.getElementById('appScreen').classList.remove('hidden');
-      document.getElementById('loggedInUser').textContent = `${state.currentUser?.name || 'User'} • ${state.currentUser?.role || 'employee'}`;
+
+      if (isAdmin()) {
+        document.getElementById('loggedInUser').textContent = `${state.currentUser.name} • admin • All Shops`;
+      } else {
+        document.getElementById('loggedInUser').textContent = `${state.currentUser.name} • employee • ${state.currentUser.shopName}`;
+      }
+
       document.getElementById('shopName').value = state.settings.shopName;
       document.getElementById('shopCurrency').value = state.settings.currency;
       document.getElementById('shopTagline').value = state.settings.tagline;
-      togglePaymentReferenceLabel();
+
       applyRoleUI();
+      applyShopLockUI();
+      togglePaymentReferenceLabel();
       renderAll();
     }
 
     function applyRoleUI() {
-      const isAdmin = state.currentUser?.role === 'admin';
-      document.querySelectorAll('.role-admin-only').forEach(el => el.style.display = isAdmin ? '' : 'none');
+      document.querySelectorAll('.role-admin-only').forEach(el => {
+        el.style.display = isAdmin() ? '' : 'none';
+      });
+    }
+
+    function applyShopLockUI() {
+      const dashboardFilter = document.getElementById('dashboardShopFilter');
+      const saleShop = document.getElementById('saleShop');
+      const stockShop = document.getElementById('stockShop');
+      const subtitle = document.getElementById('dashboardSubtitle');
+
+      if (isAdmin()) {
+        dashboardFilter.disabled = false;
+        saleShop.disabled = false;
+        stockShop.disabled = false;
+        subtitle.textContent = 'Monitor all shops or a single shop.';
+      } else {
+        const shop = getCurrentUserShop() || 'Gakindu';
+        dashboardFilter.value = shop;
+        dashboardFilter.disabled = true;
+        saleShop.value = shop;
+        saleShop.disabled = true;
+        stockShop.value = shop;
+        stockShop.disabled = true;
+        subtitle.textContent = `You are viewing ${shop} only.`;
+      }
     }
 
     function showPage(pageId, el = null) {
@@ -1037,11 +716,14 @@ sales
       const matchedBtn = el || document.querySelector(`.nav-btn[data-page="${pageId}"]`);
       if (matchedBtn) matchedBtn.classList.add('active');
       if (pageId === 'salesPage') {
+        applyShopLockUI();
         refreshSaleProductOptions();
         updateSalePricePreview();
         renderCart();
       }
       if (pageId === 'dashboardPage') renderDashboard();
+      if (pageId === 'stockPage') renderShopStockTable();
+      if (pageId === 'receiptsPage') renderReceipts();
     }
 
     function focusProductForm() {
@@ -1116,7 +798,12 @@ sales
     async function reloadAllData() {
       try {
         setLoading(true, 'Loading database data...');
-        await Promise.all([loadProductsFromSupabase(), loadShopStocksFromSupabase(), loadSalesFromSupabase()]);
+        await Promise.all([
+          loadEmployeesFromSupabase(),
+          loadProductsFromSupabase(),
+          loadShopStocksFromSupabase(),
+          loadSalesFromSupabase()
+        ]);
         renderAll();
       } catch (error) {
         showAlert('globalAlert', error.message || 'Failed to load data from database.', 'error');
@@ -1137,6 +824,32 @@ sales
       if (!row || row.stock <= 0) return 'out';
       if (row.stock <= Number(row.lowStockThreshold || 0)) return 'low';
       return 'in';
+    }
+
+    function getDashboardShopFilter() {
+      return document.getElementById('dashboardShopFilter')?.value || 'ALL';
+    }
+
+    function getAllowedShopFilterValue() {
+      return isAdmin() ? getDashboardShopFilter() : (getCurrentUserShop() || 'Gakindu');
+    }
+
+    function getFilteredSalesForDashboard() {
+      const filter = getAllowedShopFilterValue();
+      return filter === 'ALL' ? [...state.sales] : state.sales.filter(s => s.shopName === filter);
+    }
+
+    function getFilteredShopStocksForDashboard() {
+      const filter = getAllowedShopFilterValue();
+      return filter === 'ALL' ? [...state.shopStocks] : state.shopStocks.filter(s => s.shopName === filter);
+    }
+
+    function getVisibleReceipts() {
+      return isAdmin() ? [...state.sales] : state.sales.filter(s => s.shopName === getCurrentUserShop());
+    }
+
+    function getVisibleStocks() {
+      return isAdmin() ? [...state.shopStocks] : state.shopStocks.filter(s => s.shopName === getCurrentUserShop());
     }
 
     function refreshCategoryOptions() {
@@ -1228,8 +941,8 @@ sales
             </div>
             <p class="footer-note">${escapeHtml(product.description || 'No description')}</p>
             <div class="product-actions">
-              <button class="btn btn-primary" onclick="editProduct(${product.id})">Edit</button>
-              <button class="btn btn-danger" onclick="deleteProduct(${product.id})">Delete</button>
+              ${isAdmin() ? `<button class="btn btn-primary" onclick="editProduct(${product.id})">Edit</button>` : ''}
+              ${isAdmin() ? `<button class="btn btn-danger" onclick="deleteProduct(${product.id})">Delete</button>` : ''}
             </div>
           </div>
         `;
@@ -1238,11 +951,14 @@ sales
 
     function renderShopStockTable() {
       const table = document.getElementById('shopStockTable');
-      if (!state.shopStocks.length) {
+      const stocks = getVisibleStocks();
+
+      if (!stocks.length) {
         table.innerHTML = '<tr><td colspan="5" class="muted center">No shop stock records yet.</td></tr>';
         return;
       }
-      table.innerHTML = state.shopStocks.map(row => {
+
+      table.innerHTML = stocks.map(row => {
         const product = state.products.find(p => String(p.id) === String(row.productId));
         const status = getStockStatusRow(row);
         const badge = status === 'out'
@@ -1273,6 +989,7 @@ sales
     }
 
     function editProduct(id) {
+      if (!requireAdmin()) return;
       const product = state.products.find(p => String(p.id) === String(id));
       if (!product) return;
       state.editingProductId = id;
@@ -1433,24 +1150,9 @@ sales
       const profitMargin = finalTotal > 0 ? (profitMade / finalTotal) * 100 : 0;
 
       return {
-        product,
-        stockRow,
-        shopName,
-        saleType,
-        qty,
-        costPrice,
-        markedPrice,
-        basePrice,
-        typeDiscount,
-        extraDiscount,
-        autoFinalUnitPrice,
-        customSellingPrice,
-        negotiatedMode,
-        finalUnitPrice,
-        finalTotal,
-        discountGiven,
-        profitMade,
-        profitMargin
+        product, stockRow, shopName, saleType, qty, costPrice, markedPrice, basePrice,
+        typeDiscount, extraDiscount, autoFinalUnitPrice, customSellingPrice, negotiatedMode,
+        finalUnitPrice, finalTotal, discountGiven, profitMade, profitMargin
       };
     }
 
@@ -1494,14 +1196,8 @@ sales
 
     function addCurrentItemToCart() {
       const info = calculateSalePreview();
-      if (!info) {
-        showAlert('globalAlert', 'Choose a valid stocked product.', 'error');
-        return;
-      }
-      if (info.qty > info.stockRow.stock) {
-        showAlert('globalAlert', 'Not enough stock in this shop.', 'error');
-        return;
-      }
+      if (!info) return showAlert('globalAlert', 'Choose a valid stocked product.', 'error');
+      if (info.qty > info.stockRow.stock) return showAlert('globalAlert', 'Not enough stock in this shop.', 'error');
 
       const existing = state.cart.find(item =>
         String(item.productId) === String(info.product.id) &&
@@ -1511,10 +1207,7 @@ sales
 
       if (existing) {
         const totalQty = existing.qty + info.qty;
-        if (totalQty > info.stockRow.stock) {
-          showAlert('globalAlert', 'Combined cart quantity exceeds shop stock.', 'error');
-          return;
-        }
+        if (totalQty > info.stockRow.stock) return showAlert('globalAlert', 'Combined cart quantity exceeds shop stock.', 'error');
         existing.qty = totalQty;
         existing.finalTotal = existing.finalUnitPrice * existing.qty;
         existing.profitMade = (existing.finalUnitPrice - existing.costPrice) * existing.qty;
@@ -1579,6 +1272,8 @@ sales
     function resetSaleForm() {
       state.cart = [];
       document.getElementById('saleForm').reset();
+      const defaultShop = isAdmin() ? 'Gakindu' : getCurrentUserShop();
+      if (defaultShop) document.getElementById('saleShop').value = defaultShop;
       document.getElementById('saleQty').value = 1;
       document.getElementById('manualExtraDiscount').value = 0;
       document.getElementById('customSellingPrice').value = '';
@@ -1599,6 +1294,7 @@ sales
 
       if (!customerName) return showAlert('globalAlert', 'Customer name is required.', 'error');
       if (!state.cart.length) return showAlert('globalAlert', 'Add at least one item to the cart.', 'error');
+      if (!isAdmin() && shopName !== getCurrentUserShop()) return showAlert('globalAlert', 'You can only sell for your assigned shop.', 'error');
       if (!state.cart.every(item => item.shopName === shopName)) return showAlert('globalAlert', 'All cart items must belong to the selected shop.', 'error');
 
       for (const item of state.cart) {
@@ -1655,14 +1351,13 @@ sales
       resetSaleForm();
     }
 
-    function getGroupedSalesData() {
+    function getGroupedSalesData(filteredSales) {
       const viewType = document.getElementById('chartViewType')?.value || 'day';
       const grouped = {};
 
-      state.sales.slice().reverse().forEach(sale => {
+      filteredSales.slice().reverse().forEach(sale => {
         const saleDate = new Date(sale.createdAt);
         let label = '';
-
         if (viewType === 'day') label = saleDate.toLocaleDateString();
         else if (viewType === 'month') label = `${saleDate.getFullYear()}-${String(saleDate.getMonth() + 1).padStart(2, '0')}`;
         else label = `${saleDate.getFullYear()}`;
@@ -1687,10 +1382,10 @@ sales
       };
     }
 
-    function renderSalesChart() {
+    function renderSalesChart(filteredSales) {
       const canvas = document.getElementById('salesLineChart');
       if (!canvas) return;
-      const { labels, revenueData, profitData, marginData } = getGroupedSalesData();
+      const { labels, revenueData, profitData, marginData } = getGroupedSalesData(filteredSales);
       if (salesChart) salesChart.destroy();
 
       salesChart = new Chart(canvas, {
@@ -1720,53 +1415,60 @@ sales
           },
           scales: {
             x: { ticks: { color: '#cbd5e1' }, grid: { color: 'rgba(255,255,255,0.08)' } },
-            y: {
-              position: 'left',
-              ticks: { color: '#cbd5e1', callback: value => formatMoney(value) },
-              grid: { color: 'rgba(255,255,255,0.08)' }
-            },
-            y1: {
-              position: 'right',
-              beginAtZero: true,
-              ticks: { color: '#cbd5e1', callback: value => value + '%' },
-              grid: { drawOnChartArea: false }
-            }
+            y: { position: 'left', ticks: { color: '#cbd5e1', callback: value => formatMoney(value) }, grid: { color: 'rgba(255,255,255,0.08)' } },
+            y1: { position: 'right', beginAtZero: true, ticks: { color: '#cbd5e1', callback: value => value + '%' }, grid: { drawOnChartArea: false } }
           }
         }
       });
     }
 
+    function renderBranchSummaryCards() {
+      if (!isAdmin()) return;
+      for (const shop of SHOPS) {
+        const sales = state.sales.filter(s => s.shopName === shop);
+        const stocks = state.shopStocks.filter(s => s.shopName === shop);
+        const revenue = sales.reduce((sum, s) => sum + Number(s.total || 0), 0);
+        const profit = sales.reduce((sum, s) => sum + Number(s.totalProfit || 0), 0);
+        const units = stocks.reduce((sum, s) => sum + Number(s.stock || 0), 0);
+        const low = stocks.filter(s => getStockStatusRow(s) !== 'in').length;
+
+        const key = shop === 'Gakindu' ? 'gakindu' : shop === 'Oythaya' ? 'oythaya' : 'shopC';
+        document.getElementById(`${key}Revenue`).textContent = formatMoney(revenue);
+        document.getElementById(`${key}Profit`).textContent = formatMoney(profit);
+        document.getElementById(`${key}Units`).textContent = units;
+        document.getElementById(`${key}Low`).textContent = low;
+      }
+    }
+
     function renderDashboard() {
+      const filteredSales = getFilteredSalesForDashboard();
+      const filteredStocks = getFilteredShopStocksForDashboard();
+      const filter = getAllowedShopFilterValue();
+
       document.getElementById('statProducts').textContent = state.products.length;
-      document.getElementById('statStockRows').textContent = state.shopStocks.length;
-      document.getElementById('statStock').textContent = state.shopStocks.reduce((sum, row) => sum + Number(row.stock || 0), 0);
-      document.getElementById('statRevenue').textContent = formatMoney(state.sales.reduce((sum, s) => sum + Number(s.total || 0), 0));
-      document.getElementById('statProfit').textContent = formatMoney(state.sales.reduce((sum, s) => sum + Number(s.totalProfit || 0), 0));
+      document.getElementById('statStockRows').textContent = filteredStocks.length;
+      document.getElementById('statStock').textContent = filteredStocks.reduce((sum, row) => sum + Number(row.stock || 0), 0);
 
-      const totalRevenue = state.sales.reduce((sum, s) => sum + Number(s.total || 0), 0);
-      const totalProfit = state.sales.reduce((sum, s) => sum + Number(s.totalProfit || 0), 0);
+      const totalRevenue = filteredSales.reduce((sum, s) => sum + Number(s.total || 0), 0);
+      const totalProfit = filteredSales.reduce((sum, s) => sum + Number(s.totalProfit || 0), 0);
       const avgMargin = totalRevenue > 0 ? (totalProfit / totalRevenue) * 100 : 0;
+
+      document.getElementById('statRevenue').textContent = formatMoney(totalRevenue);
+      document.getElementById('statProfit').textContent = formatMoney(totalProfit);
       document.getElementById('statProfitMargin').textContent = `${avgMargin.toFixed(1)}%`;
+      document.getElementById('statReceipts').textContent = filteredSales.length;
 
-      const chartData = getGroupedSalesData();
-      const labelMap = {
-        day: 'Based on day-by-day chart view',
-        month: 'Based on month-by-month chart view',
-        year: 'Based on year-by-year chart view'
-      };
-      document.getElementById('statProfitMarginLabel').textContent = labelMap[chartData.viewType] || 'Across all receipts';
+      const chartData = getGroupedSalesData(filteredSales);
+      const labelMap = { day: 'Based on day-by-day chart view', month: 'Based on month-by-month chart view', year: 'Based on year-by-year chart view' };
+      document.getElementById('statProfitMarginLabel').textContent = `${labelMap[chartData.viewType] || 'Across current receipts'}${filter !== 'ALL' ? ` • ${filter}` : ''}`;
 
-      document.getElementById('statGakindu').textContent =
-        state.shopStocks.filter(row => row.shopName === 'Gakindu').reduce((sum, row) => sum + Number(row.stock || 0), 0);
-
-      document.getElementById('statLowStock').textContent =
-        state.shopStocks.filter(row => getStockStatusRow(row) !== 'in').length;
+      document.getElementById('statLowStock').textContent = filteredStocks.filter(row => getStockStatusRow(row) !== 'in').length;
 
       const recentSalesTable = document.getElementById('recentSalesTable');
-      if (!state.sales.length) {
+      if (!filteredSales.length) {
         recentSalesTable.innerHTML = '<tr><td colspan="8" class="muted center">No sales yet.</td></tr>';
       } else {
-        recentSalesTable.innerHTML = state.sales.slice(0, 6).map(sale => `
+        recentSalesTable.innerHTML = filteredSales.slice(0, 6).map(sale => `
           <tr>
             <td>${sale.receiptNo}</td>
             <td>${escapeHtml(sale.customerName)}</td>
@@ -1781,32 +1483,30 @@ sales
       }
 
       const lowStockList = document.getElementById('lowStockList');
-      const lowItems = state.shopStocks.filter(row => getStockStatusRow(row) !== 'in');
+      const lowItems = filteredStocks.filter(row => getStockStatusRow(row) !== 'in');
       if (!lowItems.length) {
         lowStockList.innerHTML = '<div class="empty-state">No low stock records right now.</div>';
       } else {
         lowStockList.innerHTML = lowItems.map(row => {
           const product = state.products.find(p => String(p.id) === String(row.productId));
-          return `
-            <div class="receipt-line">
-              <span>${escapeHtml(product?.name || 'Unknown Product')} • ${escapeHtml(row.shopName)}</span>
-              <strong>${row.stock} left</strong>
-            </div>
-          `;
+          return `<div class="receipt-line"><span>${escapeHtml(product?.name || 'Unknown Product')} • ${escapeHtml(row.shopName)}</span><strong>${row.stock} left</strong></div>`;
         }).join('');
       }
 
-      renderSalesChart();
+      renderBranchSummaryCards();
+      renderSalesChart(filteredSales);
     }
 
     function renderReceipts() {
       const table = document.getElementById('receiptsTable');
-      if (!state.sales.length) {
+      const receipts = getVisibleReceipts();
+
+      if (!receipts.length) {
         table.innerHTML = '<tr><td colspan="9" class="muted center">No receipts available.</td></tr>';
         return;
       }
 
-      table.innerHTML = state.sales.map(sale => `
+      table.innerHTML = receipts.map(sale => `
         <tr>
           <td>${sale.receiptNo}</td>
           <td>${escapeHtml(sale.customerName)}</td>
@@ -1818,7 +1518,7 @@ sales
           <td>${formatDate(sale.createdAt)}</td>
           <td style="display:flex; gap:8px; flex-wrap:wrap;">
             <button class="btn btn-primary" style="padding:8px 12px;" onclick="printReceipt(${sale.id})">View / Print</button>
-            <button class="btn btn-danger" style="padding:8px 12px;" onclick="deleteReceipt(${sale.id})">Delete</button>
+            ${isAdmin() ? `<button class="btn btn-danger" style="padding:8px 12px;" onclick="deleteReceipt(${sale.id})">Delete</button>` : ''}
           </td>
         </tr>
       `).join('');
@@ -1826,9 +1526,7 @@ sales
 
     function generateReceiptHTML(sale, autoPrint = false) {
       const area = document.getElementById('receiptPrintArea');
-      const itemsHtml = sale.items.map(item => `
-        <div class="receipt-line"><span>${escapeHtml(item.productName)} x ${item.qty}</span><strong>${formatMoney(item.finalTotal)}</strong></div>
-      `).join('');
+      const itemsHtml = sale.items.map(item => `<div class="receipt-line"><span>${escapeHtml(item.productName)} x ${item.qty}</span><strong>${formatMoney(item.finalTotal)}</strong></div>`).join('');
       const receiptHtml = `
         <div class="receipt-preview">
           <div class="receipt-header">
@@ -1886,11 +1584,7 @@ sales
       setLoading(false);
 
       if (salesDelete.error || stockDelete.error || productDelete.error) {
-        showAlert(
-          'globalAlert',
-          salesDelete.error?.message || stockDelete.error?.message || productDelete.error?.message || 'Reset failed.',
-          'error'
-        );
+        showAlert('globalAlert', salesDelete.error?.message || stockDelete.error?.message || productDelete.error?.message || 'Reset failed.', 'error');
         return;
       }
 
@@ -1900,21 +1594,33 @@ sales
       showAlert('globalAlert', 'Dashboard reset complete. Everything is now zero.', 'success');
     }
 
-    function handleEmployeeSubmit(event) {
+    async function handleEmployeeSubmit(event) {
       event.preventDefault();
       if (!requireAdmin()) return;
-      const name = document.getElementById('employeeName').value.trim();
+
+      const full_name = document.getElementById('employeeName').value.trim();
       const email = document.getElementById('employeeEmail').value.trim().toLowerCase();
       const password = document.getElementById('employeePassword').value;
+      const shop_name = document.getElementById('employeeShop').value;
 
-      if (!name || !email || !password) return showAlert('globalAlert', 'Fill all employee fields.', 'error');
+      if (!full_name || !email || !password || !shop_name) return showAlert('globalAlert', 'Fill all employee fields.', 'error');
       if (email === ADMIN_EMAIL.toLowerCase()) return showAlert('globalAlert', 'This email is already used by admin.', 'error');
-      if (state.employees.some(emp => emp.email.toLowerCase() === email)) return showAlert('globalAlert', 'Employee email already exists.', 'error');
 
-      state.employees.push({ id: `emp-${Date.now()}`, name, email, password, role: 'employee' });
-      saveLocalSettings();
+      setLoading(true, 'Saving employee...');
+      const { error } = await supabase.from('employees').insert([{
+        full_name,
+        email,
+        password,
+        role: 'employee',
+        shop_name,
+        is_active: true
+      }]);
+      setLoading(false);
+
+      if (error) return showAlert('globalAlert', error.message || 'Failed to save employee.', 'error');
+
       document.getElementById('employeeForm').reset();
-      renderEmployees();
+      await reloadAllData();
       showAlert('globalAlert', 'Employee added successfully.', 'success');
     }
 
@@ -1922,27 +1628,33 @@ sales
       const table = document.getElementById('employeeTable');
       if (!table) return;
       if (!state.employees.length) {
-        table.innerHTML = '<tr><td colspan="4" class="muted center">No employees yet.</td></tr>';
+        table.innerHTML = '<tr><td colspan="5" class="muted center">No employees yet.</td></tr>';
         return;
       }
       table.innerHTML = state.employees.map(emp => `
         <tr>
           <td>${escapeHtml(emp.name)}</td>
           <td>${escapeHtml(emp.email)}</td>
-          <td><span class="badge violet">Employee</span></td>
-          <td><button class="btn btn-danger" style="padding:8px 12px;" onclick="deleteEmployee('${emp.id}')">Delete</button></td>
+          <td>${escapeHtml(emp.shopName || 'Not set')}</td>
+          <td><span class="badge violet">${escapeHtml(capitalize(emp.role || 'employee'))}</span></td>
+          <td><button class="btn btn-danger" style="padding:8px 12px;" onclick="deleteEmployee(${emp.id})">Delete</button></td>
         </tr>
       `).join('');
     }
 
-    function deleteEmployee(id) {
+    async function deleteEmployee(id) {
       if (!requireAdmin()) return;
-      const emp = state.employees.find(e => e.id === id);
+      const emp = state.employees.find(e => String(e.id) === String(id));
       if (!emp) return;
       if (!confirm(`Delete employee ${emp.name}?`)) return;
-      state.employees = state.employees.filter(e => e.id !== id);
-      saveLocalSettings();
-      renderEmployees();
+
+      setLoading(true, 'Deleting employee...');
+      const { error } = await supabase.from('employees').delete().eq('id', id);
+      setLoading(false);
+
+      if (error) return showAlert('globalAlert', error.message || 'Failed to delete employee.', 'error');
+
+      await reloadAllData();
       showAlert('globalAlert', 'Employee deleted successfully.', 'success');
     }
 
@@ -1976,6 +1688,7 @@ sales
     }
 
     async function seedSampleData() {
+      if (!requireAdmin()) return;
       const { count, error: countError } = await supabase.from('products').select('*', { count: 'exact', head: true });
       if (countError) return showAlert('globalAlert', countError.message || 'Could not check products.', 'error');
       if ((count || 0) > 0) return showAlert('globalAlert', 'Products already exist. Sample data was not added.', 'info');
@@ -2009,6 +1722,7 @@ sales
     function renderAll() {
       document.title = state.settings.shopName;
       document.getElementById('brandNameSidebar').textContent = state.settings.shopName;
+      applyShopLockUI();
       renderDashboard();
       refreshCategoryOptions();
       refreshStockProductOptions();
@@ -2057,10 +1771,12 @@ sales
     async function initApp() {
       loadLocalSettings();
       document.getElementById('adminEmail').value = ADMIN_EMAIL;
+
       const { data } = await supabase.auth.getSession();
       const session = data.session;
+
       if (session?.user?.email && session.user.email.toLowerCase() === ADMIN_EMAIL.toLowerCase()) {
-        state.currentUser = { name: 'Admin', email: session.user.email, role: 'admin' };
+        state.currentUser = { name: 'Admin', email: session.user.email, role: 'admin', shopName: null };
         await reloadAllData();
         showApp();
       }
