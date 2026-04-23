@@ -381,8 +381,8 @@
                 <input id="searchProducts" placeholder="Search product name or barcode..." oninput="renderProducts()" />
                 <select id="filterCategory" onchange="renderProducts()"><option value="">All Categories</option></select>
                 <select id="sortProducts" onchange="renderProducts()">
+                  <option value="name" selected>Name A-Z</option>
                   <option value="latest">Latest</option>
-                  <option value="name">Name</option>
                   <option value="retail">Retail Price</option>
                   <option value="wholesale">Wholesale Price</option>
                 </select>
@@ -394,17 +394,19 @@
         </section>
 
         <section id="stockPage" class="page hidden">
-          <div class="topbar"><div><h2>Shop Stock</h2><p>Admin manages all shops. Employees only see their own shop stock.</p></div></div>
+          <div class="topbar"><div><h2>Shop Stock</h2><p>Admin manages all shops. Employees can add stock only to their assigned shop.</p></div></div>
           <div class="grid two-col">
-            <div class="card role-admin-only">
-              <div class="section-title"><h3>Set Stock By Shop</h3><span class="badge success">Multi-Shop</span></div>
+            <div class="card">
+              <div class="section-title"><h3>Add / Update Stock By Shop</h3><span class="badge success">Own Shop Only For Employee</span></div>
               <form id="stockForm" class="form-grid">
-                <div class="form-group"><label for="stockProduct">Product</label><select id="stockProduct"></select></div>
+                <div class="form-group"><label for="stockProductSearch">Search Item</label><input id="stockProductSearch" placeholder="Search item name..." oninput="refreshStockProductOptions()" /></div>
+                <div class="form-group"><label for="stockProduct">Product</label><select id="stockProduct" onchange="syncStockSearchWithSelection()"></select></div>
                 <div class="form-group"><label for="stockShop">Shop</label>
                   <select id="stockShop"><option value="Gakindu">Gakindu</option><option value="Oythaya">Oythaya</option><option value="Shop C">Shop C</option></select>
                 </div>
-                <div class="form-group"><label for="shopStockQty">Stock Quantity</label><input id="shopStockQty" type="number" min="0" value="0" /></div>
+                <div class="form-group"><label for="shopStockQty">Add Stock Quantity</label><input id="shopStockQty" type="number" min="0" value="0" /></div>
                 <div class="form-group"><label for="shopStockThreshold">Low Stock Threshold</label><input id="shopStockThreshold" type="number" min="0" value="5" /></div>
+                <div class="form-group full"><div class="quick-box small">Admin can update any shop. Employee can only add stock to the shop assigned to their account.</div></div>
                 <div class="form-group full"><button type="submit" class="btn btn-primary">Save Shop Stock</button></div>
               </form>
             </div>
@@ -437,7 +439,8 @@
                 <div class="form-group"><label for="saleType">Sale Type</label>
                   <select id="saleType" onchange="updateSalePricePreview()"><option value="retail">Retail</option><option value="wholesale">Wholesale</option></select>
                 </div>
-                <div class="form-group"><label for="saleProduct">Product</label><select id="saleProduct" onchange="updateSalePricePreview()"></select></div>
+                <div class="form-group"><label for="saleProductSearch">Search Item</label><input id="saleProductSearch" placeholder="Search item name..." oninput="refreshSaleProductOptions()" /></div>
+                <div class="form-group"><label for="saleProduct">Product</label><select id="saleProduct" onchange="syncSaleSearchWithSelection(); updateSalePricePreview()"></select></div>
                 <div class="form-group"><label for="saleQty">Quantity</label><input id="saleQty" type="number" min="1" value="1" oninput="updateSalePricePreview()" /></div>
                 <div class="form-group"><label for="manualExtraDiscount">Extra Discount %</label><input id="manualExtraDiscount" type="number" min="0" max="100" value="0" oninput="updateSalePricePreview()" /></div>
                 <div class="form-group"><label for="customSellingPrice">Negotiated Selling Price (Optional)</label><input id="customSellingPrice" type="number" min="0" step="0.01" placeholder="Leave empty to use automatic price" oninput="updateSalePricePreview()" /></div>
@@ -879,6 +882,11 @@
       return true;
     }
 
+    function canManageStockForShop(shopName) {
+      if (isAdmin()) return true;
+      return (getCurrentUserShop() || '') === (shopName || '');
+    }
+
     function showApp() {
       document.getElementById('loginScreen').classList.add('hidden');
       document.getElementById('appScreen').classList.remove('hidden');
@@ -989,6 +997,32 @@
       return 'in';
     }
 
+    function normalizeSearch(value) {
+      return String(value || '').trim().toLowerCase();
+    }
+
+    function sortProductsAZ(products) {
+      return [...products].sort((a, b) => String(a.name || '').localeCompare(String(b.name || '')));
+    }
+
+    function syncStockSearchWithSelection() {
+      const select = document.getElementById('stockProduct');
+      const input = document.getElementById('stockProductSearch');
+      if (!select || !input) return;
+      const selected = state.products.find(p => String(p.id) === String(select.value));
+      if (selected) input.value = selected.name;
+    }
+
+    function syncSaleSearchWithSelection() {
+      const select = document.getElementById('saleProduct');
+      const input = document.getElementById('saleProductSearch');
+      if (!select || !input) return;
+      const selectedId = select.value;
+      const row = state.shopStocks.find(r => String(r.productId) === String(selectedId) && r.shopName === (document.getElementById('saleShop')?.value || 'Gakindu'));
+      const selected = state.products.find(p => String(p.id) === String(row?.productId || selectedId));
+      if (selected) input.value = selected.name;
+    }
+
     function refreshCategoryOptions() {
       const categoryFilter = document.getElementById('filterCategory');
       const current = categoryFilter.value;
@@ -999,32 +1033,64 @@
 
     function refreshStockProductOptions() {
       const select = document.getElementById('stockProduct');
+      const searchInput = document.getElementById('stockProductSearch');
       if (!select) return;
-      if (!state.products.length) {
-        select.innerHTML = '<option value="">No products available</option>';
+
+      const current = select.value;
+      const query = normalizeSearch(searchInput?.value);
+      let products = sortProductsAZ(state.products);
+
+      if (query) {
+        products = products.filter(p =>
+          normalizeSearch(p.name).includes(query) ||
+          normalizeSearch(p.barcode).includes(query) ||
+          normalizeSearch(p.category).includes(query)
+        );
+      }
+
+      if (!products.length) {
+        select.innerHTML = '<option value="">No matching products</option>';
         return;
       }
-      select.innerHTML = state.products.map(p => `<option value="${p.id}">${escapeHtml(p.name)}</option>`).join('');
+
+      select.innerHTML = products.map(p => `<option value="${p.id}">${escapeHtml(p.name)}</option>`).join('');
+      if (products.some(p => String(p.id) === String(current))) select.value = current;
     }
 
     function refreshSaleProductOptions() {
       const select = document.getElementById('saleProduct');
+      const searchInput = document.getElementById('saleProductSearch');
       const shopName = document.getElementById('saleShop')?.value || 'Gakindu';
       const current = select.value;
-      const rows = state.shopStocks.filter(row => row.shopName === shopName && row.stock > 0);
+      const query = normalizeSearch(searchInput?.value);
+
+      let rows = state.shopStocks.filter(row => row.shopName === shopName && row.stock > 0)
+        .map(row => {
+          const product = state.products.find(p => String(p.id) === String(row.productId));
+          return product ? { row, product } : null;
+        })
+        .filter(Boolean)
+        .sort((a, b) => String(a.product.name || '').localeCompare(String(b.product.name || '')));
+
+      if (query) {
+        rows = rows.filter(({ product }) =>
+          normalizeSearch(product.name).includes(query) ||
+          normalizeSearch(product.barcode).includes(query) ||
+          normalizeSearch(product.category).includes(query)
+        );
+      }
 
       if (!rows.length) {
         select.innerHTML = '<option value="">No stocked products in this shop</option>';
+        updateSalePricePreview();
         return;
       }
 
-      select.innerHTML = rows.map(row => {
-        const product = state.products.find(p => String(p.id) === String(row.productId));
-        if (!product) return '';
-        return `<option value="${product.id}">${escapeHtml(product.name)} (${row.stock} ${escapeHtml(product.unit || 'pcs')} in ${escapeHtml(shopName)})</option>`;
-      }).join('');
+      select.innerHTML = rows.map(({ row, product }) =>
+        `<option value="${product.id}">${escapeHtml(product.name)} (${row.stock} ${escapeHtml(product.unit || 'pcs')} in ${escapeHtml(shopName)})</option>`
+      ).join('');
 
-      if (rows.some(r => String(r.productId) === String(current))) select.value = current;
+      if (rows.some(({ product }) => String(product.id) === String(current))) select.value = current;
     }
 
     function renderProducts() {
@@ -1048,10 +1114,10 @@
       if (category) filtered = filtered.filter(p => p.category === category);
 
       filtered.sort((a, b) => {
-        if (sortBy === 'name') return a.name.localeCompare(b.name);
+        if (sortBy === 'latest') return new Date(b.createdAt) - new Date(a.createdAt);
         if (sortBy === 'retail') return b.retailPrice - a.retailPrice;
         if (sortBy === 'wholesale') return b.wholesalePrice - a.wholesalePrice;
-        return new Date(b.createdAt) - new Date(a.createdAt);
+        return a.name.localeCompare(b.name);
       });
 
       if (!filtered.length) {
@@ -1552,26 +1618,39 @@
 
     async function handleStockSubmit(event) {
       event.preventDefault();
-      if (!requireAdmin()) return;
+
       const productId = document.getElementById('stockProduct').value;
       const shopName = document.getElementById('stockShop').value;
-      const stock = Number(document.getElementById('shopStockQty').value || 0);
+      const qtyToAdd = Number(document.getElementById('shopStockQty').value || 0);
       const lowStockThreshold = Number(document.getElementById('shopStockThreshold').value || 0);
+
       if (!productId || !shopName) return showAlert('globalAlert', 'Select a product and shop.', 'error');
+      if (qtyToAdd < 0) return showAlert('globalAlert', 'Stock to add cannot be negative.', 'error');
+      if (!canManageStockForShop(shopName)) return showAlert('globalAlert', 'You can only add stock to your own assigned shop.', 'error');
 
       const existing = getShopStock(productId, shopName);
       setLoading(true, 'Saving shop stock...');
       let result;
+
       if (existing) {
-        result = await supabase.from('shop_stock').update({ stock, low_stock_threshold: lowStockThreshold }).eq('id', existing.id);
+        const newStock = Number(existing.stock || 0) + qtyToAdd;
+        result = await supabase
+          .from('shop_stock')
+          .update({ stock: newStock, low_stock_threshold: lowStockThreshold })
+          .eq('id', existing.id);
       } else {
-        result = await supabase.from('shop_stock').insert([{ product_id: productId, shop_name: shopName, stock, low_stock_threshold: lowStockThreshold }]);
+        result = await supabase
+          .from('shop_stock')
+          .insert([{ product_id: productId, shop_name: shopName, stock: qtyToAdd, low_stock_threshold: lowStockThreshold }]);
       }
+
       setLoading(false);
 
       if (result.error) return showAlert('globalAlert', result.error.message || 'Failed to save shop stock.', 'error');
+
+      document.getElementById('shopStockQty').value = 0;
       await reloadAllData();
-      showAlert('globalAlert', 'Shop stock saved successfully.', 'success');
+      showAlert('globalAlert', `Stock added successfully for ${shopName}.`, 'success');
     }
 
     async function handleEmployeeSubmit(event) {
@@ -1803,9 +1882,12 @@
     window.resetSaleLineInputs = resetSaleLineInputs;
     window.resetSaleForm = resetSaleForm;
     window.refreshSaleProductOptions = refreshSaleProductOptions;
+    window.refreshStockProductOptions = refreshStockProductOptions;
     window.renderCart = renderCart;
     window.deleteEmployee = deleteEmployee;
     window.renderEmployees = renderEmployees;
+    window.syncStockSearchWithSelection = syncStockSearchWithSelection;
+    window.syncSaleSearchWithSelection = syncSaleSearchWithSelection;
 
     async function initApp() {
       loadLocalSettings();
