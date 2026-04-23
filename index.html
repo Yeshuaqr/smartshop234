@@ -22,7 +22,8 @@
     .app-shell{display:grid;grid-template-columns:260px 1fr;min-height:100vh}
     .sidebar{
       background:rgba(17,24,39,.95); border-right:1px solid rgba(255,255,255,.08);
-      padding:24px 16px; position:sticky; top:0; height:100vh; backdrop-filter:blur(12px);
+      padding:24px 16px 170px; position:sticky; top:0; height:100vh; backdrop-filter:blur(12px);
+      overflow-y:auto;
     }
     .brand{display:flex;align-items:center;gap:12px;margin-bottom:28px}
     .brand-logo{
@@ -33,7 +34,7 @@
     .brand h1{font-size:1.1rem}
     .brand p{color:var(--muted);font-size:.88rem;margin-top:4px}
     .nav-btn{
-      width:100%;margin-bottom:10px;border:none;border-radius:14px;padding:14px;text-align:left;
+      width:100%;margin-bottom:14px;border:none;border-radius:14px;padding:14px 16px;text-align:left;
       color:var(--text);background:rgba(255,255,255,.04);cursor:pointer;transition:.2s ease;
     }
     .nav-btn:hover,.nav-btn.active{
@@ -41,8 +42,9 @@
       transform:translateY(-1px)
     }
     .sidebar-footer{
-      position:absolute;left:16px;right:16px;bottom:20px;padding:14px;border-radius:16px;
+      position:absolute;left:16px;right:16px;bottom:20px;padding:16px;border-radius:16px;
       background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.06);
+      z-index:2;
     }
     .main{padding:24px}
     .topbar{display:flex;justify-content:space-between;align-items:center;gap:16px;margin-bottom:22px;flex-wrap:wrap}
@@ -261,17 +263,22 @@
           </div>
         </div>
 
-        <button class="nav-btn active" data-page="dashboardPage" onclick="showPage('dashboardPage', this)">📊 Dashboard</button>
-        <button class="nav-btn" data-page="productsPage" onclick="showPage('productsPage', this)">📦 Products</button>
-        <button class="nav-btn" data-page="stockPage" onclick="showPage('stockPage', this)">🏪 Shop Stock</button>
-        <button class="nav-btn" data-page="salesPage" onclick="showPage('salesPage', this)">🛒 Make Sale</button>
-        <button class="nav-btn" data-page="receiptsPage" onclick="showPage('receiptsPage', this)">🧾 Receipts</button>
-        <button class="nav-btn role-admin-only" data-page="employeesPage" onclick="showPage('employeesPage', this)">👥 Employees</button>
-        <button class="nav-btn" data-page="settingsPage" onclick="showPage('settingsPage', this)">⚙️ Settings</button>
+        <div class="nav-top">
+          <button class="nav-btn active" data-page="dashboardPage" onclick="showPage('dashboardPage', this)">📊 Dashboard</button>
+          <button class="nav-btn" data-page="productsPage" onclick="showPage('productsPage', this)">📦 Products</button>
+          <button class="nav-btn" data-page="stockPage" onclick="showPage('stockPage', this)">🏪 Shop Stock</button>
+          <button class="nav-btn" data-page="salesPage" onclick="showPage('salesPage', this)">🛒 Make Sale</button>
+          <button class="nav-btn" data-page="receiptsPage" onclick="showPage('receiptsPage', this)">🧾 Receipts</button>
+        </div>
+
+        <div class="nav-bottom">
+          <button class="nav-btn role-admin-only" data-page="employeesPage" onclick="showPage('employeesPage', this)">👥 Employees</button>
+          <button class="nav-btn" data-page="settingsPage" onclick="showPage('settingsPage', this)">⚙️ Settings</button>
+        </div>
 
         <div class="sidebar-footer">
           <div class="small muted">Quick Actions</div>
-          <div style="display:grid; gap:10px; margin-top:10px;">
+          <div style="display:grid; gap:14px; margin-top:12px;">
             <button class="btn btn-success" onclick="showPage('productsPage'); focusProductForm()">+ Add Product</button>
             <button class="btn btn-warning" onclick="showPage('salesPage')">+ New Sale</button>
             <button class="btn btn-danger" onclick="logout()">Logout</button>
@@ -394,10 +401,38 @@
         </section>
 
         <section id="stockPage" class="page hidden">
-          <div class="topbar"><div><h2>Shop Stock</h2><p>Admin manages all shops. Employees can add stock only to their assigned shop.</p></div></div>
+          <div class="topbar"><div><h2>Shop Stock</h2><p>Admin now has the three shops separated clearly. Employees can still add stock only to their own assigned shop.</p></div></div>
+
+          <div class="grid branch-stats role-admin-only" style="margin-bottom:18px;">
+            <div class="card branch-card">
+              <h4>Gakindu Stock Panel</h4>
+              <div class="mini">
+                <div>Total Units: <b id="stockPanelGakinduUnits">0</b></div>
+                <div>Low Stock Items: <b id="stockPanelGakinduLow">0</b></div>
+              </div>
+              <div style="margin-top:12px;"><button class="btn btn-primary" onclick="setStockShop('Gakindu')">Manage Gakindu</button></div>
+            </div>
+            <div class="card branch-card">
+              <h4>Oythaya Stock Panel</h4>
+              <div class="mini">
+                <div>Total Units: <b id="stockPanelOythayaUnits">0</b></div>
+                <div>Low Stock Items: <b id="stockPanelOythayaLow">0</b></div>
+              </div>
+              <div style="margin-top:12px;"><button class="btn btn-primary" onclick="setStockShop('Oythaya')">Manage Oythaya</button></div>
+            </div>
+            <div class="card branch-card">
+              <h4>Shop C Stock Panel</h4>
+              <div class="mini">
+                <div>Total Units: <b id="stockPanelShopCUnits">0</b></div>
+                <div>Low Stock Items: <b id="stockPanelShopCLow">0</b></div>
+              </div>
+              <div style="margin-top:12px;"><button class="btn btn-primary" onclick="setStockShop('Shop C')">Manage Shop C</button></div>
+            </div>
+          </div>
+
           <div class="grid two-col">
             <div class="card">
-              <div class="section-title"><h3>Add / Update Stock By Shop</h3><span class="badge success">Own Shop Only For Employee</span></div>
+              <div class="section-title"><h3>Add / Update Stock By Shop</h3><span class="badge success">Separated By Shop</span></div>
               <form id="stockForm" class="form-grid">
                 <div class="form-group"><label for="stockProductSearch">Search Item</label><input id="stockProductSearch" placeholder="Search item name..." oninput="refreshStockProductOptions()" /></div>
                 <div class="form-group"><label for="stockProduct">Product</label><select id="stockProduct" onchange="syncStockSearchWithSelection()"></select></div>
@@ -406,17 +441,47 @@
                 </div>
                 <div class="form-group"><label for="shopStockQty">Add Stock Quantity</label><input id="shopStockQty" type="number" min="0" value="0" /></div>
                 <div class="form-group"><label for="shopStockThreshold">Low Stock Threshold</label><input id="shopStockThreshold" type="number" min="0" value="5" /></div>
-                <div class="form-group full"><div class="quick-box small">Admin can update any shop. Employee can only add stock to the shop assigned to their account.</div></div>
+                <div class="form-group full"><div class="quick-box small">Admin can add stock for any shop using the separate stock panels below. Employee can only add stock to the shop assigned to their account.</div></div>
                 <div class="form-group full"><button type="submit" class="btn btn-primary">Save Shop Stock</button></div>
               </form>
             </div>
 
             <div class="card">
-              <div class="section-title"><h3>Stock Records</h3><span class="badge info">Per Shop</span></div>
+              <div class="section-title"><h3>Current Stock Records</h3><span class="badge info">Visible Records</span></div>
               <div class="table-wrap">
                 <table>
                   <thead><tr><th>Product</th><th>Shop</th><th>Stock</th><th>Threshold</th><th>Status</th></tr></thead>
                   <tbody id="shopStockTable"></tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+
+          <div class="grid branch-stats role-admin-only" style="margin-top:18px;">
+            <div class="card">
+              <div class="section-title"><h3>Gakindu Stock Records</h3><span class="badge info">Separated Shop</span></div>
+              <div class="table-wrap">
+                <table>
+                  <thead><tr><th>Product</th><th>Stock</th><th>Threshold</th><th>Status</th></tr></thead>
+                  <tbody id="shopStockTableGakindu"></tbody>
+                </table>
+              </div>
+            </div>
+            <div class="card">
+              <div class="section-title"><h3>Oythaya Stock Records</h3><span class="badge pink">Separated Shop</span></div>
+              <div class="table-wrap">
+                <table>
+                  <thead><tr><th>Product</th><th>Stock</th><th>Threshold</th><th>Status</th></tr></thead>
+                  <tbody id="shopStockTableOythaya"></tbody>
+                </table>
+              </div>
+            </div>
+            <div class="card">
+              <div class="section-title"><h3>Shop C Stock Records</h3><span class="badge violet">Separated Shop</span></div>
+              <div class="table-wrap">
+                <table>
+                  <thead><tr><th>Product</th><th>Stock</th><th>Threshold</th><th>Status</th></tr></thead>
+                  <tbody id="shopStockTableShopC"></tbody>
                 </table>
               </div>
             </div>
@@ -1151,15 +1216,24 @@
       }).join('');
     }
 
-    function renderShopStockTable() {
-      const table = document.getElementById('shopStockTable');
-      const stocks = getVisibleStocks();
-      if (!stocks.length) {
-        table.innerHTML = '<tr><td colspan="5" class="muted center">No shop stock records yet.</td></tr>';
-        return;
+    function setStockShop(shopName) {
+      const stockShop = document.getElementById('stockShop');
+      if (!stockShop) return;
+      stockShop.value = shopName;
+      const thresholdInput = document.getElementById('shopStockThreshold');
+      const firstRow = state.shopStocks.find(row => row.shopName === shopName);
+      if (firstRow && thresholdInput) thresholdInput.value = firstRow.lowStockThreshold || 5;
+      showAlert('globalAlert', `Now managing ${shopName} stock.`, 'info');
+    }
+
+    function buildStockRows(rows, includeShopColumn = true) {
+      if (!rows.length) {
+        return includeShopColumn
+          ? '<tr><td colspan="5" class="muted center">No shop stock records yet.</td></tr>'
+          : '<tr><td colspan="4" class="muted center">No shop stock records yet.</td></tr>';
       }
 
-      table.innerHTML = stocks.map(row => {
+      return rows.map(row => {
         const product = state.products.find(p => String(p.id) === String(row.productId));
         const status = getStockStatusRow(row);
         const badge = status === 'out'
@@ -1168,14 +1242,49 @@
           ? '<span class="badge warning">Low</span>'
           : '<span class="badge success">In Stock</span>';
 
-        return `<tr>
-          <td>${escapeHtml(product?.name || 'Unknown Product')}</td>
-          <td>${escapeHtml(row.shopName)}</td>
-          <td>${row.stock}</td>
-          <td>${row.lowStockThreshold}</td>
-          <td>${badge}</td>
-        </tr>`;
+        return includeShopColumn
+          ? `<tr>
+              <td>${escapeHtml(product?.name || 'Unknown Product')}</td>
+              <td>${escapeHtml(row.shopName)}</td>
+              <td>${row.stock}</td>
+              <td>${row.lowStockThreshold}</td>
+              <td>${badge}</td>
+            </tr>`
+          : `<tr>
+              <td>${escapeHtml(product?.name || 'Unknown Product')}</td>
+              <td>${row.stock}</td>
+              <td>${row.lowStockThreshold}</td>
+              <td>${badge}</td>
+            </tr>`;
       }).join('');
+    }
+
+    function renderShopPanelSummary(shopName, unitsId, lowId) {
+      const rows = state.shopStocks.filter(row => row.shopName === shopName);
+      const units = rows.reduce((sum, row) => sum + Number(row.stock || 0), 0);
+      const low = rows.filter(row => getStockStatusRow(row) !== 'in').length;
+      const unitsEl = document.getElementById(unitsId);
+      const lowEl = document.getElementById(lowId);
+      if (unitsEl) unitsEl.textContent = units;
+      if (lowEl) lowEl.textContent = low;
+    }
+
+    function renderShopStockTable() {
+      const table = document.getElementById('shopStockTable');
+      const stocks = getVisibleStocks();
+      table.innerHTML = buildStockRows(stocks, true);
+
+      renderShopPanelSummary('Gakindu', 'stockPanelGakinduUnits', 'stockPanelGakinduLow');
+      renderShopPanelSummary('Oythaya', 'stockPanelOythayaUnits', 'stockPanelOythayaLow');
+      renderShopPanelSummary('Shop C', 'stockPanelShopCUnits', 'stockPanelShopCLow');
+
+      const gakinduTable = document.getElementById('shopStockTableGakindu');
+      const oythayaTable = document.getElementById('shopStockTableOythaya');
+      const shopCTable = document.getElementById('shopStockTableShopC');
+
+      if (gakinduTable) gakinduTable.innerHTML = buildStockRows(state.shopStocks.filter(row => row.shopName === 'Gakindu'), false);
+      if (oythayaTable) oythayaTable.innerHTML = buildStockRows(state.shopStocks.filter(row => row.shopName === 'Oythaya'), false);
+      if (shopCTable) shopCTable.innerHTML = buildStockRows(state.shopStocks.filter(row => row.shopName === 'Shop C'), false);
     }
 
     function getGroupedSalesData(filteredSales) {
@@ -1867,6 +1976,7 @@
     window.logout = logout;
     window.showPage = showPage;
     window.focusProductForm = focusProductForm;
+    window.setStockShop = setStockShop;
     window.fillAdminEmail = fillAdminEmail;
     window.reloadAllData = reloadAllData;
     window.seedSampleData = seedSampleData;
