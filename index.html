@@ -669,7 +669,8 @@
       shopStocks: [],
       sales: [],
       currentUser: null,
-      cart: []
+      cart: [],
+      editingProductId: null
     };
 
     function loadLocalSettings() {
@@ -1211,6 +1212,12 @@
               <div>Shop C Stock: <b>${stockC} ${escapeHtml(product.unit || 'pcs')}</b></div>
             </div>
             <p class="footer-note">${escapeHtml(product.description || 'No description')}</p>
+            ${isAdmin() ? `
+              <div class="product-actions">
+                <button class="btn btn-primary" onclick="editProduct('${product.id}')">Edit</button>
+                <button class="btn btn-danger" onclick="deleteProduct('${product.id}')">Delete</button>
+              </div>
+            ` : ''}
           </div>
         `;
       }).join('');
@@ -1689,10 +1696,64 @@
     }
 
     function resetProductForm() {
+      state.editingProductId = null;
       document.getElementById('productForm').reset();
       document.getElementById('lowStockThreshold').value = 5;
       document.getElementById('retailDiscount').value = 0;
       document.getElementById('wholesaleDiscount').value = 0;
+      const title = document.querySelector('#productsPage .section-title h3');
+      if (title) title.textContent = 'Add New Product';
+      const saveBtn = document.querySelector('#productForm button[type="submit"]');
+      if (saveBtn) saveBtn.textContent = 'Save Product';
+    }
+
+    function editProduct(productId) {
+      if (!requireAdmin()) return;
+      const product = state.products.find(p => String(p.id) === String(productId));
+      if (!product) return;
+      state.editingProductId = product.id;
+      document.getElementById('productName').value = product.name || '';
+      document.getElementById('productCategory').value = product.category || '';
+      document.getElementById('productBarcode').value = product.barcode || '';
+      document.getElementById('productUnit').value = product.unit || 'pcs';
+      document.getElementById('costPrice').value = product.costPrice || 0;
+      document.getElementById('markedPrice').value = product.markedPrice || 0;
+      document.getElementById('retailPrice').value = product.retailPrice || 0;
+      document.getElementById('wholesalePrice').value = product.wholesalePrice || 0;
+      document.getElementById('lowStockThreshold').value = product.lowStockThreshold || 5;
+      document.getElementById('retailDiscount').value = product.retailDiscount || 0;
+      document.getElementById('wholesaleDiscount').value = product.wholesaleDiscount || 0;
+      document.getElementById('productDescription').value = product.description || '';
+      const title = document.querySelector('#productsPage .section-title h3');
+      if (title) title.textContent = 'Edit Product';
+      const saveBtn = document.querySelector('#productForm button[type="submit"]');
+      if (saveBtn) saveBtn.textContent = 'Update Product';
+      showPage('productsPage');
+      focusProductForm();
+    }
+
+    async function deleteProduct(productId) {
+      if (!requireAdmin()) return;
+      const product = state.products.find(p => String(p.id) === String(productId));
+      if (!product) return;
+      if (!confirm(`Delete ${product.name}? This will also remove its shop stock records.`)) return;
+
+      setLoading(true, 'Deleting product...');
+      const stockDelete = await supabase.from('shop_stock').delete().eq('product_id', productId);
+      if (stockDelete.error) {
+        setLoading(false);
+        return showAlert('globalAlert', stockDelete.error.message || 'Failed to delete related shop stock.', 'error');
+      }
+
+      const productDelete = await supabase.from('products').delete().eq('id', productId);
+      setLoading(false);
+      if (productDelete.error) {
+        return showAlert('globalAlert', productDelete.error.message || 'Failed to delete product.', 'error');
+      }
+
+      if (String(state.editingProductId) === String(productId)) resetProductForm();
+      await reloadAllData();
+      showAlert('globalAlert', 'Product deleted successfully.', 'success');
     }
 
     async function handleProductSubmit(event) {
@@ -1715,14 +1776,17 @@
 
       if (!product.name) return showAlert('globalAlert', 'Product name is required.', 'error');
 
-      setLoading(true, 'Saving product...');
-      const result = await supabase.from('products').insert([product]);
+      const isEditingProduct = !!state.editingProductId;
+      setLoading(true, isEditingProduct ? 'Updating product...' : 'Saving product...');
+      const result = state.editingProductId
+        ? await supabase.from('products').update(product).eq('id', state.editingProductId)
+        : await supabase.from('products').insert([product]);
       setLoading(false);
       if (result.error) return showAlert('globalAlert', result.error.message || 'Failed to save product.', 'error');
 
-      document.getElementById('productForm').reset();
+      resetProductForm();
       await reloadAllData();
-      showAlert('globalAlert', 'Product added successfully.', 'success');
+      showAlert('globalAlert', isEditingProduct ? 'Product updated successfully.' : 'Product added successfully.', 'success');
     }
 
     async function handleStockSubmit(event) {
@@ -1984,6 +2048,8 @@
     window.renderDashboard = renderDashboard;
     window.renderProducts = renderProducts;
     window.resetProductForm = resetProductForm;
+    window.editProduct = editProduct;
+    window.deleteProduct = deleteProduct;
     window.togglePaymentReferenceLabel = togglePaymentReferenceLabel;
     window.printReceipt = printReceipt;
     window.addCurrentItemToCart = addCurrentItemToCart;
