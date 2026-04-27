@@ -432,17 +432,20 @@
 
           <div class="grid two-col">
             <div class="card">
-              <div class="section-title"><h3>Add / Update Stock By Shop</h3><span class="badge success">Separated By Shop</span></div>
+              <div class="section-title"><h3 id="stockFormTitle">Add / Update Stock By Shop</h3><span class="badge success">Separated By Shop</span></div>
               <form id="stockForm" class="form-grid">
                 <div class="form-group"><label for="stockProductSearch">Search Item</label><input id="stockProductSearch" placeholder="Search item name..." oninput="refreshStockProductOptions()" /></div>
                 <div class="form-group"><label for="stockProduct">Product</label><select id="stockProduct" onchange="syncStockSearchWithSelection()"></select></div>
                 <div class="form-group"><label for="stockShop">Shop</label>
                   <select id="stockShop"><option value="Gakindu">Gakindu</option><option value="Oythaya">Oythaya</option><option value="Shop C">Shop C</option></select>
                 </div>
-                <div class="form-group"><label for="shopStockQty">Add Stock Quantity</label><input id="shopStockQty" type="number" min="0" value="0" /></div>
+                <div class="form-group"><label for="shopStockQty" id="shopStockQtyLabel">Add Stock Quantity</label><input id="shopStockQty" type="number" min="0" value="0" /></div>
                 <div class="form-group"><label for="shopStockThreshold">Low Stock Threshold</label><input id="shopStockThreshold" type="number" min="0" value="5" /></div>
-                <div class="form-group full"><div class="quick-box small">Admin can add stock for any shop using the separate stock panels below. Employee can only add stock to the shop assigned to their account.</div></div>
-                <div class="form-group full"><button type="submit" class="btn btn-primary">Save Shop Stock</button></div>
+                <div class="form-group full"><div class="quick-box small">Admin can add stock for any shop. Employees can add, edit, or delete stock records only for their own assigned shop. Use Edit when you made a mistake and need to rectify the exact stock value.</div></div>
+                <div class="form-group full" style="display:flex; gap:10px; flex-wrap:wrap;">
+                  <button type="submit" class="btn btn-primary" id="saveStockBtn">Save Shop Stock</button>
+                  <button type="button" class="btn btn-dark" onclick="resetStockForm()">Clear / Cancel Edit</button>
+                </div>
               </form>
             </div>
 
@@ -450,7 +453,7 @@
               <div class="section-title"><h3>Current Stock Records</h3><span class="badge info">Visible Records</span></div>
               <div class="table-wrap">
                 <table>
-                  <thead><tr><th>Product</th><th>Shop</th><th>Stock</th><th>Threshold</th><th>Status</th></tr></thead>
+                  <thead><tr><th>Product</th><th>Shop</th><th>Stock</th><th>Threshold</th><th>Status</th><th>Action</th></tr></thead>
                   <tbody id="shopStockTable"></tbody>
                 </table>
               </div>
@@ -462,7 +465,7 @@
               <div class="section-title"><h3>Gakindu Stock Records</h3><span class="badge info">Separated Shop</span></div>
               <div class="table-wrap">
                 <table>
-                  <thead><tr><th>Product</th><th>Stock</th><th>Threshold</th><th>Status</th></tr></thead>
+                  <thead><tr><th>Product</th><th>Stock</th><th>Threshold</th><th>Status</th><th>Action</th></tr></thead>
                   <tbody id="shopStockTableGakindu"></tbody>
                 </table>
               </div>
@@ -471,7 +474,7 @@
               <div class="section-title"><h3>Oythaya Stock Records</h3><span class="badge pink">Separated Shop</span></div>
               <div class="table-wrap">
                 <table>
-                  <thead><tr><th>Product</th><th>Stock</th><th>Threshold</th><th>Status</th></tr></thead>
+                  <thead><tr><th>Product</th><th>Stock</th><th>Threshold</th><th>Status</th><th>Action</th></tr></thead>
                   <tbody id="shopStockTableOythaya"></tbody>
                 </table>
               </div>
@@ -480,7 +483,7 @@
               <div class="section-title"><h3>Shop C Stock Records</h3><span class="badge violet">Separated Shop</span></div>
               <div class="table-wrap">
                 <table>
-                  <thead><tr><th>Product</th><th>Stock</th><th>Threshold</th><th>Status</th></tr></thead>
+                  <thead><tr><th>Product</th><th>Stock</th><th>Threshold</th><th>Status</th><th>Action</th></tr></thead>
                   <tbody id="shopStockTableShopC"></tbody>
                 </table>
               </div>
@@ -670,7 +673,8 @@
       sales: [],
       currentUser: null,
       cart: [],
-      editingProductId: null
+      editingProductId: null,
+      editingStockId: null
     };
 
     function loadLocalSettings() {
@@ -1224,6 +1228,7 @@
     }
 
     function setStockShop(shopName) {
+      state.editingStockId = null;
       const stockShop = document.getElementById('stockShop');
       if (!stockShop) return;
       stockShop.value = shopName;
@@ -1234,10 +1239,9 @@
     }
 
     function buildStockRows(rows, includeShopColumn = true) {
+      const colspan = includeShopColumn ? 6 : 5;
       if (!rows.length) {
-        return includeShopColumn
-          ? '<tr><td colspan="5" class="muted center">No shop stock records yet.</td></tr>'
-          : '<tr><td colspan="4" class="muted center">No shop stock records yet.</td></tr>';
+        return `<tr><td colspan="${colspan}" class="muted center">No shop stock records yet.</td></tr>`;
       }
 
       return rows.map(row => {
@@ -1249,6 +1253,14 @@
           ? '<span class="badge warning">Low</span>'
           : '<span class="badge success">In Stock</span>';
 
+        const canEdit = canManageStockForShop(row.shopName);
+        const actions = canEdit
+          ? `<div style="display:flex; gap:8px; flex-wrap:wrap;">
+              <button class="btn btn-primary" style="padding:8px 12px;" onclick="editStockRecord('${row.id}')">Edit</button>
+              <button class="btn btn-danger" style="padding:8px 12px;" onclick="deleteStockRecord('${row.id}')">Delete</button>
+            </div>`
+          : '<span class="badge warning">Locked</span>';
+
         return includeShopColumn
           ? `<tr>
               <td>${escapeHtml(product?.name || 'Unknown Product')}</td>
@@ -1256,12 +1268,14 @@
               <td>${row.stock}</td>
               <td>${row.lowStockThreshold}</td>
               <td>${badge}</td>
+              <td>${actions}</td>
             </tr>`
           : `<tr>
               <td>${escapeHtml(product?.name || 'Unknown Product')}</td>
               <td>${row.stock}</td>
               <td>${row.lowStockThreshold}</td>
               <td>${badge}</td>
+              <td>${actions}</td>
             </tr>`;
       }).join('');
     }
@@ -1794,36 +1808,131 @@
 
       const productId = document.getElementById('stockProduct').value;
       const shopName = document.getElementById('stockShop').value;
-      const qtyToAdd = Number(document.getElementById('shopStockQty').value || 0);
+      const stockInput = Number(document.getElementById('shopStockQty').value || 0);
       const lowStockThreshold = Number(document.getElementById('shopStockThreshold').value || 0);
 
       if (!productId || !shopName) return showAlert('globalAlert', 'Select a product and shop.', 'error');
-      if (qtyToAdd < 0) return showAlert('globalAlert', 'Stock to add cannot be negative.', 'error');
-      if (!canManageStockForShop(shopName)) return showAlert('globalAlert', 'You can only add stock to your own assigned shop.', 'error');
+      if (stockInput < 0) return showAlert('globalAlert', 'Stock cannot be negative.', 'error');
+      if (!canManageStockForShop(shopName)) return showAlert('globalAlert', 'You can only manage stock for your own assigned shop.', 'error');
 
-      const existing = getShopStock(productId, shopName);
-      setLoading(true, 'Saving shop stock...');
+      setLoading(true, state.editingStockId ? 'Updating stock record...' : 'Adding stock...');
       let result;
 
-      if (existing) {
-        const newStock = Number(existing.stock || 0) + qtyToAdd;
+      if (state.editingStockId) {
+        const row = state.shopStocks.find(item => String(item.id) === String(state.editingStockId));
+        if (!row) {
+          setLoading(false);
+          return showAlert('globalAlert', 'Stock record not found.', 'error');
+        }
+
+        if (!canManageStockForShop(row.shopName)) {
+          setLoading(false);
+          return showAlert('globalAlert', 'You can only edit stock for your own assigned shop.', 'error');
+        }
+
         result = await supabase
           .from('shop_stock')
-          .update({ stock: newStock, low_stock_threshold: lowStockThreshold })
-          .eq('id', existing.id);
+          .update({
+            product_id: productId,
+            shop_name: shopName,
+            stock: stockInput,
+            low_stock_threshold: lowStockThreshold
+          })
+          .eq('id', state.editingStockId);
       } else {
-        result = await supabase
-          .from('shop_stock')
-          .insert([{ product_id: productId, shop_name: shopName, stock: qtyToAdd, low_stock_threshold: lowStockThreshold }]);
+        const existing = getShopStock(productId, shopName);
+        if (existing) {
+          const newStock = Number(existing.stock || 0) + stockInput;
+          result = await supabase
+            .from('shop_stock')
+            .update({ stock: newStock, low_stock_threshold: lowStockThreshold })
+            .eq('id', existing.id);
+        } else {
+          result = await supabase
+            .from('shop_stock')
+            .insert([{
+              product_id: productId,
+              shop_name: shopName,
+              stock: stockInput,
+              low_stock_threshold: lowStockThreshold
+            }]);
+        }
       }
 
       setLoading(false);
 
       if (result.error) return showAlert('globalAlert', result.error.message || 'Failed to save shop stock.', 'error');
 
-      document.getElementById('shopStockQty').value = 0;
+      const message = state.editingStockId
+        ? `Stock record updated for ${shopName}.`
+        : `Stock added successfully for ${shopName}.`;
+
+      resetStockForm();
       await reloadAllData();
-      showAlert('globalAlert', `Stock added successfully for ${shopName}.`, 'success');
+      showAlert('globalAlert', message, 'success');
+    }
+
+    function resetStockForm() {
+      state.editingStockId = null;
+      const qty = document.getElementById('shopStockQty');
+      const threshold = document.getElementById('shopStockThreshold');
+      const title = document.getElementById('stockFormTitle');
+      const label = document.getElementById('shopStockQtyLabel');
+      const btn = document.getElementById('saveStockBtn');
+
+      if (qty) qty.value = 0;
+      if (threshold) threshold.value = 5;
+      if (title) title.textContent = 'Add / Update Stock By Shop';
+      if (label) label.textContent = 'Add Stock Quantity';
+      if (btn) btn.textContent = 'Save Shop Stock';
+
+      applyShopLockUI();
+    }
+
+    function editStockRecord(stockId) {
+      const row = state.shopStocks.find(item => String(item.id) === String(stockId));
+      if (!row) return showAlert('globalAlert', 'Stock record not found.', 'error');
+      if (!canManageStockForShop(row.shopName)) return showAlert('globalAlert', 'You can only edit stock for your own assigned shop.', 'error');
+
+      state.editingStockId = row.id;
+      document.getElementById('stockProduct').value = row.productId;
+      document.getElementById('stockShop').value = row.shopName;
+      document.getElementById('shopStockQty').value = row.stock;
+      document.getElementById('shopStockThreshold').value = row.lowStockThreshold || 5;
+
+      const product = state.products.find(p => String(p.id) === String(row.productId));
+      const search = document.getElementById('stockProductSearch');
+      if (search && product) search.value = product.name || '';
+
+      const title = document.getElementById('stockFormTitle');
+      const label = document.getElementById('shopStockQtyLabel');
+      const btn = document.getElementById('saveStockBtn');
+      if (title) title.textContent = 'Rectify / Edit Shop Stock';
+      if (label) label.textContent = 'Correct Stock Quantity';
+      if (btn) btn.textContent = 'Update Stock Record';
+
+      showPage('stockPage');
+      document.getElementById('shopStockQty')?.focus();
+      showAlert('globalAlert', `Editing stock record for ${row.shopName}. Enter the correct stock quantity.`, 'info');
+    }
+
+    async function deleteStockRecord(stockId) {
+      const row = state.shopStocks.find(item => String(item.id) === String(stockId));
+      if (!row) return showAlert('globalAlert', 'Stock record not found.', 'error');
+      if (!canManageStockForShop(row.shopName)) return showAlert('globalAlert', 'You can only delete stock for your own assigned shop.', 'error');
+
+      const product = state.products.find(p => String(p.id) === String(row.productId));
+      if (!confirm(`Delete ${product?.name || 'this product'} from ${row.shopName} stock records? This does not delete the main product.`)) return;
+
+      setLoading(true, 'Deleting shop stock record...');
+      const { error } = await supabase.from('shop_stock').delete().eq('id', stockId);
+      setLoading(false);
+
+      if (error) return showAlert('globalAlert', error.message || 'Failed to delete shop stock record.', 'error');
+
+      if (String(state.editingStockId) === String(stockId)) resetStockForm();
+      await reloadAllData();
+      showAlert('globalAlert', 'Shop stock record deleted successfully.', 'success');
     }
 
     async function handleEmployeeSubmit(event) {
@@ -2062,6 +2171,9 @@
     window.renderCart = renderCart;
     window.deleteEmployee = deleteEmployee;
     window.renderEmployees = renderEmployees;
+    window.resetStockForm = resetStockForm;
+    window.editStockRecord = editStockRecord;
+    window.deleteStockRecord = deleteStockRecord;
     window.syncStockSearchWithSelection = syncStockSearchWithSelection;
     window.syncSaleSearchWithSelection = syncSaleSearchWithSelection;
 
