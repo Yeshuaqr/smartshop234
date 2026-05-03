@@ -22,8 +22,10 @@
     .app-shell{display:grid;grid-template-columns:260px 1fr;min-height:100vh}
     .sidebar{
       background:rgba(17,24,39,.95); border-right:1px solid rgba(255,255,255,.08);
-      padding:24px 16px 170px; position:sticky; top:0; height:100vh; backdrop-filter:blur(12px);
+      padding:24px 16px; position:sticky; top:0; height:100vh; backdrop-filter:blur(12px);
       overflow-y:auto;
+      display:flex;
+      flex-direction:column;
     }
     .brand{display:flex;align-items:center;gap:12px;margin-bottom:28px}
     .brand-logo{
@@ -33,8 +35,13 @@
     }
     .brand h1{font-size:1.1rem}
     .brand p{color:var(--muted);font-size:.88rem;margin-top:4px}
+    .nav-menu{
+      display:grid;
+      gap:10px;
+      margin-bottom:18px;
+    }
     .nav-btn{
-      width:100%;margin-bottom:14px;border:none;border-radius:14px;padding:14px 16px;text-align:left;
+      width:100%;border:none;border-radius:14px;padding:14px 16px;text-align:left;
       color:var(--text);background:rgba(255,255,255,.04);cursor:pointer;transition:.2s ease;
     }
     .nav-btn:hover,.nav-btn.active{
@@ -42,9 +49,9 @@
       transform:translateY(-1px)
     }
     .sidebar-footer{
-      position:absolute;left:16px;right:16px;bottom:20px;padding:16px;border-radius:16px;
+      margin-top:12px;
+      padding:16px;border-radius:16px;
       background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.06);
-      z-index:2;
     }
     .main{padding:24px}
     .topbar{display:flex;justify-content:space-between;align-items:center;gap:16px;margin-bottom:22px;flex-wrap:wrap}
@@ -177,7 +184,7 @@
       .two-col,.products-grid,.toolbar,.employee-toolbar,.login-card{grid-template-columns:1fr}
       .app-shell{grid-template-columns:1fr}
       .sidebar{position:relative;height:auto}
-      .sidebar-footer{position:relative;left:auto;right:auto;bottom:auto;margin-top:16px}
+      .sidebar-footer{position:relative;margin-top:16px}
     }
     @media (max-width:720px){
       .form-grid{grid-template-columns:1fr}
@@ -263,15 +270,12 @@
           </div>
         </div>
 
-        <div class="nav-top">
+        <div class="nav-menu">
           <button class="nav-btn active" data-page="dashboardPage" onclick="showPage('dashboardPage', this)">📊 Dashboard</button>
           <button class="nav-btn" data-page="productsPage" onclick="showPage('productsPage', this)">📦 Products</button>
           <button class="nav-btn" data-page="stockPage" onclick="showPage('stockPage', this)">🏪 Shop Stock</button>
           <button class="nav-btn" data-page="salesPage" onclick="showPage('salesPage', this)">🛒 Make Sale</button>
           <button class="nav-btn" data-page="receiptsPage" onclick="showPage('receiptsPage', this)">🧾 Receipts</button>
-        </div>
-
-        <div class="nav-bottom">
           <button class="nav-btn role-admin-only" data-page="employeesPage" onclick="showPage('employeesPage', this)">👥 Employees</button>
           <button class="nav-btn" data-page="settingsPage" onclick="showPage('settingsPage', this)">⚙️ Settings</button>
         </div>
