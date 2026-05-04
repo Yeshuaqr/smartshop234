@@ -3,2374 +3,562 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>SmartShop Pro Multi-Shop</title>
+  <title>Shop Admin Password Fix</title>
+
+  <!-- Supabase JS -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
   <style>
-    :root{
-      --bg:#0f172a; --panel:#111827; --panel2:#1f2937; --text:#f8fafc; --muted:#cbd5e1;
-      --primary:#38bdf8; --primary-dark:#0284c7; --success:#22c55e; --warning:#f59e0b;
-      --danger:#ef4444; --pink:#ec4899; --violet:#8b5cf6; --shadow:0 10px 25px rgba(0,0,0,.25);
-      --radius:18px;
+    :root {
+      --bg: #0f172a;
+      --card: #111827;
+      --card2: #1f2937;
+      --text: #f8fafc;
+      --muted: #cbd5e1;
+      --primary: #38bdf8;
+      --primary-dark: #0284c7;
+      --danger: #ef4444;
+      --success: #22c55e;
+      --warning: #f59e0b;
+      --border: rgba(255,255,255,.12);
+      --radius: 18px;
+      --shadow: 0 20px 50px rgba(0,0,0,.35);
     }
-    *{box-sizing:border-box;margin:0;padding:0}
-    body{
-      font-family:Arial,Helvetica,sans-serif;
-      background:linear-gradient(135deg,#020617,#0f172a,#111827);
-      color:var(--text); min-height:100vh;
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: Arial, Helvetica, sans-serif;
     }
-    button,input,select,textarea{font:inherit}
-    .hidden{display:none!important}
-    .app-shell{display:grid;grid-template-columns:260px 1fr;min-height:100vh}
-    .sidebar{
-      background:rgba(17,24,39,.95); border-right:1px solid rgba(255,255,255,.08);
-      padding:24px 16px; position:sticky; top:0; height:100vh; backdrop-filter:blur(12px);
-      overflow-y:auto;
-      display:flex;
-      flex-direction:column;
+
+    body {
+      min-height: 100vh;
+      background: radial-gradient(circle at top, #1e3a8a 0%, var(--bg) 45%, #020617 100%);
+      color: var(--text);
+      padding: 20px;
     }
-    .brand{display:flex;align-items:center;gap:12px;margin-bottom:28px}
-    .brand-logo{
-      width:48px;height:48px;border-radius:14px;
-      background:linear-gradient(135deg,var(--primary),var(--violet),var(--pink));
-      display:grid;place-items:center;font-size:22px;font-weight:bold;box-shadow:var(--shadow)
+
+    .container {
+      max-width: 1100px;
+      margin: auto;
     }
-    .brand h1{font-size:1.1rem}
-    .brand p{color:var(--muted);font-size:.88rem;margin-top:4px}
-    .nav-menu{
-      display:grid;
-      gap:10px;
-      margin-bottom:18px;
+
+    .topbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 15px;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
     }
-    .nav-btn{
-      width:100%;border:none;border-radius:14px;padding:14px 16px;text-align:left;
-      color:var(--text);background:rgba(255,255,255,.04);cursor:pointer;transition:.2s ease;
+
+    .brand h1 {
+      font-size: 28px;
+      margin-bottom: 5px;
     }
-    .nav-btn:hover,.nav-btn.active{
-      background:linear-gradient(135deg,rgba(56,189,248,.25),rgba(139,92,246,.22));
-      transform:translateY(-1px)
+
+    .brand p {
+      color: var(--muted);
+      font-size: 14px;
     }
-    .sidebar-footer{
-      margin-top:12px;
-      padding:16px;border-radius:16px;
-      background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.06);
+
+    .badge {
+      padding: 8px 12px;
+      border-radius: 999px;
+      background: rgba(56,189,248,.15);
+      color: #bae6fd;
+      border: 1px solid rgba(56,189,248,.35);
+      font-size: 13px;
     }
-    .main{padding:24px}
-    .topbar{display:flex;justify-content:space-between;align-items:center;gap:16px;margin-bottom:22px;flex-wrap:wrap}
-    .topbar h2{font-size:1.8rem}
-    .topbar p{color:var(--muted);margin-top:5px}
-    .topbar-actions{display:flex;gap:10px;flex-wrap:wrap}
-    .btn{
-      border:none;border-radius:14px;padding:12px 16px;cursor:pointer;color:white;
-      transition:.2s ease;box-shadow:var(--shadow)
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 18px;
     }
-    .btn:hover{transform:translateY(-1px);opacity:.95}
-    .btn-primary{background:linear-gradient(135deg,var(--primary),var(--primary-dark))}
-    .btn-success{background:linear-gradient(135deg,#16a34a,#22c55e)}
-    .btn-danger{background:linear-gradient(135deg,#dc2626,#ef4444)}
-    .btn-warning{background:linear-gradient(135deg,#d97706,#f59e0b)}
-    .btn-dark{background:linear-gradient(135deg,#334155,#111827)}
-    .btn-violet{background:linear-gradient(135deg,#7c3aed,#8b5cf6)}
-    .grid{display:grid;gap:18px}
-    .stats{grid-template-columns:repeat(8,1fr)}
-    .employee-stats{grid-template-columns:repeat(4,1fr)}
-    .branch-stats{grid-template-columns:repeat(3,1fr)}
-    .two-col{grid-template-columns:1.1fr .9fr}
-    .card{
-      background:rgba(17,24,39,.86); border:1px solid rgba(255,255,255,.07);
-      border-radius:var(--radius); box-shadow:var(--shadow); padding:18px; backdrop-filter:blur(10px);
+
+    .card {
+      background: linear-gradient(180deg, rgba(17,24,39,.96), rgba(15,23,42,.96));
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 20px;
+      box-shadow: var(--shadow);
     }
-    .stat-card h3{color:var(--muted);font-size:.95rem;margin-bottom:8px}
-    .stat-card .value{font-size:1.45rem;font-weight:bold}
-    .stat-card small{display:block;margin-top:8px;color:#93c5fd}
-    .branch-card h4{font-size:1rem;margin-bottom:8px}
-    .branch-card .mini{display:grid;gap:6px;color:var(--muted);font-size:.9rem}
-    .section-title{
-      margin-bottom:14px;display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap
+
+    .card h2, .card h3 {
+      margin-bottom: 14px;
     }
-    .section-title h3{font-size:1.15rem}
-    .form-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}
-    .form-group{display:flex;flex-direction:column;gap:8px}
-    .form-group.full{grid-column:1 / -1}
-    label{color:var(--muted);font-size:.92rem}
-    input,select,textarea{
-      width:100%;padding:12px 13px;border-radius:12px;border:1px solid rgba(255,255,255,.1);
-      background:rgba(255,255,255,.06);color:var(--text);outline:none
+
+    .card p {
+      color: var(--muted);
+      line-height: 1.5;
+      margin-bottom: 12px;
     }
-    textarea{min-height:100px;resize:vertical}
-    input::placeholder,textarea::placeholder{color:#94a3b8}
-    table{width:100%;border-collapse:collapse;margin-top:12px}
-    th,td{
-      padding:12px 10px;text-align:left;border-bottom:1px solid rgba(255,255,255,.08);
-      font-size:.95rem;vertical-align:top
+
+    label {
+      display: block;
+      margin: 12px 0 6px;
+      color: #e5e7eb;
+      font-size: 14px;
+      font-weight: bold;
     }
-    th{color:#93c5fd;font-weight:600}
-    .table-wrap{overflow-x:auto}
-    .badge{
-      display:inline-flex;align-items:center;padding:6px 10px;border-radius:999px;
-      font-size:.82rem;font-weight:bold
+
+    input {
+      width: 100%;
+      padding: 13px 14px;
+      background: #020617;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      color: var(--text);
+      outline: none;
+      font-size: 15px;
     }
-    .badge.success{background:rgba(34,197,94,.18);color:#86efac}
-    .badge.warning{background:rgba(245,158,11,.18);color:#fcd34d}
-    .badge.danger{background:rgba(239,68,68,.18);color:#fca5a5}
-    .badge.info{background:rgba(56,189,248,.18);color:#7dd3fc}
-    .badge.pink{background:rgba(236,72,153,.18);color:#f9a8d4}
-    .badge.violet{background:rgba(139,92,246,.18);color:#c4b5fd}
-    .products-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:14px}
-    .product-card{
-      border-radius:18px;background:linear-gradient(180deg,rgba(255,255,255,.06),rgba(255,255,255,.03));
-      border:1px solid rgba(255,255,255,.07);padding:16px
+
+    input:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(56,189,248,.16);
     }
-    .product-card h4{font-size:1.12rem;margin-bottom:7px}
-    .product-meta{color:var(--muted);font-size:.9rem;margin-bottom:12px;display:grid;gap:6px}
-    .toolbar{display:grid;grid-template-columns:1.2fr .8fr .8fr .8fr;gap:12px;margin-bottom:14px}
-    .employee-toolbar{display:grid;grid-template-columns:1.2fr .8fr;gap:12px;margin-bottom:14px}
-    .employee-pill{
-      display:inline-flex;align-items:center;gap:8px;padding:10px 12px;border-radius:12px;
-      background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.06);margin:6px 6px 0 0
+
+    button {
+      border: 0;
+      border-radius: 12px;
+      padding: 12px 16px;
+      font-weight: bold;
+      cursor: pointer;
+      margin-top: 14px;
+      color: white;
+      background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+      transition: .2s;
     }
-    .login-screen{min-height:100vh;display:grid;place-items:center;padding:18px}
-    .login-card{
-      width:100%;max-width:1100px;display:grid;grid-template-columns:1.1fr .9fr;
-      background:rgba(17,24,39,.88);border:1px solid rgba(255,255,255,.08);border-radius:28px;
-      overflow:hidden;box-shadow:0 25px 50px rgba(0,0,0,.35)
+
+    button:hover {
+      transform: translateY(-1px);
+      filter: brightness(1.08);
     }
-    .login-left{
-      padding:40px;
-      background:
-        radial-gradient(circle at top left, rgba(56,189,248,.25), transparent 35%),
-        radial-gradient(circle at bottom right, rgba(236,72,153,.18), transparent 35%),
-        linear-gradient(135deg, rgba(15,23,42,1), rgba(17,24,39,1));
+
+    button.secondary {
+      background: #334155;
     }
-    .login-right{padding:34px}
-    .big-title{font-size:2.2rem;line-height:1.15;margin-bottom:12px}
-    .muted{color:var(--muted)}
-    .feature-list{display:grid;gap:12px;margin-top:24px}
-    .feature-item{
-      padding:14px;border-radius:16px;background:rgba(255,255,255,.05);
-      border:1px solid rgba(255,255,255,.07)
+
+    button.danger {
+      background: linear-gradient(135deg, #ef4444, #b91c1c);
     }
-    .alert{padding:12px 14px;border-radius:14px;margin-bottom:14px;display:none}
-    .alert.show{display:block}
-    .alert.success{background:rgba(34,197,94,.18);color:#bbf7d0}
-    .alert.error{background:rgba(239,68,68,.18);color:#fecaca}
-    .alert.info{background:rgba(56,189,248,.18);color:#bae6fd}
-    .receipt-preview{background:white;color:black;border-radius:18px;padding:22px;margin-top:14px}
-    .receipt-header{text-align:center;margin-bottom:16px}
-    .receipt-line{display:flex;justify-content:space-between;gap:12px;padding:8px 0;border-bottom:1px dashed #bbb}
-    .receipt-total{font-weight:bold;font-size:1.15rem;margin-top:14px}
-    .small{font-size:.86rem}
-    .center{text-align:center}
-    .empty-state{
-      padding:26px;text-align:center;color:var(--muted);background:rgba(255,255,255,.03);
-      border:1px dashed rgba(255,255,255,.12);border-radius:18px
+
+    .btn-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
     }
-    .footer-note{margin-top:10px;color:var(--muted);font-size:.85rem}
-    .chart-wrap{position:relative;height:340px;margin-top:12px}
-    .quick-box{border:1px solid rgba(255,255,255,.07);background:rgba(255,255,255,.03);border-radius:16px;padding:14px}
-    .loading-overlay{
-      position:fixed;inset:0;background:rgba(2,6,23,.7);display:none;align-items:center;
-      justify-content:center;z-index:1000;backdrop-filter:blur(6px)
+
+    .hidden {
+      display: none !important;
     }
-    .loading-overlay.show{display:flex}
-    .loading-box{
-      background:rgba(17,24,39,.95);border:1px solid rgba(255,255,255,.08);border-radius:20px;
-      padding:18px 22px;box-shadow:var(--shadow)
+
+    .msg {
+      margin-top: 12px;
+      padding: 11px 12px;
+      border-radius: 12px;
+      font-size: 14px;
+      display: none;
     }
-    .cart-item{
-      border:1px solid rgba(255,255,255,.08);border-radius:14px;padding:12px;
-      background:rgba(255,255,255,.03);display:grid;gap:6px;margin-bottom:12px
+
+    .msg.show {
+      display: block;
     }
-    @media (max-width:1500px){.stats{grid-template-columns:repeat(4,1fr)} .branch-stats,.employee-stats{grid-template-columns:1fr}}
-    @media (max-width:1100px){
-      .two-col,.products-grid,.toolbar,.employee-toolbar,.login-card{grid-template-columns:1fr}
-      .app-shell{grid-template-columns:1fr}
-      .sidebar{position:relative;height:auto}
-      .sidebar-footer{position:relative;margin-top:16px}
+
+    .msg.success {
+      background: rgba(34,197,94,.12);
+      color: #bbf7d0;
+      border: 1px solid rgba(34,197,94,.35);
     }
-    @media (max-width:720px){
-      .form-grid{grid-template-columns:1fr}
-      .main{padding:16px}
-      .login-left,.login-right{padding:22px}
-      .topbar h2{font-size:1.35rem}
-      .big-title{font-size:1.6rem}
-      .stats,.employee-stats{grid-template-columns:1fr}
+
+    .msg.error {
+      background: rgba(239,68,68,.12);
+      color: #fecaca;
+      border: 1px solid rgba(239,68,68,.35);
     }
-    @media print{
-      body *{visibility:hidden}
-      #receiptPrintArea,#receiptPrintArea *{visibility:visible}
-      #receiptPrintArea{position:absolute;left:0;top:0;width:100%;background:white}
+
+    .msg.warn {
+      background: rgba(245,158,11,.12);
+      color: #fde68a;
+      border: 1px solid rgba(245,158,11,.35);
+    }
+
+    .info-box {
+      background: rgba(15,23,42,.85);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 14px;
+      margin-top: 14px;
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.5;
+    }
+
+    .user-row {
+      background: rgba(255,255,255,.04);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 12px;
+      margin-top: 10px;
+      word-break: break-word;
+    }
+
+    .user-row strong {
+      color: white;
+    }
+
+    .status-dot {
+      width: 10px;
+      height: 10px;
+      display: inline-block;
+      border-radius: 50%;
+      background: var(--danger);
+      margin-right: 6px;
+    }
+
+    .status-dot.online {
+      background: var(--success);
+    }
+
+    @media print {
+      body {
+        background: white;
+        color: black;
+      }
+      .card, .topbar {
+        box-shadow: none;
+        border: 1px solid #ddd;
+      }
+      button {
+        display: none;
+      }
     }
   </style>
 </head>
 <body>
-  <div id="loadingOverlay" class="loading-overlay"><div class="loading-box">Please wait...</div></div>
-
-  <section id="loginScreen" class="login-screen">
-    <div class="login-card">
-      <div class="login-left">
-        <div class="brand">
-          <div class="brand-logo">S</div>
-          <div>
-            <h1>SmartShop Pro Multi-Shop</h1>
-            <p>Retail & Wholesale Management</p>
-          </div>
-        </div>
-        <h2 class="big-title">Both admin and employees now use <span style="color:#7dd3fc">Supabase Auth</span>.</h2>
-        <p class="muted">Employee passwords are no longer stored in the employees table. Auth handles sign-in, and the employees table stores shop/role info.</p>
-        <div class="feature-list">
-          <div class="feature-item">🔐 Supabase Auth for admin</div>
-          <div class="feature-item">🔐 Supabase Auth for employees</div>
-          <div class="feature-item">🏪 Employee locked to assigned shop</div>
-          <div class="feature-item">👥 Multiple employees per shop</div>
-        </div>
+  <div class="container">
+    <div class="topbar">
+      <div class="brand">
+        <h1>Retail & Wholesale Shop</h1>
+        <p>Admin password change fix using Supabase Auth</p>
       </div>
-
-      <div class="login-right">
-        <div class="section-title">
-          <h3>Login</h3>
-          <span class="badge info">Supabase Auth</span>
-        </div>
-        <div id="loginAlert" class="alert"></div>
-        <div class="form-grid">
-          <div class="form-group full">
-            <label for="loginRole">Expected Role</label>
-            <select id="loginRole">
-              <option value="admin">Admin</option>
-              <option value="employee">Employee</option>
-            </select>
-          </div>
-          <div class="form-group full">
-            <label for="adminEmail">Email</label>
-            <input type="email" id="adminEmail" placeholder="Enter email" />
-          </div>
-          <div class="form-group full">
-            <label for="adminPassword">Password</label>
-            <input type="password" id="adminPassword" placeholder="Enter password" />
-          </div>
-          <div class="form-group full">
-            <label for="unlockCode">Secret Unlock Code</label>
-            <input type="password" id="unlockCode" placeholder="Only use if account is locked" />
-          </div>
-        </div>
-        <div id="loginLockStatus" class="quick-box small" style="display:none; margin-top:14px;"></div>
-        <div style="display:flex; gap:10px; margin-top:16px; flex-wrap:wrap;">
-          <button class="btn btn-primary" onclick="loginUser()">Login</button>
-          <button class="btn btn-dark" onclick="fillAdminEmail()">Fill Admin Email</button>
-        </div>
-        <p class="footer-note">
-          Employees must already exist in <b>Supabase Authentication → Users</b>.<br>
-          Their same email must also exist in the <b>employees</b> table.
-        </p>
+      <div class="badge" id="sessionBadge">
+        <span class="status-dot" id="sessionDot"></span>
+        Checking session...
       </div>
     </div>
-  </section>
 
-  <section id="appScreen" class="hidden">
-    <div class="app-shell">
-      <aside class="sidebar">
-        <div class="brand">
-          <div class="brand-logo">S</div>
-          <div>
-            <h1 id="brandNameSidebar">SmartShop Pro Multi-Shop</h1>
-            <p id="loggedInUser">User</p>
+    <!-- LOGIN SECTION -->
+    <section id="loginSection" class="grid">
+      <div class="card">
+        <h2>Admin Login</h2>
+        <p>Login with your Supabase admin email and password first. After login, you can change your own admin password.</p>
+
+        <label>Admin Email</label>
+        <input type="email" id="loginEmail" placeholder="admin@example.com" autocomplete="email" />
+
+        <label>Password</label>
+        <input type="password" id="loginPassword" placeholder="Enter password" autocomplete="current-password" />
+
+        <div class="btn-row">
+          <button onclick="loginAdmin()">Login</button>
+          <button class="secondary" onclick="clearLoginForm()">Clear</button>
+        </div>
+
+        <div id="loginMsg" class="msg"></div>
+      </div>
+
+      <div class="card">
+        <h3>Important</h3>
+        <p>This file fixes admin changing his own password only.</p>
+        <div class="info-box">
+          For employee password changing directly, you still need backend/server because Supabase Admin API must not run inside frontend HTML.
+        </div>
+      </div>
+    </section>
+
+    <!-- ADMIN DASHBOARD SECTION -->
+    <section id="adminSection" class="hidden">
+      <div class="grid">
+        <div class="card">
+          <h2>Admin Area</h2>
+          <p>You are logged in as:</p>
+          <div class="user-row">
+            <strong>Email:</strong> <span id="currentAdminEmail">-</span><br />
+            <strong>User ID:</strong> <span id="currentAdminId">-</span>
+          </div>
+
+          <div class="btn-row">
+            <button class="secondary" onclick="refreshSession()">Refresh Session</button>
+            <button class="danger" onclick="logoutAdmin()">Logout</button>
+          </div>
+
+          <div id="sessionMsg" class="msg"></div>
+        </div>
+
+        <div class="card">
+          <h2>Change Admin Password</h2>
+          <p>Enter a new password for the currently logged-in admin account.</p>
+
+          <label>New Password</label>
+          <input type="password" id="adminNewPassword" placeholder="New password" autocomplete="new-password" />
+
+          <label>Confirm New Password</label>
+          <input type="password" id="adminConfirmPassword" placeholder="Confirm new password" autocomplete="new-password" />
+
+          <div class="btn-row">
+            <button onclick="changeAdminPassword()">Change Password</button>
+            <button class="secondary" onclick="clearPasswordForm()">Clear</button>
+          </div>
+
+          <div id="adminPasswordMsg" class="msg"></div>
+
+          <div class="info-box">
+            After success, logout and login again using the new password. If old password still works, the password update did not reach Supabase.
           </div>
         </div>
 
-        <div class="nav-menu">
-          <button class="nav-btn active" data-page="dashboardPage" onclick="showPage('dashboardPage', this)">📊 Dashboard</button>
-          <button class="nav-btn" data-page="productsPage" onclick="showPage('productsPage', this)">📦 Products</button>
-          <button class="nav-btn" data-page="stockPage" onclick="showPage('stockPage', this)">🏪 Shop Stock</button>
-          <button class="nav-btn" data-page="salesPage" onclick="showPage('salesPage', this)">🛒 Make Sale</button>
-          <button class="nav-btn" data-page="receiptsPage" onclick="showPage('receiptsPage', this)">🧾 Receipts</button>
-          <button class="nav-btn role-admin-only" data-page="employeesPage" onclick="showPage('employeesPage', this)">👥 Employees</button>
-          <button class="nav-btn" data-page="settingsPage" onclick="showPage('settingsPage', this)">⚙️ Settings</button>
+        <div class="card">
+          <h2>Password Reset by Email</h2>
+          <p>If you forgot admin password, send a Supabase reset link to your email.</p>
+
+          <label>Admin Email</label>
+          <input type="email" id="resetEmail" placeholder="admin@example.com" />
+
+          <button onclick="sendPasswordResetEmail()">Send Reset Link</button>
+
+          <div id="resetMsg" class="msg"></div>
         </div>
+      </div>
+    </section>
+  </div>
 
-        <div class="sidebar-footer">
-          <div class="small muted">Quick Actions</div>
-          <div style="display:grid; gap:14px; margin-top:12px;">
-            <button class="btn btn-success" onclick="showPage('productsPage'); focusProductForm()">+ Add Product</button>
-            <button class="btn btn-warning" onclick="showPage('salesPage')">+ New Sale</button>
-            <button class="btn btn-danger" onclick="logout()">Logout</button>
-          </div>
-        </div>
-      </aside>
+  <script>
+    /************************************************************
+     * 1. SUPABASE CONFIG
+     * Replace SUPABASE_ANON_KEY with your publishable/anon key.
+     * DO NOT put service_role or sb_secret key here.
+     ************************************************************/
 
-      <main class="main">
-        <div id="globalAlert" class="alert"></div>
+    const SUPABASE_URL = "https://vzmhlhykafcahglkhljw.supabase.co";
+    const SUPABASE_ANON_KEY = "PASTE_YOUR_SUPABASE_PUBLISHABLE_OR_ANON_KEY_HERE";
 
-        <section id="dashboardPage" class="page">
-          <div class="topbar">
-            <div>
-              <h2>Dashboard</h2>
-              <p id="dashboardSubtitle">Monitor all shops or a single shop.</p>
-            </div>
-            <div class="topbar-actions">
-              <select id="dashboardShopFilter" onchange="renderDashboard()" style="min-width:170px;">
-                <option value="ALL">All Shops</option>
-                <option value="Gakindu">Gakindu</option>
-                <option value="Oythaya">Oythaya</option>
-                <option value="Shop C">Shop C</option>
-              </select>
-              <button class="btn btn-primary role-admin-only" onclick="seedSampleData()">Load Sample Data</button>
-              <button class="btn btn-dark" onclick="reloadAllData()">Refresh From Database</button>
-              <button class="btn btn-danger role-admin-only" onclick="resetDashboardData()">Reset Dashboard To Zero</button>
-            </div>
-          </div>
+    const supabaseClient = window.supabase.createClient(
+      SUPABASE_URL,
+      SUPABASE_ANON_KEY
+    );
 
-          <div class="grid stats">
-            <div class="card stat-card"><h3>Total Products</h3><div class="value" id="statProducts">0</div><small>Base products saved</small></div>
-            <div class="card stat-card"><h3>Total Shop Stocks</h3><div class="value" id="statStockRows">0</div><small>Stock rows in current view</small></div>
-            <div class="card stat-card"><h3>Total Units</h3><div class="value" id="statStock">0</div><small>Units in current view</small></div>
-            <div class="card stat-card"><h3>Total Revenue</h3><div class="value" id="statRevenue">KSh 0</div><small>Current view</small></div>
-            <div class="card stat-card"><h3>Total Profit</h3><div class="value" id="statProfit">KSh 0</div><small>Current view</small></div>
-            <div class="card stat-card"><h3>Avg Profit Margin</h3><div class="value" id="statProfitMargin">0%</div><small id="statProfitMarginLabel">Across current view</small></div>
-            <div class="card stat-card"><h3>Low Stock Records</h3><div class="value" id="statLowStock">0</div><small>Below threshold</small></div>
-            <div class="card stat-card"><h3>Total Receipts</h3><div class="value" id="statReceipts">0</div><small>In current view</small></div>
-          </div>
+    /************************************************************
+     * 2. SMALL HELPERS
+     ************************************************************/
 
-          <div class="grid branch-stats role-admin-only" style="margin-top:18px;">
-            <div class="card branch-card"><h4>Gakindu</h4><div class="mini"><div>Revenue: <b id="gakinduRevenue">KSh 0</b></div><div>Profit: <b id="gakinduProfit">KSh 0</b></div><div>Units: <b id="gakinduUnits">0</b></div><div>Low Stock: <b id="gakinduLow">0</b></div></div></div>
-            <div class="card branch-card"><h4>Oythaya</h4><div class="mini"><div>Revenue: <b id="oythayaRevenue">KSh 0</b></div><div>Profit: <b id="oythayaProfit">KSh 0</b></div><div>Units: <b id="oythayaUnits">0</b></div><div>Low Stock: <b id="oythayaLow">0</b></div></div></div>
-            <div class="card branch-card"><h4>Shop C</h4><div class="mini"><div>Revenue: <b id="shopCRevenue">KSh 0</b></div><div>Profit: <b id="shopCProfit">KSh 0</b></div><div>Units: <b id="shopCUnits">0</b></div><div>Low Stock: <b id="shopCLow">0</b></div></div></div>
-          </div>
-
-          <div class="card" style="margin-top:18px;">
-            <div class="section-title">
-              <h3>Sales Performance & Profit</h3>
-              <div style="display:flex; gap:10px; flex-wrap:wrap; align-items:center;">
-                <span class="badge info">Day / Month / Year View</span>
-                <select id="chartViewType" onchange="renderDashboard()" style="min-width:160px;">
-                  <option value="day" selected>Day by Day</option>
-                  <option value="month">Month by Month</option>
-                  <option value="year">Year by Year</option>
-                </select>
-              </div>
-            </div>
-            <div class="chart-wrap"><canvas id="salesLineChart"></canvas></div>
-          </div>
-
-          <div class="grid two-col" style="margin-top:18px;">
-            <div class="card">
-              <div class="section-title"><h3>Recent Sales</h3><span class="badge info">Latest Transactions</span></div>
-              <div class="table-wrap">
-                <table>
-                  <thead><tr><th>Receipt</th><th>Customer</th><th>Shop</th><th>Items</th><th>Total</th><th>Profit</th><th>Margin</th><th>Date</th></tr></thead>
-                  <tbody id="recentSalesTable"></tbody>
-                </table>
-              </div>
-            </div>
-            <div class="card">
-              <div class="section-title"><h3>Low Stock Alert</h3><span class="badge danger">Needs Attention</span></div>
-              <div id="lowStockList"></div>
-            </div>
-          </div>
-        </section>
-
-        <section id="productsPage" class="page hidden">
-          <div class="topbar"><div><h2>Products</h2><p>Add and manage base products. Stock per shop is handled separately.</p></div></div>
-          <div class="grid two-col">
-            <div class="card role-admin-only">
-              <div class="section-title"><h3>Add New Product</h3><span class="badge success">Product Master</span></div>
-              <form id="productForm" class="form-grid">
-                <div class="form-group"><label for="productName">Product Name</label><input id="productName" required placeholder="e.g. Coil" /></div>
-                <div class="form-group"><label for="productCategory">Category</label><input id="productCategory" placeholder="e.g. Hardware" /></div>
-                <div class="form-group"><label for="productBarcode">Barcode</label><input id="productBarcode" placeholder="Scan or type barcode" /></div>
-                <div class="form-group"><label for="productUnit">Unit</label><input id="productUnit" placeholder="e.g. pieces, boxes" /></div>
-                <div class="form-group"><label for="costPrice">Cost Price (KSh)</label><input id="costPrice" type="number" min="0" step="0.01" required /></div>
-                <div class="form-group"><label for="markedPrice">Marked Price (KSh)</label><input id="markedPrice" type="number" min="0" step="0.01" required /></div>
-                <div class="form-group"><label for="retailPrice">Retail Price (KSh)</label><input id="retailPrice" type="number" min="0" step="0.01" required /></div>
-                <div class="form-group"><label for="wholesalePrice">Wholesale Price (KSh)</label><input id="wholesalePrice" type="number" min="0" step="0.01" required /></div>
-                <div class="form-group"><label for="lowStockThreshold">Default Low Stock Threshold</label><input id="lowStockThreshold" type="number" min="0" value="5" /></div>
-                <div class="form-group"><label for="retailDiscount">Retail Discount %</label><input id="retailDiscount" type="number" min="0" max="100" value="0" /></div>
-                <div class="form-group"><label for="wholesaleDiscount">Wholesale Discount %</label><input id="wholesaleDiscount" type="number" min="0" max="100" value="0" /></div>
-                <div class="form-group full"><label for="productDescription">Description</label><textarea id="productDescription" placeholder="Write product details..."></textarea></div>
-                <div class="form-group full" style="display:flex; gap:10px; flex-wrap:wrap;">
-                  <button type="submit" class="btn btn-primary">Save Product</button>
-                  <button type="button" class="btn btn-dark" onclick="resetProductForm()">Clear Form</button>
-                </div>
-              </form>
-            </div>
-
-            <div class="card">
-              <div class="section-title"><h3>Find Products</h3><span class="badge pink">Shared Online Data</span></div>
-              <div class="toolbar">
-                <input id="searchProducts" placeholder="Search product name or barcode..." oninput="renderProducts()" />
-                <select id="filterCategory" onchange="renderProducts()"><option value="">All Categories</option></select>
-                <select id="sortProducts" onchange="renderProducts()">
-                  <option value="name" selected>Name A-Z</option>
-                  <option value="latest">Latest</option>
-                  <option value="retail">Retail Price</option>
-                  <option value="wholesale">Wholesale Price</option>
-                </select>
-                <div class="quick-box small center">Stock is managed in Shop Stock page.</div>
-              </div>
-              <div id="productsGrid" class="products-grid"></div>
-            </div>
-          </div>
-        </section>
-
-        <section id="stockPage" class="page hidden">
-          <div class="topbar"><div><h2>Shop Stock</h2><p>Admin now has the three shops separated clearly. Employees can still add stock only to their own assigned shop.</p></div></div>
-
-          <div class="grid branch-stats role-admin-only" style="margin-bottom:18px;">
-            <div class="card branch-card">
-              <h4>Gakindu Stock Panel</h4>
-              <div class="mini">
-                <div>Total Units: <b id="stockPanelGakinduUnits">0</b></div>
-                <div>Low Stock Items: <b id="stockPanelGakinduLow">0</b></div>
-              </div>
-              <div style="margin-top:12px;"><button class="btn btn-primary" onclick="setStockShop('Gakindu')">Manage Gakindu</button></div>
-            </div>
-            <div class="card branch-card">
-              <h4>Oythaya Stock Panel</h4>
-              <div class="mini">
-                <div>Total Units: <b id="stockPanelOythayaUnits">0</b></div>
-                <div>Low Stock Items: <b id="stockPanelOythayaLow">0</b></div>
-              </div>
-              <div style="margin-top:12px;"><button class="btn btn-primary" onclick="setStockShop('Oythaya')">Manage Oythaya</button></div>
-            </div>
-            <div class="card branch-card">
-              <h4>Shop C Stock Panel</h4>
-              <div class="mini">
-                <div>Total Units: <b id="stockPanelShopCUnits">0</b></div>
-                <div>Low Stock Items: <b id="stockPanelShopCLow">0</b></div>
-              </div>
-              <div style="margin-top:12px;"><button class="btn btn-primary" onclick="setStockShop('Shop C')">Manage Shop C</button></div>
-            </div>
-          </div>
-
-          <div class="grid two-col">
-            <div class="card">
-              <div class="section-title"><h3 id="stockFormTitle">Add / Update Stock By Shop</h3><span class="badge success">Separated By Shop</span></div>
-              <form id="stockForm" class="form-grid">
-                <div class="form-group"><label for="stockProductSearch">Search Item</label><input id="stockProductSearch" placeholder="Search item name..." oninput="refreshStockProductOptions()" /></div>
-                <div class="form-group"><label for="stockProduct">Product</label><select id="stockProduct" onchange="syncStockSearchWithSelection()"></select></div>
-                <div class="form-group"><label for="stockShop">Shop</label>
-                  <select id="stockShop"><option value="Gakindu">Gakindu</option><option value="Oythaya">Oythaya</option><option value="Shop C">Shop C</option></select>
-                </div>
-                <div class="form-group"><label for="shopStockQty" id="shopStockQtyLabel">Add Stock Quantity</label><input id="shopStockQty" type="number" min="0" value="0" /></div>
-                <div class="form-group"><label for="shopStockThreshold">Low Stock Threshold</label><input id="shopStockThreshold" type="number" min="0" value="5" /></div>
-                <div class="form-group full"><div class="quick-box small">Admin can add stock for any shop. Employees can add, edit, or delete stock records only for their own assigned shop. Use Edit when you made a mistake and need to rectify the exact stock value.</div></div>
-                <div class="form-group full" style="display:flex; gap:10px; flex-wrap:wrap;">
-                  <button type="submit" class="btn btn-primary" id="saveStockBtn">Save Shop Stock</button>
-                  <button type="button" class="btn btn-dark" onclick="resetStockForm()">Clear / Cancel Edit</button>
-                </div>
-              </form>
-            </div>
-
-            <div class="card">
-              <div class="section-title"><h3>Current Stock Records</h3><span class="badge info">Visible Records</span></div>
-              <div class="table-wrap">
-                <table>
-                  <thead><tr><th>Product</th><th>Shop</th><th>Stock</th><th>Threshold</th><th>Status</th><th>Action</th></tr></thead>
-                  <tbody id="shopStockTable"></tbody>
-                </table>
-              </div>
-            </div>
-          </div>
-
-          <div class="grid branch-stats role-admin-only" style="margin-top:18px;">
-            <div class="card">
-              <div class="section-title"><h3>Gakindu Stock Records</h3><span class="badge info">Separated Shop</span></div>
-              <div class="table-wrap">
-                <table>
-                  <thead><tr><th>Product</th><th>Stock</th><th>Threshold</th><th>Status</th><th>Action</th></tr></thead>
-                  <tbody id="shopStockTableGakindu"></tbody>
-                </table>
-              </div>
-            </div>
-            <div class="card">
-              <div class="section-title"><h3>Oythaya Stock Records</h3><span class="badge pink">Separated Shop</span></div>
-              <div class="table-wrap">
-                <table>
-                  <thead><tr><th>Product</th><th>Stock</th><th>Threshold</th><th>Status</th><th>Action</th></tr></thead>
-                  <tbody id="shopStockTableOythaya"></tbody>
-                </table>
-              </div>
-            </div>
-            <div class="card">
-              <div class="section-title"><h3>Shop C Stock Records</h3><span class="badge violet">Separated Shop</span></div>
-              <div class="table-wrap">
-                <table>
-                  <thead><tr><th>Product</th><th>Stock</th><th>Threshold</th><th>Status</th><th>Action</th></tr></thead>
-                  <tbody id="shopStockTableShopC"></tbody>
-                </table>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        <section id="salesPage" class="page hidden">
-          <div class="topbar"><div><h2>Make Sale</h2><p>Admin can choose any shop. Employee is locked to their assigned shop.</p></div></div>
-          <div class="grid two-col">
-            <div class="card">
-              <div class="section-title"><h3>Sale Entry</h3><span class="badge success">Multi-Item Sale</span></div>
-              <form id="saleForm" class="form-grid">
-                <div class="form-group full"><label for="saleShop">Shop</label>
-                  <select id="saleShop" onchange="refreshSaleProductOptions(); updateSalePricePreview(); renderCart();">
-                    <option value="Gakindu">Gakindu</option><option value="Oythaya">Oythaya</option><option value="Shop C">Shop C</option>
-                  </select>
-                </div>
-                <div class="form-group"><label for="customerName">Customer Name</label><input id="customerName" placeholder="e.g. Benson" required /></div>
-                <div class="form-group"><label for="customerPhone">Phone</label><input id="customerPhone" placeholder="e.g. 0712345678" /></div>
-                <div class="form-group"><label for="saleType">Sale Type</label>
-                  <select id="saleType" onchange="updateSalePricePreview()"><option value="retail">Retail</option><option value="wholesale">Wholesale</option></select>
-                </div>
-                <div class="form-group"><label for="saleProductSearch">Search Item</label><input id="saleProductSearch" placeholder="Search item name..." oninput="refreshSaleProductOptions()" /></div>
-                <div class="form-group"><label for="saleProduct">Product</label><select id="saleProduct" onchange="syncSaleSearchWithSelection(); updateSalePricePreview()"></select></div>
-                <div class="form-group"><label for="saleQty">Quantity</label><input id="saleQty" type="number" min="1" value="1" oninput="updateSalePricePreview()" /></div>
-                <div class="form-group"><label for="manualExtraDiscount">Extra Discount %</label><input id="manualExtraDiscount" type="number" min="0" max="100" value="0" oninput="updateSalePricePreview()" /></div>
-                <div class="form-group"><label for="customSellingPrice">Negotiated Selling Price (Optional)</label><input id="customSellingPrice" type="number" min="0" step="0.01" placeholder="Leave empty to use automatic price" oninput="updateSalePricePreview()" /></div>
-                <div class="form-group"><label for="paymentMethod">Payment Method</label>
-                  <select id="paymentMethod" onchange="togglePaymentReferenceLabel()"><option value="mpesa">M-Pesa</option><option value="airtel_money">Airtel Money</option><option value="paypal">PayPal</option><option value="cash">Cash</option></select>
-                </div>
-                <div class="form-group full"><label for="paymentReference" id="paymentReferenceLabel">Phone / Transaction Ref</label><input id="paymentReference" placeholder="e.g. 0712345678 or TXN123" /></div>
-                <div class="form-group full" style="display:flex; gap:10px; flex-wrap:wrap;">
-                  <button type="button" class="btn btn-violet" onclick="addCurrentItemToCart()">Add Item To Cart</button>
-                  <button type="button" class="btn btn-dark" onclick="resetSaleLineInputs()">Clear Item</button>
-                </div>
-                <div class="form-group full"><label for="saleNotes">Sale Notes</label><textarea id="saleNotes" placeholder="Optional notes..."></textarea></div>
-                <div class="form-group full" style="display:flex; gap:10px; flex-wrap:wrap;">
-                  <button type="submit" class="btn btn-primary">Complete Sale</button>
-                  <button type="button" class="btn btn-dark" onclick="resetSaleForm()">Clear All</button>
-                </div>
-              </form>
-            </div>
-
-            <div class="card">
-              <div class="section-title"><h3>Cart & Summary</h3><span class="badge info">Live Preview</span></div>
-              <div id="salePreview" class="empty-state">Choose a stocked product to see item pricing.</div>
-              <div style="height:12px"></div>
-              <div id="cartList"></div>
-              <div id="cartTotals" class="quick-box small">Cart is empty.</div>
-            </div>
-          </div>
-        </section>
-
-        <section id="receiptsPage" class="page hidden">
-          <div class="topbar"><div><h2>Receipts</h2><p>Admin sees all receipts. Employees only see receipts from their own shop.</p></div></div>
-          <div class="card">
-            <div class="section-title"><h3>All Receipts</h3><span class="badge pink">Printable</span></div>
-            <div class="table-wrap">
-              <table>
-                <thead><tr><th>Receipt No</th><th>Customer</th><th>Shop</th><th>Items</th><th>Total</th><th>Profit</th><th>Margin</th><th>Date</th><th>Action</th></tr></thead>
-                <tbody id="receiptsTable"></tbody>
-              </table>
-            </div>
-          </div>
-          <div id="receiptPrintArea"></div>
-        </section>
-
-        <section id="employeesPage" class="page hidden role-admin-only">
-          <div class="topbar">
-            <div>
-              <h2>Employees</h2>
-              <p>Add employee metadata for existing Supabase Auth users.</p>
-            </div>
-          </div>
-
-          <div class="grid employee-stats">
-            <div class="card stat-card"><h3>Total Employees</h3><div class="value" id="statEmployeesTotal">0</div><small>All active employees</small></div>
-            <div class="card stat-card"><h3>Gakindu Employees</h3><div class="value" id="statEmployeesGakindu">0</div><small>Assigned to Gakindu</small></div>
-            <div class="card stat-card"><h3>Oythaya Employees</h3><div class="value" id="statEmployeesOythaya">0</div><small>Assigned to Oythaya</small></div>
-            <div class="card stat-card"><h3>Shop C Employees</h3><div class="value" id="statEmployeesShopC">0</div><small>Assigned to Shop C</small></div>
-          </div>
-
-          <div class="grid two-col" style="margin-top:18px;">
-            <div class="card">
-              <div class="section-title"><h3>Create Employee Login</h3><span class="badge violet">Supabase Auth</span></div>
-              <form id="employeeForm" class="form-grid">
-                <div class="form-group"><label for="employeeName">Full Name</label><input id="employeeName" placeholder="e.g. Jane Doe" /></div>
-                <div class="form-group"><label for="employeeEmail">Employee Email</label><input id="employeeEmail" type="email" placeholder="employee@shop.com" /></div>
-                <div class="form-group"><label for="employeePassword">Create Password</label><input id="employeePassword" type="password" placeholder="Minimum 6 characters" /></div>
-                <div class="form-group"><label for="employeeShop">Assigned Shop</label>
-                  <select id="employeeShop"><option value="Gakindu">Gakindu</option><option value="Oythaya">Oythaya</option><option value="Shop C">Shop C</option></select>
-                </div>
-                <div class="form-group"><label for="employeeRole">Role</label>
-                  <select id="employeeRole"><option value="employee">Employee</option></select>
-                </div>
-                <div class="form-group full"><button type="submit" class="btn btn-primary">Create Employee + Password</button></div>
-              </form>
-              <div class="footer-note">This uses a Supabase Edge Function called <b>admin-create-employee</b>. Do not put service role keys in HTML.</div>
-            </div>
-
-            <div class="card">
-              <div class="section-title"><h3>Employee Filters</h3><span class="badge info">Search & Shop Filter</span></div>
-              <div class="employee-toolbar">
-                <input id="employeeSearch" placeholder="Search employee name or email..." oninput="renderEmployees()" />
-                <select id="employeeShopFilter" onchange="renderEmployees()">
-                  <option value="ALL">All Shops</option>
-                  <option value="Gakindu">Gakindu</option>
-                  <option value="Oythaya">Oythaya</option>
-                  <option value="Shop C">Shop C</option>
-                </select>
-              </div>
-              <div class="quick-box small">Admin can create employee passwords here after you deploy the required Edge Function.</div>
-            </div>
-          </div>
-
-          <div class="grid branch-stats" style="margin-top:18px;">
-            <div class="card">
-              <div class="section-title"><h3>Gakindu Employees</h3><span class="badge info" id="gakinduEmployeeCountBadge">0 employees</span></div>
-              <div id="gakinduEmployeeGroup"></div>
-            </div>
-            <div class="card">
-              <div class="section-title"><h3>Oythaya Employees</h3><span class="badge pink" id="oythayaEmployeeCountBadge">0 employees</span></div>
-              <div id="oythayaEmployeeGroup"></div>
-            </div>
-            <div class="card">
-              <div class="section-title"><h3>Shop C Employees</h3><span class="badge violet" id="shopCEmployeeCountBadge">0 employees</span></div>
-              <div id="shopCEmployeeGroup"></div>
-            </div>
-          </div>
-
-          <div class="card" style="margin-top:18px;">
-            <div class="section-title"><h3>All Employees Table</h3><span class="badge success">Metadata</span></div>
-            <div class="table-wrap">
-              <table>
-                <thead><tr><th>Name</th><th>Email</th><th>Shop</th><th>Role</th><th>Status</th><th>Action</th></tr></thead>
-                <tbody id="employeeTable"></tbody>
-              </table>
-            </div>
-          </div>
-        </section>
-
-        <section id="settingsPage" class="page hidden">
-          <div class="topbar"><div><h2>Settings</h2><p>Update shop branding.</p></div></div>
-          <div class="grid two-col">
-            <div class="card">
-              <div class="section-title"><h3>Shop Details</h3><span class="badge info">Branding</span></div>
-              <form id="settingsForm" class="form-grid">
-                <div class="form-group"><label for="shopName">Shop Name</label><input id="shopName" /></div>
-                <div class="form-group"><label for="shopCurrency">Currency</label><input id="shopCurrency" /></div>
-                <div class="form-group full"><label for="shopTagline">Shop Tagline</label><input id="shopTagline" /></div>
-                <div class="form-group full"><button type="submit" class="btn btn-primary">Save Settings</button></div>
-              </form>
-            </div>
-            <div class="card">
-              <div class="section-title"><h3>Change My Password</h3><span class="badge success">Auth Security</span></div>
-              <form id="changePasswordForm" class="form-grid">
-                <div class="form-group full"><label for="currentPassword">Current Password</label><input id="currentPassword" type="password" placeholder="Enter current password" /></div>
-                <div class="form-group"><label for="newPassword">New Password</label><input id="newPassword" type="password" placeholder="Minimum 6 characters" /></div>
-                <div class="form-group"><label for="confirmNewPassword">Confirm New Password</label><input id="confirmNewPassword" type="password" placeholder="Repeat new password" /></div>
-                <div class="form-group full"><button type="submit" class="btn btn-success">Change Password</button></div>
-              </form>
-              <div class="footer-note">Works for admin and employee after login.</div>
-            </div>
-            <div class="card">
-              <div class="section-title"><h3>Login Security</h3><span class="badge warning">3 Attempts</span></div>
-              <div class="quick-box small" style="white-space:pre-wrap;line-height:1.5">Wrong password locks that email on this device for 1 hour after 3 attempts. Secret unlock code clears the timer.</div>
-              <div class="footer-note">Current secret code in this file: <b>SHOPMASTER2026</b></div>
-            </div>
-            <div class="card">
-              <div class="section-title"><h3>Auth Notes</h3><span class="badge warning">Important</span></div>
-              <div class="quick-box small" style="white-space:pre-wrap;line-height:1.5">
-1. Admin and employees use Supabase Auth.
-2. Admin password change works in this HTML.
-3. Employee creation/reset password requires Edge Functions:
-   - admin-create-employee
-   - admin-reset-employee-password
-4. Never place service role key in HTML.
-              </div>
-            </div>
-          </div>
-        </section>
-      </main>
-    </div>
-  </section>
-
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <script type="module">
-    import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
-
-    const SUPABASE_URL = 'https://vzmhlhykafcahglkhljw.supabase.co';
-    const SUPABASE_ANON_KEY = 'sb_publishable_AdW-VgSNHD2tjZ2kNhgtCA_N4WZcBva';
-    const ADMIN_EMAIL = 'rinarichard3@gmail.com';
-    const MAX_LOGIN_ATTEMPTS = 3;
-    const LOCK_MINUTES = 60;
-    const SECRET_UNLOCK_CODE = 'SHOPMASTER2026';
-    const CREATE_EMPLOYEE_FUNCTION = 'admin-create-employee';
-    const RESET_EMPLOYEE_PASSWORD_FUNCTION = 'admin-reset-employee-password';
-    const SHOPS = ['Gakindu', 'Oythaya', 'Shop C'];
-
-    const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-    const LOCAL_SETTINGS_KEY = 'smartshop_auth_both_v1';
-    let salesChart = null;
-
-    let state = {
-      settings: { shopName: 'SmartShop Pro Multi-Shop', currency: 'KSh', tagline: 'Retail & Wholesale Shop' },
-      employees: [],
-      products: [],
-      shopStocks: [],
-      sales: [],
-      currentUser: null,
-      cart: [],
-      editingProductId: null,
-      editingStockId: null
-    };
-
-    function loadLocalSettings() {
-      try {
-        const raw = localStorage.getItem(LOCAL_SETTINGS_KEY);
-        if (!raw) return;
-        const parsed = JSON.parse(raw);
-        state.settings = { ...state.settings, ...(parsed.settings || parsed || {}) };
-      } catch (e) { console.error(e); }
-    }
-
-    function saveLocalSettings() {
-      localStorage.setItem(LOCAL_SETTINGS_KEY, JSON.stringify({ settings: state.settings }));
-    }
-
-    function setLoading(show, text='Please wait...') {
-      const overlay = document.getElementById('loadingOverlay');
-      overlay.classList.toggle('show', !!show);
-      overlay.querySelector('.loading-box').textContent = text;
-    }
-
-    function formatMoney(value) {
-      return `${state.settings.currency} ${Number(value || 0).toLocaleString(undefined, { minimumFractionDigits: 0, maximumFractionDigits: 2 })}`;
-    }
-
-    function showAlert(targetId, message, type='info') {
-      const box = document.getElementById(targetId);
-      if (!box) return;
-      box.className = `alert show ${type}`;
-      box.textContent = message;
-      setTimeout(() => { box.className = 'alert'; box.textContent = ''; }, 3500);
-    }
-
-    function escapeHtml(value) {
-      return String(value ?? '')
-        .replace(/&/g,'&amp;')
-        .replace(/</g,'&lt;')
-        .replace(/>/g,'&gt;')
-        .replace(/"/g,'&quot;')
-        .replace(/'/g,'&#039;');
-    }
-
-    function formatDate(iso){ return new Date(iso).toLocaleDateString(); }
-    function formatDateTime(iso){ return new Date(iso).toLocaleString(); }
-    function capitalize(text){ return text ? text.charAt(0).toUpperCase() + text.slice(1) : ''; }
-    function isAdmin(){ return state.currentUser?.role === 'admin'; }
-    function getCurrentUserShop(){ return state.currentUser?.shopName || null; }
-
-    function getDiscountedPrice(price, discountPercent) {
-      const p = Number(price) || 0;
-      const d = Number(discountPercent) || 0;
-      return p - (p * d / 100);
-    }
-
-    function fillAdminEmail() {
-      document.getElementById('adminEmail').value = ADMIN_EMAIL;
-      document.getElementById('adminPassword').focus();
-    }
-
-    function safeParseItems(value) {
-      try {
-        const parsed = JSON.parse(value || '[]');
-        return Array.isArray(parsed) ? parsed : [];
-      } catch {
-        return [];
-      }
-    }
-
-    async function loadEmployeesFromSupabase() {
-      const { data, error } = await supabase
-        .from('employees')
-        .select('*')
-        .order('created_at', { ascending: false });
-      if (error) throw new Error(error.message || 'Failed to load employees');
-      state.employees = (data || []).map(item => ({
-        id: item.id,
-        authUserId: item.auth_user_id || null,
-        name: item.full_name,
-        email: item.email,
-        role: item.role || 'employee',
-        shopName: item.shop_name,
-        isActive: item.is_active
-      }));
-    }
-
-    async function loadProductsFromSupabase() {
-      const { data, error } = await supabase
-        .from('products')
-        .select('*')
-        .order('created_at', { ascending: false });
-      if (error) throw new Error(error.message || 'Failed to load products');
-      state.products = (data || []).map(item => ({
-        id: item.id,
-        name: item.name,
-        category: item.category || '',
-        barcode: item.barcode || '',
-        costPrice: Number(item.cost_price || 0),
-        markedPrice: Number(item.marked_price || 0),
-        retailPrice: Number(item.retail_price || 0),
-        wholesalePrice: Number(item.wholesale_price || 0),
-        unit: item.unit || 'pcs',
-        lowStockThreshold: Number(item.low_stock_threshold || 0),
-        retailDiscount: Number(item.retail_discount || 0),
-        wholesaleDiscount: Number(item.wholesale_discount || 0),
-        description: item.description || '',
-        createdAt: item.created_at || new Date().toISOString()
-      }));
-    }
-
-    async function loadShopStocksFromSupabase() {
-      const { data, error } = await supabase
-        .from('shop_stock')
-        .select('*')
-        .order('created_at', { ascending: false });
-      if (error) throw new Error(error.message || 'Failed to load shop stock');
-      state.shopStocks = (data || []).map(item => ({
-        id: item.id,
-        productId: item.product_id,
-        shopName: item.shop_name,
-        stock: Number(item.stock || 0),
-        lowStockThreshold: Number(item.low_stock_threshold || 0),
-        createdAt: item.created_at || new Date().toISOString()
-      }));
-    }
-
-    async function loadSalesFromSupabase() {
-      const { data, error } = await supabase
-        .from('sales')
-        .select('*')
-        .order('created_at', { ascending: false });
-      if (error) throw new Error(error.message || 'Failed to load sales');
-      state.sales = (data || []).map(item => ({
-        id: item.id,
-        receiptNo: item.receipt_no,
-        customerName: item.customer_name,
-        customerPhone: item.customer_phone || '',
-        notes: item.notes || '',
-        shopName: item.shop_name || '',
-        items: safeParseItems(item.items_json),
-        itemCount: Number(item.item_count || 0),
-        total: Number(item.total || 0),
-        totalProfit: Number(item.total_profit || 0),
-        totalMargin: Number(item.total_margin || 0),
-        paymentMethod: item.payment_method || '',
-        paymentReference: item.payment_reference || '',
-        createdBy: item.created_by || '',
-        createdAt: item.created_at || new Date().toISOString()
-      }));
-    }
-
-    async function reloadAllData() {
-      try {
-        setLoading(true, 'Loading data...');
-        await Promise.all([
-          loadEmployeesFromSupabase(),
-          loadProductsFromSupabase(),
-          loadShopStocksFromSupabase(),
-          loadSalesFromSupabase()
-        ]);
-        renderAll();
-      } catch (error) {
-        showAlert('globalAlert', error.message || 'Failed to load data.', 'error');
-      } finally {
-        setLoading(false);
-      }
-    }
-
-
-    function getLoginLockKey(email) {
-      return `smartshop_login_lock_${String(email || '').trim().toLowerCase()}`;
-    }
-
-    function getLoginLockInfo(email) {
-      try {
-        const raw = localStorage.getItem(getLoginLockKey(email));
-        return raw ? JSON.parse(raw) : { attempts: 0, lockedUntil: 0 };
-      } catch {
-        return { attempts: 0, lockedUntil: 0 };
-      }
-    }
-
-    function saveLoginLockInfo(email, info) {
-      localStorage.setItem(getLoginLockKey(email), JSON.stringify(info));
-    }
-
-    function clearLoginLock(email) {
-      localStorage.removeItem(getLoginLockKey(email));
-      const box = document.getElementById('loginLockStatus');
-      if (box) { box.style.display = 'none'; box.textContent = ''; }
-    }
-
-    function getRemainingLockMinutes(info) {
-      const remainingMs = Number(info.lockedUntil || 0) - Date.now();
-      return Math.max(0, Math.ceil(remainingMs / 60000));
-    }
-
-    function isLoginLocked(email) {
-      const info = getLoginLockInfo(email);
-      return Number(info.lockedUntil || 0) > Date.now();
-    }
-
-    function showLoginLockStatus(email) {
-      const box = document.getElementById('loginLockStatus');
-      if (!box) return;
-      const info = getLoginLockInfo(email);
-      if (Number(info.lockedUntil || 0) > Date.now()) {
-        box.style.display = 'block';
-        box.innerHTML = `🔒 This email is locked for about <b>${getRemainingLockMinutes(info)} minute(s)</b>. Enter the secret unlock code to continue.`;
-      } else if (Number(info.attempts || 0) > 0) {
-        box.style.display = 'block';
-        box.innerHTML = `⚠️ Wrong attempts: <b>${info.attempts}/${MAX_LOGIN_ATTEMPTS}</b>.`;
-      } else {
-        box.style.display = 'none';
-        box.textContent = '';
-      }
-    }
-
-    function registerFailedLogin(email) {
-      const info = getLoginLockInfo(email);
-      const attempts = Number(info.attempts || 0) + 1;
-      const next = { attempts, lockedUntil: 0 };
-      if (attempts >= MAX_LOGIN_ATTEMPTS) {
-        next.lockedUntil = Date.now() + LOCK_MINUTES * 60 * 1000;
-      }
-      saveLoginLockInfo(email, next);
-      showLoginLockStatus(email);
-      return next;
-    }
-
-    async function resolveCurrentUserFromSession(session) {
-      if (!session?.user?.email) return null;
-
-      const authUser = session.user;
-      const email = authUser.email.toLowerCase();
-
-      if (email === ADMIN_EMAIL.toLowerCase()) {
-        return {
-          name: 'Admin',
-          email: authUser.email,
-          role: 'admin',
-          shopName: null,
-          authUserId: authUser.id
-        };
-      }
-
-      let { data: employeeRows, error } = await supabase
-        .from('employees')
-        .select('*')
-        .eq('email', authUser.email)
-        .eq('is_active', true)
-        .limit(1);
-
-      if (error) throw new Error(error.message || 'Failed to load employee profile');
-
-      const employee = employeeRows?.[0];
-      if (!employee) return null;
-
-      if (!employee.auth_user_id) {
-        await supabase
-          .from('employees')
-          .update({ auth_user_id: authUser.id })
-          .eq('id', employee.id);
-      }
-
-      return {
-        name: employee.full_name || 'Employee',
-        email: employee.email,
-        role: employee.role || 'employee',
-        shopName: employee.shop_name || 'Gakindu',
-        authUserId: authUser.id
-      };
-    }
-
-    async function loginUser() {
-      const expectedRole = document.getElementById('loginRole').value;
-      const email = document.getElementById('adminEmail').value.trim().toLowerCase();
-      const password = document.getElementById('adminPassword').value.trim();
-      const unlockCode = document.getElementById('unlockCode')?.value.trim() || '';
-
-      if (!email || !password) {
-        return showAlert('loginAlert', 'Email and password are required.', 'error');
-      }
-
-      if (isLoginLocked(email)) {
-        if (unlockCode === SECRET_UNLOCK_CODE) {
-          clearLoginLock(email);
-          showAlert('loginAlert', 'Secret code accepted. Timer cleared.', 'success');
-        } else {
-          showLoginLockStatus(email);
-          return showAlert('loginAlert', 'Too many wrong attempts. Wait 1 hour or enter the secret unlock code.', 'error');
-        }
-      }
-
-      setLoading(true, 'Signing in...');
-      const { data, error } = await supabase.auth.signInWithPassword({ email, password });
-      setLoading(false);
-
-      if (error || !data.session) {
-        const info = registerFailedLogin(email);
-        if (Number(info.lockedUntil || 0) > Date.now()) {
-          return showAlert('loginAlert', 'Wrong password 3 times. Login locked for 1 hour.', 'error');
-        }
-        return showAlert('loginAlert', `${error?.message || 'Login failed.'} Attempts: ${info.attempts}/${MAX_LOGIN_ATTEMPTS}`, 'error');
-      }
-
-      clearLoginLock(email);
-
-      try {
-        setLoading(true, 'Loading profile...');
-        const resolvedUser = await resolveCurrentUserFromSession(data.session);
-        setLoading(false);
-
-        if (!resolvedUser) {
-          await supabase.auth.signOut();
-          return showAlert('loginAlert', 'Your Auth account exists, but no active employee profile was found.', 'error');
-        }
-
-        if (expectedRole === 'admin' && resolvedUser.role !== 'admin') {
-          await supabase.auth.signOut();
-          return showAlert('loginAlert', 'This account is not an admin account.', 'error');
-        }
-
-        if (expectedRole === 'employee' && resolvedUser.role === 'admin') {
-          await supabase.auth.signOut();
-          return showAlert('loginAlert', 'This account is the admin account. Choose Admin role.', 'error');
-        }
-
-        state.currentUser = resolvedUser;
-        await reloadAllData();
-        showApp();
-        showAlert('globalAlert', `Welcome ${resolvedUser.name}.`, 'success');
-      } catch (err) {
-        setLoading(false);
-        await supabase.auth.signOut();
-        showAlert('loginAlert', err.message || 'Failed to load user profile.', 'error');
-      }
-    }
-
-    async function logout() {
-      await supabase.auth.signOut();
-      state.currentUser = null;
-      state.cart = [];
-      document.getElementById('appScreen').classList.add('hidden');
-      document.getElementById('loginScreen').classList.remove('hidden');
-      document.getElementById('adminPassword').value = '';
-      document.getElementById('loginRole').value = 'admin';
-    }
-
-    function requireAdmin() {
-      if (!isAdmin()) {
-        showAlert('globalAlert', 'Only admin can do this action.', 'error');
-        return false;
-      }
-      return true;
-    }
-
-    function canManageStockForShop(shopName) {
-      if (isAdmin()) return true;
-      return (getCurrentUserShop() || '') === (shopName || '');
-    }
-
-    function showApp() {
-      document.getElementById('loginScreen').classList.add('hidden');
-      document.getElementById('appScreen').classList.remove('hidden');
-      document.getElementById('loggedInUser').textContent = isAdmin()
-        ? `${state.currentUser.name} • admin • All Shops`
-        : `${state.currentUser.name} • employee • ${state.currentUser.shopName}`;
-
-      document.getElementById('shopName').value = state.settings.shopName;
-      document.getElementById('shopCurrency').value = state.settings.currency;
-      document.getElementById('shopTagline').value = state.settings.tagline;
-
-      applyRoleUI();
-      applyShopLockUI();
-      togglePaymentReferenceLabel();
-      renderAll();
-    }
-
-    function applyRoleUI() {
-      document.querySelectorAll('.role-admin-only').forEach(el => {
-        el.style.display = isAdmin() ? '' : 'none';
-      });
-    }
-
-    function applyShopLockUI() {
-      const dashboardFilter = document.getElementById('dashboardShopFilter');
-      const saleShop = document.getElementById('saleShop');
-      const stockShop = document.getElementById('stockShop');
-      const subtitle = document.getElementById('dashboardSubtitle');
-
-      if (isAdmin()) {
-        dashboardFilter.disabled = false;
-        saleShop.disabled = false;
-        stockShop.disabled = false;
-        subtitle.textContent = 'Monitor all shops or a single shop.';
-      } else {
-        const shop = getCurrentUserShop() || 'Gakindu';
-        dashboardFilter.value = shop;
-        dashboardFilter.disabled = true;
-        saleShop.value = shop;
-        saleShop.disabled = true;
-        stockShop.value = shop;
-        stockShop.disabled = true;
-        subtitle.textContent = `You are viewing ${shop} only.`;
-      }
-    }
-
-    function showPage(pageId, el = null) {
-      document.querySelectorAll('.page').forEach(page => page.classList.add('hidden'));
-      const page = document.getElementById(pageId);
-      if (page) page.classList.remove('hidden');
-      document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
-      const matchedBtn = el || document.querySelector(`.nav-btn[data-page="${pageId}"]`);
-      if (matchedBtn) matchedBtn.classList.add('active');
-
-      if (pageId === 'salesPage') {
-        applyShopLockUI();
-        refreshSaleProductOptions();
-        updateSalePricePreview();
-        renderCart();
-      }
-      if (pageId === 'dashboardPage') renderDashboard();
-      if (pageId === 'stockPage') renderShopStockTable();
-      if (pageId === 'receiptsPage') renderReceipts();
-      if (pageId === 'employeesPage') renderEmployees();
-    }
-
-    function focusProductForm() {
-      document.getElementById('productName')?.focus();
-    }
-
-    function getDashboardShopFilter() {
-      return document.getElementById('dashboardShopFilter')?.value || 'ALL';
-    }
-
-    function getAllowedShopFilterValue() {
-      return isAdmin() ? getDashboardShopFilter() : (getCurrentUserShop() || 'Gakindu');
-    }
-
-    function getFilteredSalesForDashboard() {
-      const filter = getAllowedShopFilterValue();
-      return filter === 'ALL' ? [...state.sales] : state.sales.filter(s => s.shopName === filter);
-    }
-
-    function getFilteredShopStocksForDashboard() {
-      const filter = getAllowedShopFilterValue();
-      return filter === 'ALL' ? [...state.shopStocks] : state.shopStocks.filter(s => s.shopName === filter);
-    }
-
-    function getVisibleReceipts() {
-      return isAdmin() ? [...state.sales] : state.sales.filter(s => s.shopName === getCurrentUserShop());
-    }
-
-    function getVisibleStocks() {
-      return isAdmin() ? [...state.shopStocks] : state.shopStocks.filter(s => s.shopName === getCurrentUserShop());
-    }
-
-    function getCategories() {
-      return [...new Set(state.products.map(p => p.category).filter(Boolean))].sort();
-    }
-
-    function getShopStock(productId, shopName) {
-      return state.shopStocks.find(row => String(row.productId) === String(productId) && row.shopName === shopName);
-    }
-
-    function getStockStatusRow(row) {
-      if (!row || row.stock <= 0) return 'out';
-      if (row.stock <= Number(row.lowStockThreshold || 0)) return 'low';
-      return 'in';
-    }
-
-    function normalizeSearch(value) {
-      return String(value || '').trim().toLowerCase();
-    }
-
-    function sortProductsAZ(products) {
-      return [...products].sort((a, b) => String(a.name || '').localeCompare(String(b.name || '')));
-    }
-
-    function syncStockSearchWithSelection() {
-      const select = document.getElementById('stockProduct');
-      const input = document.getElementById('stockProductSearch');
-      if (!select || !input) return;
-      const selected = state.products.find(p => String(p.id) === String(select.value));
-      if (selected) input.value = selected.name;
+    function showMsg(id, text, type = "success") {
+      const el = document.getElementById(id);
+      el.textContent = text;
+      el.className = "msg show " + type;
     }
 
-    function syncSaleSearchWithSelection() {
-      const select = document.getElementById('saleProduct');
-      const input = document.getElementById('saleProductSearch');
-      if (!select || !input) return;
-      const selectedId = select.value;
-      const row = state.shopStocks.find(r => String(r.productId) === String(selectedId) && r.shopName === (document.getElementById('saleShop')?.value || 'Gakindu'));
-      const selected = state.products.find(p => String(p.id) === String(row?.productId || selectedId));
-      if (selected) input.value = selected.name;
+    function hideMsg(id) {
+      const el = document.getElementById(id);
+      el.textContent = "";
+      el.className = "msg";
     }
 
-    function refreshCategoryOptions() {
-      const categoryFilter = document.getElementById('filterCategory');
-      const current = categoryFilter.value;
-      categoryFilter.innerHTML = '<option value="">All Categories</option>' +
-        getCategories().map(cat => `<option value="${escapeHtml(cat)}">${escapeHtml(cat)}</option>`).join('');
-      categoryFilter.value = current;
+    function setSessionBadge(isOnline, text) {
+      const badge = document.getElementById("sessionBadge");
+      const dot = document.getElementById("sessionDot");
+      badge.innerHTML = `<span class="status-dot ${isOnline ? "online" : ""}" id="sessionDot"></span>${text}`;
     }
 
-    function refreshStockProductOptions() {
-      const select = document.getElementById('stockProduct');
-      const searchInput = document.getElementById('stockProductSearch');
-      if (!select) return;
-
-      const current = select.value;
-      const query = normalizeSearch(searchInput?.value);
-      let products = sortProductsAZ(state.products);
-
-      if (query) {
-        products = products.filter(p =>
-          normalizeSearch(p.name).includes(query) ||
-          normalizeSearch(p.barcode).includes(query) ||
-          normalizeSearch(p.category).includes(query)
-        );
-      }
-
-      if (!products.length) {
-        select.innerHTML = '<option value="">No matching products</option>';
-        return;
-      }
-
-      select.innerHTML = products.map(p => `<option value="${p.id}">${escapeHtml(p.name)}</option>`).join('');
-      if (products.some(p => String(p.id) === String(current))) select.value = current;
-    }
-
-    function refreshSaleProductOptions() {
-      const select = document.getElementById('saleProduct');
-      const searchInput = document.getElementById('saleProductSearch');
-      const shopName = document.getElementById('saleShop')?.value || 'Gakindu';
-      const current = select.value;
-      const query = normalizeSearch(searchInput?.value);
-
-      let rows = state.shopStocks.filter(row => row.shopName === shopName && row.stock > 0)
-        .map(row => {
-          const product = state.products.find(p => String(p.id) === String(row.productId));
-          return product ? { row, product } : null;
-        })
-        .filter(Boolean)
-        .sort((a, b) => String(a.product.name || '').localeCompare(String(b.product.name || '')));
-
-      if (query) {
-        rows = rows.filter(({ product }) =>
-          normalizeSearch(product.name).includes(query) ||
-          normalizeSearch(product.barcode).includes(query) ||
-          normalizeSearch(product.category).includes(query)
-        );
-      }
-
-      if (!rows.length) {
-        select.innerHTML = '<option value="">No stocked products in this shop</option>';
-        updateSalePricePreview();
-        return;
-      }
-
-      select.innerHTML = rows.map(({ row, product }) =>
-        `<option value="${product.id}">${escapeHtml(product.name)} (${row.stock} ${escapeHtml(product.unit || 'pcs')} in ${escapeHtml(shopName)})</option>`
-      ).join('');
-
-      if (rows.some(({ product }) => String(product.id) === String(current))) select.value = current;
-    }
-
-    function renderProducts() {
-      const grid = document.getElementById('productsGrid');
-      const query = document.getElementById('searchProducts').value.trim().toLowerCase();
-      const category = document.getElementById('filterCategory').value;
-      const sortBy = document.getElementById('sortProducts').value;
-
-      let filtered = [...state.products];
-
-      if (query) {
-        filtered = filtered.filter(p =>
-          p.name.toLowerCase().includes(query) ||
-          (p.category || '').toLowerCase().includes(query) ||
-          (p.description || '').toLowerCase().includes(query) ||
-          (p.unit || '').toLowerCase().includes(query) ||
-          (p.barcode || '').toLowerCase().includes(query)
-        );
-      }
-
-      if (category) filtered = filtered.filter(p => p.category === category);
-
-      filtered.sort((a, b) => {
-        if (sortBy === 'latest') return new Date(b.createdAt) - new Date(a.createdAt);
-        if (sortBy === 'retail') return b.retailPrice - a.retailPrice;
-        if (sortBy === 'wholesale') return b.wholesalePrice - a.wholesalePrice;
-        return a.name.localeCompare(b.name);
-      });
-
-      if (!filtered.length) {
-        grid.innerHTML = '<div class="empty-state" style="grid-column:1/-1;">No products found.</div>';
-        return;
-      }
-
-      grid.innerHTML = filtered.map(product => {
-        const stockA = getShopStock(product.id, 'Gakindu')?.stock || 0;
-        const stockB = getShopStock(product.id, 'Oythaya')?.stock || 0;
-        const stockC = getShopStock(product.id, 'Shop C')?.stock || 0;
-        return `
-          <div class="product-card">
-            <div style="display:flex; justify-content:space-between; gap:10px; align-items:flex-start;">
-              <h4>${escapeHtml(product.name)}</h4>
-              <span class="badge info">${escapeHtml(product.category || 'General')}</span>
-            </div>
-            <div class="product-meta">
-              <div>Barcode: <b>${escapeHtml(product.barcode || '—')}</b></div>
-              <div>Cost Price: <b>${formatMoney(product.costPrice)}</b></div>
-              <div>Marked Price: <b>${formatMoney(product.markedPrice)}</b></div>
-              <div>Retail Price: <b>${formatMoney(product.retailPrice)}</b></div>
-              <div>Wholesale Price: <b>${formatMoney(product.wholesalePrice)}</b></div>
-              <div>Gakindu Stock: <b>${stockA} ${escapeHtml(product.unit || 'pcs')}</b></div>
-              <div>Oythaya Stock: <b>${stockB} ${escapeHtml(product.unit || 'pcs')}</b></div>
-              <div>Shop C Stock: <b>${stockC} ${escapeHtml(product.unit || 'pcs')}</b></div>
-            </div>
-            <p class="footer-note">${escapeHtml(product.description || 'No description')}</p>
-            ${isAdmin() ? `
-              <div class="product-actions">
-                <button class="btn btn-primary" onclick="editProduct('${product.id}')">Edit</button>
-                <button class="btn btn-danger" onclick="deleteProduct('${product.id}')">Delete</button>
-              </div>
-            ` : ''}
-          </div>
-        `;
-      }).join('');
-    }
-
-    function setStockShop(shopName) {
-      state.editingStockId = null;
-      const stockShop = document.getElementById('stockShop');
-      if (!stockShop) return;
-      stockShop.value = shopName;
-      const thresholdInput = document.getElementById('shopStockThreshold');
-      const firstRow = state.shopStocks.find(row => row.shopName === shopName);
-      if (firstRow && thresholdInput) thresholdInput.value = firstRow.lowStockThreshold || 5;
-      showAlert('globalAlert', `Now managing ${shopName} stock.`, 'info');
-    }
-
-    function buildStockRows(rows, includeShopColumn = true) {
-      const colspan = includeShopColumn ? 6 : 5;
-      if (!rows.length) {
-        return `<tr><td colspan="${colspan}" class="muted center">No shop stock records yet.</td></tr>`;
-      }
-
-      return rows.map(row => {
-        const product = state.products.find(p => String(p.id) === String(row.productId));
-        const status = getStockStatusRow(row);
-        const badge = status === 'out'
-          ? '<span class="badge danger">Out</span>'
-          : status === 'low'
-          ? '<span class="badge warning">Low</span>'
-          : '<span class="badge success">In Stock</span>';
-
-        const canEdit = canManageStockForShop(row.shopName);
-        const actions = canEdit
-          ? `<div style="display:flex; gap:8px; flex-wrap:wrap;">
-              <button class="btn btn-primary" style="padding:8px 12px;" onclick="editStockRecord('${row.id}')">Edit</button>
-              <button class="btn btn-danger" style="padding:8px 12px;" onclick="deleteStockRecord('${row.id}')">Delete</button>
-            </div>`
-          : '<span class="badge warning">Locked</span>';
-
-        return includeShopColumn
-          ? `<tr>
-              <td>${escapeHtml(product?.name || 'Unknown Product')}</td>
-              <td>${escapeHtml(row.shopName)}</td>
-              <td>${row.stock}</td>
-              <td>${row.lowStockThreshold}</td>
-              <td>${badge}</td>
-              <td>${actions}</td>
-            </tr>`
-          : `<tr>
-              <td>${escapeHtml(product?.name || 'Unknown Product')}</td>
-              <td>${row.stock}</td>
-              <td>${row.lowStockThreshold}</td>
-              <td>${badge}</td>
-              <td>${actions}</td>
-            </tr>`;
-      }).join('');
-    }
-
-    function renderShopPanelSummary(shopName, unitsId, lowId) {
-      const rows = state.shopStocks.filter(row => row.shopName === shopName);
-      const units = rows.reduce((sum, row) => sum + Number(row.stock || 0), 0);
-      const low = rows.filter(row => getStockStatusRow(row) !== 'in').length;
-      const unitsEl = document.getElementById(unitsId);
-      const lowEl = document.getElementById(lowId);
-      if (unitsEl) unitsEl.textContent = units;
-      if (lowEl) lowEl.textContent = low;
-    }
-
-    function renderShopStockTable() {
-      const table = document.getElementById('shopStockTable');
-      const stocks = getVisibleStocks();
-      table.innerHTML = buildStockRows(stocks, true);
-
-      renderShopPanelSummary('Gakindu', 'stockPanelGakinduUnits', 'stockPanelGakinduLow');
-      renderShopPanelSummary('Oythaya', 'stockPanelOythayaUnits', 'stockPanelOythayaLow');
-      renderShopPanelSummary('Shop C', 'stockPanelShopCUnits', 'stockPanelShopCLow');
-
-      const gakinduTable = document.getElementById('shopStockTableGakindu');
-      const oythayaTable = document.getElementById('shopStockTableOythaya');
-      const shopCTable = document.getElementById('shopStockTableShopC');
-
-      if (gakinduTable) gakinduTable.innerHTML = buildStockRows(state.shopStocks.filter(row => row.shopName === 'Gakindu'), false);
-      if (oythayaTable) oythayaTable.innerHTML = buildStockRows(state.shopStocks.filter(row => row.shopName === 'Oythaya'), false);
-      if (shopCTable) shopCTable.innerHTML = buildStockRows(state.shopStocks.filter(row => row.shopName === 'Shop C'), false);
-    }
-
-    function getGroupedSalesData(filteredSales) {
-      const viewType = document.getElementById('chartViewType')?.value || 'day';
-      const grouped = {};
-
-      filteredSales.slice().reverse().forEach(sale => {
-        const saleDate = new Date(sale.createdAt);
-        let label = '';
-        if (viewType === 'day') label = saleDate.toLocaleDateString();
-        else if (viewType === 'month') label = `${saleDate.getFullYear()}-${String(saleDate.getMonth()+1).padStart(2,'0')}`;
-        else label = `${saleDate.getFullYear()}`;
-
-        if (!grouped[label]) grouped[label] = { revenue: 0, profit: 0, marginTotal: 0, count: 0 };
-        grouped[label].revenue += Number(sale.total || 0);
-        grouped[label].profit += Number(sale.totalProfit || 0);
-        grouped[label].marginTotal += Number(sale.totalMargin || 0);
-        grouped[label].count += 1;
-      });
-
-      const labels = Object.keys(grouped);
-      return {
-        labels,
-        revenueData: labels.map(label => grouped[label].revenue),
-        profitData: labels.map(label => grouped[label].profit),
-        marginData: labels.map(label => grouped[label].count ? Number((grouped[label].marginTotal / grouped[label].count).toFixed(2)) : 0),
-        viewType
-      };
-    }
-
-    function renderSalesChart(filteredSales) {
-      const canvas = document.getElementById('salesLineChart');
-      if (!canvas) return;
-      const { labels, revenueData, profitData, marginData } = getGroupedSalesData(filteredSales);
-      if (salesChart) salesChart.destroy();
-
-      salesChart = new Chart(canvas, {
-        data: {
-          labels,
-          datasets: [
-            { type: 'line', label: 'Revenue', data: revenueData, borderWidth: 3, tension: 0.3, fill: false, yAxisID: 'y' },
-            { type: 'line', label: 'Profit', data: profitData, borderWidth: 3, tension: 0.3, fill: false, yAxisID: 'y' },
-            { type: 'bar', label: 'Avg Margin %', data: marginData, borderWidth: 1, yAxisID: 'y1' }
-          ]
-        },
-        options: {
-          responsive: true,
-          maintainAspectRatio: false,
-          plugins: {
-            legend: { labels: { color: '#f8fafc' } },
-            tooltip: {
-              callbacks: {
-                label: function(context) {
-                  const label = context.dataset.label || '';
-                  const value = context.raw || 0;
-                  if (label.includes('Margin')) return `${label}: ${value}%`;
-                  return `${label}: ${formatMoney(value)}`;
-                }
-              }
-            }
-          },
-          scales: {
-            x: { ticks: { color: '#cbd5e1' }, grid: { color: 'rgba(255,255,255,0.08)' } },
-            y: { position: 'left', ticks: { color: '#cbd5e1', callback: value => formatMoney(value) }, grid: { color: 'rgba(255,255,255,0.08)' } },
-            y1: { position: 'right', beginAtZero: true, ticks: { color: '#cbd5e1', callback: value => value + '%' }, grid: { drawOnChartArea: false } }
-          }
-        }
-      });
-    }
-
-    function renderBranchSummaryCards() {
-      if (!isAdmin()) return;
-      for (const shop of SHOPS) {
-        const sales = state.sales.filter(s => s.shopName === shop);
-        const stocks = state.shopStocks.filter(s => s.shopName === shop);
-        const revenue = sales.reduce((sum, s) => sum + Number(s.total || 0), 0);
-        const profit = sales.reduce((sum, s) => sum + Number(s.totalProfit || 0), 0);
-        const units = stocks.reduce((sum, s) => sum + Number(s.stock || 0), 0);
-        const low = stocks.filter(s => getStockStatusRow(s) !== 'in').length;
-
-        const key = shop === 'Gakindu' ? 'gakindu' : shop === 'Oythaya' ? 'oythaya' : 'shopC';
-        document.getElementById(`${key}Revenue`).textContent = formatMoney(revenue);
-        document.getElementById(`${key}Profit`).textContent = formatMoney(profit);
-        document.getElementById(`${key}Units`).textContent = units;
-        document.getElementById(`${key}Low`).textContent = low;
-      }
-    }
-
-    function renderDashboard() {
-      const filteredSales = getFilteredSalesForDashboard();
-      const filteredStocks = getFilteredShopStocksForDashboard();
-      const filter = getAllowedShopFilterValue();
-
-      document.getElementById('statProducts').textContent = state.products.length;
-      document.getElementById('statStockRows').textContent = filteredStocks.length;
-      document.getElementById('statStock').textContent = filteredStocks.reduce((sum, row) => sum + Number(row.stock || 0), 0);
-
-      const totalRevenue = filteredSales.reduce((sum, s) => sum + Number(s.total || 0), 0);
-      const totalProfit = filteredSales.reduce((sum, s) => sum + Number(s.totalProfit || 0), 0);
-      const avgMargin = totalRevenue > 0 ? (totalProfit / totalRevenue) * 100 : 0;
-
-      document.getElementById('statRevenue').textContent = formatMoney(totalRevenue);
-      document.getElementById('statProfit').textContent = formatMoney(totalProfit);
-      document.getElementById('statProfitMargin').textContent = `${avgMargin.toFixed(1)}%`;
-      document.getElementById('statReceipts').textContent = filteredSales.length;
-      document.getElementById('statLowStock').textContent = filteredStocks.filter(row => getStockStatusRow(row) !== 'in').length;
-
-      const chartData = getGroupedSalesData(filteredSales);
-      const labelMap = { day:'Based on day-by-day chart view', month:'Based on month-by-month chart view', year:'Based on year-by-year chart view' };
-      document.getElementById('statProfitMarginLabel').textContent = `${labelMap[chartData.viewType] || 'Across current receipts'}${filter !== 'ALL' ? ` • ${filter}` : ''}`;
-
-      const recentSalesTable = document.getElementById('recentSalesTable');
-      if (!filteredSales.length) {
-        recentSalesTable.innerHTML = '<tr><td colspan="8" class="muted center">No sales yet.</td></tr>';
-      } else {
-        recentSalesTable.innerHTML = filteredSales.slice(0, 6).map(sale => `
-          <tr>
-            <td>${sale.receiptNo}</td>
-            <td>${escapeHtml(sale.customerName)}</td>
-            <td>${escapeHtml(sale.shopName)}</td>
-            <td>${sale.itemCount}</td>
-            <td>${formatMoney(sale.total)}</td>
-            <td>${formatMoney(sale.totalProfit)}</td>
-            <td>${Number(sale.totalMargin || 0).toFixed(2)}%</td>
-            <td>${formatDate(sale.createdAt)}</td>
-          </tr>`).join('');
-      }
-
-      const lowStockList = document.getElementById('lowStockList');
-      const lowItems = filteredStocks.filter(row => getStockStatusRow(row) !== 'in');
-      if (!lowItems.length) {
-        lowStockList.innerHTML = '<div class="empty-state">No low stock records right now.</div>';
-      } else {
-        lowStockList.innerHTML = lowItems.map(row => {
-          const product = state.products.find(p => String(p.id) === String(row.productId));
-          return `<div class="receipt-line"><span>${escapeHtml(product?.name || 'Unknown Product')} • ${escapeHtml(row.shopName)}</span><strong>${row.stock} left</strong></div>`;
-        }).join('');
-      }
-
-      renderBranchSummaryCards();
-      renderSalesChart(filteredSales);
-    }
-
-    function generateReceiptHTML(sale, autoPrint = false) {
-      const area = document.getElementById('receiptPrintArea');
-      const itemsHtml = sale.items.map(item => `<div class="receipt-line"><span>${escapeHtml(item.productName)} x ${item.qty}</span><strong>${formatMoney(item.finalTotal)}</strong></div>`).join('');
-      area.innerHTML = `
-        <div class="receipt-preview">
-          <div class="receipt-header">
-            <h2>${escapeHtml(state.settings.shopName)}</h2>
-            <div>${escapeHtml(state.settings.tagline)}</div>
-            <div class="small">Receipt No: <strong>${sale.receiptNo}</strong></div>
-            <div class="small">Date: ${formatDateTime(sale.createdAt)}</div>
-          </div>
-          <div class="receipt-line"><span>Name</span><strong>${escapeHtml(sale.customerName)}</strong></div>
-          <div class="receipt-line"><span>Shop</span><strong>${escapeHtml(sale.shopName)}</strong></div>
-          ${itemsHtml}
-          <div class="receipt-line"><span>Total</span><strong>${formatMoney(sale.total)}</strong></div>
-          <p class="center small" style="margin-top:20px;">Thank you for shopping with us.</p>
-        </div>`;
-      if (autoPrint) setTimeout(() => window.print(), 250);
-    }
-
-    function printReceipt(saleId) {
-      const sale = state.sales.find(s => String(s.id) === String(saleId));
-      if (!sale) return;
-      generateReceiptHTML(sale, true);
-    }
-
-    function renderReceipts() {
-      const table = document.getElementById('receiptsTable');
-      const receipts = getVisibleReceipts();
-      if (!receipts.length) {
-        table.innerHTML = '<tr><td colspan="9" class="muted center">No receipts available.</td></tr>';
-        return;
-      }
-
-      table.innerHTML = receipts.map(sale => `
-        <tr>
-          <td>${sale.receiptNo}</td>
-          <td>${escapeHtml(sale.customerName)}</td>
-          <td>${escapeHtml(sale.shopName)}</td>
-          <td>${sale.itemCount}</td>
-          <td>${formatMoney(sale.total)}</td>
-          <td>${formatMoney(sale.totalProfit)}</td>
-          <td>${Number(sale.totalMargin || 0).toFixed(2)}%</td>
-          <td>${formatDate(sale.createdAt)}</td>
-          <td><button class="btn btn-primary" style="padding:8px 12px;" onclick="printReceipt('${sale.id}')">View / Print</button></td>
-        </tr>`).join('');
-    }
-
-    function calculateSalePreview() {
-      const productId = document.getElementById('saleProduct').value;
-      const saleType = document.getElementById('saleType').value;
-      const qty = Number(document.getElementById('saleQty').value || 0);
-      const extraDiscount = Number(document.getElementById('manualExtraDiscount').value || 0);
-      const customSellingPriceInput = document.getElementById('customSellingPrice').value;
-      const customSellingPrice = customSellingPriceInput === '' ? null : Number(customSellingPriceInput);
-      const shopName = document.getElementById('saleShop').value;
-
-      const product = state.products.find(p => String(p.id) === String(productId));
-      const stockRow = getShopStock(productId, shopName);
-      if (!product || !stockRow || qty <= 0) return null;
-
-      const markedPrice = Number(product.markedPrice || 0);
-      const basePrice = saleType === 'wholesale' ? Number(product.wholesalePrice || 0) : Number(product.retailPrice || 0);
-      const costPrice = Number(product.costPrice || 0);
-      const typeDiscount = saleType === 'wholesale' ? Number(product.wholesaleDiscount || 0) : Number(product.retailDiscount || 0);
-      const afterTypeDiscount = getDiscountedPrice(basePrice, typeDiscount);
-      const autoFinalUnitPrice = getDiscountedPrice(afterTypeDiscount, extraDiscount);
-      const finalUnitPrice = customSellingPrice !== null && !Number.isNaN(customSellingPrice) ? customSellingPrice : autoFinalUnitPrice;
-      const finalTotal = finalUnitPrice * qty;
-      const costTotal = costPrice * qty;
-      const discountGiven = (markedPrice * qty) - finalTotal;
-      const profitMade = finalTotal - costTotal;
-      const profitMargin = finalTotal > 0 ? (profitMade / finalTotal) * 100 : 0;
-
-      return {
-        product, stockRow, shopName, saleType, qty, costPrice,
-        finalUnitPrice, finalTotal, discountGiven, profitMade, profitMargin
-      };
-    }
-
-    function updateSalePricePreview() {
-      const preview = document.getElementById('salePreview');
-      const info = calculateSalePreview();
-      if (!info) {
-        preview.className = 'empty-state';
-        preview.innerHTML = 'Choose a stocked product to see item pricing.';
-        return;
-      }
-
-      const enoughStock = info.stockRow.stock >= info.qty;
-      preview.className = '';
-      preview.innerHTML = `
-        <div class="receipt-preview" style="background:rgba(255,255,255,.04); color:var(--text); border:1px solid rgba(255,255,255,.08);">
-          <div class="section-title">
-            <h3>${escapeHtml(info.product.name)}</h3>
-            ${enoughStock ? '<span class="badge success">Stock Available</span>' : '<span class="badge danger">Insufficient Stock</span>'}
-          </div>
-          <div class="receipt-line"><span>Shop</span><strong>${escapeHtml(info.shopName)}</strong></div>
-          <div class="receipt-line"><span>Available Stock</span><strong>${info.stockRow.stock} ${escapeHtml(info.product.unit || 'pcs')}</strong></div>
-          <div class="receipt-line"><span>Final Selling Price</span><strong>${formatMoney(info.finalUnitPrice)}</strong></div>
-          <div class="receipt-line"><span>Quantity</span><strong>${info.qty}</strong></div>
-          <div class="receipt-line"><span>Discount Given</span><strong>${formatMoney(info.discountGiven)}</strong></div>
-          <div class="receipt-line"><span>Profit Made</span><strong>${formatMoney(info.profitMade)}</strong></div>
-          <div class="receipt-line"><span>Profit Margin</span><strong>${info.profitMargin.toFixed(2)}%</strong></div>
-          <div class="receipt-total">Item Total: ${formatMoney(info.finalTotal)}</div>
-        </div>`;
-    }
-
-    function resetSaleLineInputs() {
-      document.getElementById('saleQty').value = 1;
-      document.getElementById('manualExtraDiscount').value = 0;
-      document.getElementById('customSellingPrice').value = '';
-      updateSalePricePreview();
-    }
-
-    function addCurrentItemToCart() {
-      const info = calculateSalePreview();
-      if (!info) return showAlert('globalAlert', 'Choose a valid stocked product.', 'error');
-      if (info.qty > info.stockRow.stock) return showAlert('globalAlert', 'Not enough stock in this shop.', 'error');
-
-      const existing = state.cart.find(item =>
-        String(item.productId) === String(info.product.id) &&
-        item.shopName === info.shopName &&
-        item.saleType === info.saleType
-      );
-
-      if (existing) {
-        const totalQty = existing.qty + info.qty;
-        if (totalQty > info.stockRow.stock) return showAlert('globalAlert', 'Combined cart quantity exceeds shop stock.', 'error');
-        existing.qty = totalQty;
-        existing.finalTotal = existing.finalUnitPrice * existing.qty;
-        existing.profitMade = (existing.finalUnitPrice - existing.costPrice) * existing.qty;
-        existing.profitMargin = existing.finalTotal > 0 ? (existing.profitMade / existing.finalTotal) * 100 : 0;
-      } else {
-        state.cart.push({
-          productId: info.product.id,
-          productName: info.product.name,
-          unit: info.product.unit || 'pcs',
-          shopName: info.shopName,
-          saleType: info.saleType,
-          qty: info.qty,
-          costPrice: info.costPrice,
-          finalUnitPrice: info.finalUnitPrice,
-          discountGiven: info.discountGiven,
-          profitMade: info.profitMade,
-          profitMargin: info.profitMargin,
-          finalTotal: info.finalTotal
-        });
-      }
-
-      renderCart();
-      resetSaleLineInputs();
-      showAlert('globalAlert', 'Item added to cart.', 'success');
-    }
-
-    function removeCartItem(index) {
-      state.cart.splice(index, 1);
-      renderCart();
-    }
-
-    function renderCart() {
-      const cartList = document.getElementById('cartList');
-      const cartTotals = document.getElementById('cartTotals');
-      if (!state.cart.length) {
-        cartList.innerHTML = '<div class="empty-state">No items added yet.</div>';
-        cartTotals.innerHTML = 'Cart is empty.';
-        return;
-      }
-
-      cartList.innerHTML = state.cart.map((item, index) => `
-        <div class="cart-item">
-          <div><b>${escapeHtml(item.productName)}</b> • ${escapeHtml(item.shopName)}</div>
-          <div class="small">${capitalize(item.saleType)} • ${item.qty} ${escapeHtml(item.unit)}</div>
-          <div class="small">Unit Price: ${formatMoney(item.finalUnitPrice)}</div>
-          <div class="small">Line Total: ${formatMoney(item.finalTotal)}</div>
-          <div class="small">Profit: ${formatMoney(item.profitMade)} • Margin: ${Number(item.profitMargin || 0).toFixed(2)}%</div>
-          <div><button class="btn btn-danger" style="padding:8px 12px" onclick="removeCartItem(${index})">Remove</button></div>
-        </div>`).join('');
-
-      const total = state.cart.reduce((sum, item) => sum + Number(item.finalTotal || 0), 0);
-      const profit = state.cart.reduce((sum, item) => sum + Number(item.profitMade || 0), 0);
-      const items = state.cart.reduce((sum, item) => sum + Number(item.qty || 0), 0);
-      const margin = total > 0 ? (profit / total) * 100 : 0;
-      cartTotals.innerHTML = `Items: <b>${items}</b><br>Total: <b>${formatMoney(total)}</b><br>Total Profit: <b>${formatMoney(profit)}</b><br>Margin: <b>${margin.toFixed(2)}%</b>`;
-    }
-
-    function resetSaleForm() {
-      state.cart = [];
-      document.getElementById('saleForm').reset();
-      const defaultShop = isAdmin() ? 'Gakindu' : getCurrentUserShop();
-      if (defaultShop) document.getElementById('saleShop').value = defaultShop;
-      document.getElementById('saleQty').value = 1;
-      document.getElementById('manualExtraDiscount').value = 0;
-      document.getElementById('customSellingPrice').value = '';
-      refreshSaleProductOptions();
-      togglePaymentReferenceLabel();
-      updateSalePricePreview();
-      renderCart();
-    }
-
-    async function handleSaleSubmit(event) {
-      event.preventDefault();
-      const customerName = document.getElementById('customerName').value.trim();
-      const customerPhone = document.getElementById('customerPhone').value.trim();
-      const saleNotes = document.getElementById('saleNotes').value.trim();
-      const paymentMethod = document.getElementById('paymentMethod').value;
-      const paymentReference = document.getElementById('paymentReference').value.trim();
-      const shopName = document.getElementById('saleShop').value;
-
-      if (!customerName) return showAlert('globalAlert', 'Customer name is required.', 'error');
-      if (!state.cart.length) return showAlert('globalAlert', 'Add at least one item to the cart.', 'error');
-      if (!isAdmin() && shopName !== getCurrentUserShop()) return showAlert('globalAlert', 'You can only sell for your assigned shop.', 'error');
-
-      const receiptNo = `RCPT-${Date.now()}`;
-      const total = state.cart.reduce((sum, item) => sum + Number(item.finalTotal || 0), 0);
-      const totalProfit = state.cart.reduce((sum, item) => sum + Number(item.profitMade || 0), 0);
-      const totalMargin = total > 0 ? (totalProfit / total) * 100 : 0;
-
-      const saleInsert = {
-        receipt_no: receiptNo,
-        customer_name: customerName,
-        customer_phone: customerPhone,
-        notes: saleNotes,
-        shop_name: shopName,
-        items_json: JSON.stringify(state.cart),
-        item_count: state.cart.length,
-        total,
-        total_profit: totalProfit,
-        total_margin: totalMargin,
-        payment_method: paymentMethod,
-        payment_reference: paymentReference,
-        created_by: state.currentUser?.email || ADMIN_EMAIL
-      };
-
-      setLoading(true, 'Completing sale...');
-      const { error: insertSaleError } = await supabase.from('sales').insert([saleInsert]);
-      if (insertSaleError) {
-        setLoading(false);
-        return showAlert('globalAlert', insertSaleError.message || 'Failed to save sale.', 'error');
-      }
-
-      for (const item of state.cart) {
-        const row = getShopStock(item.productId, item.shopName);
-        const newStock = Number(row.stock || 0) - Number(item.qty || 0);
-        const { error } = await supabase.from('shop_stock').update({ stock: newStock }).eq('id', row.id);
-        if (error) {
-          setLoading(false);
-          return showAlert('globalAlert', error.message || 'Sale saved but stock update failed.', 'error');
-        }
-      }
-
-      setLoading(false);
-      await reloadAllData();
-      const savedSale = state.sales.find(s => s.receiptNo === receiptNo);
-      if (savedSale) generateReceiptHTML(savedSale, true);
-      showPage('receiptsPage');
-      showAlert('globalAlert', 'Sale completed and receipt generated.', 'success');
-      resetSaleForm();
-    }
-
-    function resetProductForm() {
-      state.editingProductId = null;
-      document.getElementById('productForm').reset();
-      document.getElementById('lowStockThreshold').value = 5;
-      document.getElementById('retailDiscount').value = 0;
-      document.getElementById('wholesaleDiscount').value = 0;
-      const title = document.querySelector('#productsPage .section-title h3');
-      if (title) title.textContent = 'Add New Product';
-      const saveBtn = document.querySelector('#productForm button[type="submit"]');
-      if (saveBtn) saveBtn.textContent = 'Save Product';
-    }
-
-    function editProduct(productId) {
-      if (!requireAdmin()) return;
-      const product = state.products.find(p => String(p.id) === String(productId));
-      if (!product) return;
-      state.editingProductId = product.id;
-      document.getElementById('productName').value = product.name || '';
-      document.getElementById('productCategory').value = product.category || '';
-      document.getElementById('productBarcode').value = product.barcode || '';
-      document.getElementById('productUnit').value = product.unit || 'pcs';
-      document.getElementById('costPrice').value = product.costPrice || 0;
-      document.getElementById('markedPrice').value = product.markedPrice || 0;
-      document.getElementById('retailPrice').value = product.retailPrice || 0;
-      document.getElementById('wholesalePrice').value = product.wholesalePrice || 0;
-      document.getElementById('lowStockThreshold').value = product.lowStockThreshold || 5;
-      document.getElementById('retailDiscount').value = product.retailDiscount || 0;
-      document.getElementById('wholesaleDiscount').value = product.wholesaleDiscount || 0;
-      document.getElementById('productDescription').value = product.description || '';
-      const title = document.querySelector('#productsPage .section-title h3');
-      if (title) title.textContent = 'Edit Product';
-      const saveBtn = document.querySelector('#productForm button[type="submit"]');
-      if (saveBtn) saveBtn.textContent = 'Update Product';
-      showPage('productsPage');
-      focusProductForm();
-    }
-
-    async function deleteProduct(productId) {
-      if (!requireAdmin()) return;
-      const product = state.products.find(p => String(p.id) === String(productId));
-      if (!product) return;
-      if (!confirm(`Delete ${product.name}? This will also remove its shop stock records.`)) return;
-
-      setLoading(true, 'Deleting product...');
-      const stockDelete = await supabase.from('shop_stock').delete().eq('product_id', productId);
-      if (stockDelete.error) {
-        setLoading(false);
-        return showAlert('globalAlert', stockDelete.error.message || 'Failed to delete related shop stock.', 'error');
-      }
-
-      const productDelete = await supabase.from('products').delete().eq('id', productId);
-      setLoading(false);
-      if (productDelete.error) {
-        return showAlert('globalAlert', productDelete.error.message || 'Failed to delete product.', 'error');
-      }
-
-      if (String(state.editingProductId) === String(productId)) resetProductForm();
-      await reloadAllData();
-      showAlert('globalAlert', 'Product deleted successfully.', 'success');
-    }
-
-    async function handleProductSubmit(event) {
-      event.preventDefault();
-      if (!requireAdmin()) return;
-      const product = {
-        name: document.getElementById('productName').value.trim(),
-        category: document.getElementById('productCategory').value.trim(),
-        barcode: document.getElementById('productBarcode').value.trim() || null,
-        cost_price: Number(document.getElementById('costPrice').value),
-        marked_price: Number(document.getElementById('markedPrice').value),
-        retail_price: Number(document.getElementById('retailPrice').value),
-        wholesale_price: Number(document.getElementById('wholesalePrice').value),
-        unit: document.getElementById('productUnit').value.trim() || 'pcs',
-        low_stock_threshold: Number(document.getElementById('lowStockThreshold').value || 0),
-        retail_discount: Number(document.getElementById('retailDiscount').value || 0),
-        wholesale_discount: Number(document.getElementById('wholesaleDiscount').value || 0),
-        description: document.getElementById('productDescription').value.trim()
-      };
-
-      if (!product.name) return showAlert('globalAlert', 'Product name is required.', 'error');
-
-      const isEditingProduct = !!state.editingProductId;
-      setLoading(true, isEditingProduct ? 'Updating product...' : 'Saving product...');
-      const result = state.editingProductId
-        ? await supabase.from('products').update(product).eq('id', state.editingProductId)
-        : await supabase.from('products').insert([product]);
-      setLoading(false);
-      if (result.error) return showAlert('globalAlert', result.error.message || 'Failed to save product.', 'error');
-
-      resetProductForm();
-      await reloadAllData();
-      showAlert('globalAlert', isEditingProduct ? 'Product updated successfully.' : 'Product added successfully.', 'success');
-    }
-
-    async function handleStockSubmit(event) {
-      event.preventDefault();
-
-      const productId = document.getElementById('stockProduct').value;
-      const shopName = document.getElementById('stockShop').value;
-      const stockInput = Number(document.getElementById('shopStockQty').value || 0);
-      const lowStockThreshold = Number(document.getElementById('shopStockThreshold').value || 0);
-
-      if (!productId || !shopName) return showAlert('globalAlert', 'Select a product and shop.', 'error');
-      if (stockInput < 0) return showAlert('globalAlert', 'Stock cannot be negative.', 'error');
-      if (!canManageStockForShop(shopName)) return showAlert('globalAlert', 'You can only manage stock for your own assigned shop.', 'error');
-
-      setLoading(true, state.editingStockId ? 'Updating stock record...' : 'Adding stock...');
-      let result;
-
-      if (state.editingStockId) {
-        const row = state.shopStocks.find(item => String(item.id) === String(state.editingStockId));
-        if (!row) {
-          setLoading(false);
-          return showAlert('globalAlert', 'Stock record not found.', 'error');
-        }
-
-        if (!canManageStockForShop(row.shopName)) {
-          setLoading(false);
-          return showAlert('globalAlert', 'You can only edit stock for your own assigned shop.', 'error');
-        }
-
-        result = await supabase
-          .from('shop_stock')
-          .update({
-            product_id: productId,
-            shop_name: shopName,
-            stock: stockInput,
-            low_stock_threshold: lowStockThreshold
-          })
-          .eq('id', state.editingStockId);
-      } else {
-        const existing = getShopStock(productId, shopName);
-        if (existing) {
-          const newStock = Number(existing.stock || 0) + stockInput;
-          result = await supabase
-            .from('shop_stock')
-            .update({ stock: newStock, low_stock_threshold: lowStockThreshold })
-            .eq('id', existing.id);
-        } else {
-          result = await supabase
-            .from('shop_stock')
-            .insert([{
-              product_id: productId,
-              shop_name: shopName,
-              stock: stockInput,
-              low_stock_threshold: lowStockThreshold
-            }]);
-        }
-      }
-
-      setLoading(false);
-
-      if (result.error) return showAlert('globalAlert', result.error.message || 'Failed to save shop stock.', 'error');
-
-      const message = state.editingStockId
-        ? `Stock record updated for ${shopName}.`
-        : `Stock added successfully for ${shopName}.`;
-
-      resetStockForm();
-      await reloadAllData();
-      showAlert('globalAlert', message, 'success');
-    }
-
-    function resetStockForm() {
-      state.editingStockId = null;
-      const qty = document.getElementById('shopStockQty');
-      const threshold = document.getElementById('shopStockThreshold');
-      const title = document.getElementById('stockFormTitle');
-      const label = document.getElementById('shopStockQtyLabel');
-      const btn = document.getElementById('saveStockBtn');
-
-      if (qty) qty.value = 0;
-      if (threshold) threshold.value = 5;
-      if (title) title.textContent = 'Add / Update Stock By Shop';
-      if (label) label.textContent = 'Add Stock Quantity';
-      if (btn) btn.textContent = 'Save Shop Stock';
-
-      applyShopLockUI();
-    }
-
-    function editStockRecord(stockId) {
-      const row = state.shopStocks.find(item => String(item.id) === String(stockId));
-      if (!row) return showAlert('globalAlert', 'Stock record not found.', 'error');
-      if (!canManageStockForShop(row.shopName)) return showAlert('globalAlert', 'You can only edit stock for your own assigned shop.', 'error');
-
-      state.editingStockId = row.id;
-      document.getElementById('stockProduct').value = row.productId;
-      document.getElementById('stockShop').value = row.shopName;
-      document.getElementById('shopStockQty').value = row.stock;
-      document.getElementById('shopStockThreshold').value = row.lowStockThreshold || 5;
-
-      const product = state.products.find(p => String(p.id) === String(row.productId));
-      const search = document.getElementById('stockProductSearch');
-      if (search && product) search.value = product.name || '';
-
-      const title = document.getElementById('stockFormTitle');
-      const label = document.getElementById('shopStockQtyLabel');
-      const btn = document.getElementById('saveStockBtn');
-      if (title) title.textContent = 'Rectify / Edit Shop Stock';
-      if (label) label.textContent = 'Correct Stock Quantity';
-      if (btn) btn.textContent = 'Update Stock Record';
-
-      showPage('stockPage');
-      document.getElementById('shopStockQty')?.focus();
-      showAlert('globalAlert', `Editing stock record for ${row.shopName}. Enter the correct stock quantity.`, 'info');
+    function clearLoginForm() {
+      document.getElementById("loginEmail").value = "";
+      document.getElementById("loginPassword").value = "";
+      hideMsg("loginMsg");
     }
-
-    async function deleteStockRecord(stockId) {
-      const row = state.shopStocks.find(item => String(item.id) === String(stockId));
-      if (!row) return showAlert('globalAlert', 'Stock record not found.', 'error');
-      if (!canManageStockForShop(row.shopName)) return showAlert('globalAlert', 'You can only delete stock for your own assigned shop.', 'error');
 
-      const product = state.products.find(p => String(p.id) === String(row.productId));
-      if (!confirm(`Delete ${product?.name || 'this product'} from ${row.shopName} stock records? This does not delete the main product.`)) return;
-
-      setLoading(true, 'Deleting shop stock record...');
-      const { error } = await supabase.from('shop_stock').delete().eq('id', stockId);
-      setLoading(false);
-
-      if (error) return showAlert('globalAlert', error.message || 'Failed to delete shop stock record.', 'error');
-
-      if (String(state.editingStockId) === String(stockId)) resetStockForm();
-      await reloadAllData();
-      showAlert('globalAlert', 'Shop stock record deleted successfully.', 'success');
+    function clearPasswordForm() {
+      document.getElementById("adminNewPassword").value = "";
+      document.getElementById("adminConfirmPassword").value = "";
+      hideMsg("adminPasswordMsg");
     }
-
-    async function handleEmployeeSubmit(event) {
-      event.preventDefault();
-      if (!requireAdmin()) return;
-
-      const full_name = document.getElementById('employeeName').value.trim();
-      const email = document.getElementById('employeeEmail').value.trim().toLowerCase();
-      const password = document.getElementById('employeePassword').value.trim();
-      const role = document.getElementById('employeeRole').value;
-      const shop_name = document.getElementById('employeeShop').value;
 
-      if (!full_name || !email || !password || !shop_name) {
-        return showAlert('globalAlert', 'Fill name, email, password and shop.', 'error');
-      }
-      if (password.length < 6) return showAlert('globalAlert', 'Password must be at least 6 characters.', 'error');
-      if (email === ADMIN_EMAIL.toLowerCase()) return showAlert('globalAlert', 'That email is reserved for admin.', 'error');
+    /************************************************************
+     * 3. CHECK SESSION ON PAGE LOAD
+     ************************************************************/
 
-      setLoading(true, 'Creating employee login...');
-      const { data, error } = await supabase.functions.invoke(CREATE_EMPLOYEE_FUNCTION, {
-        body: { full_name, email, password, role, shop_name, is_active: true }
-      });
-      setLoading(false);
+    async function checkSession() {
+      const { data, error } = await supabaseClient.auth.getSession();
 
       if (error) {
-        return showAlert('globalAlert', error.message || 'Failed. Deploy admin-create-employee Edge Function first.', 'error');
-      }
-      if (data?.error) {
-        return showAlert('globalAlert', data.error, 'error');
-      }
-
-      document.getElementById('employeeForm').reset();
-      await reloadAllData();
-      showAlert('globalAlert', 'Employee login created successfully.', 'success');
-    }
-
-
-    async function resetEmployeePassword(id) {
-      if (!requireAdmin()) return;
-      const emp = state.employees.find(e => String(e.id) === String(id));
-      if (!emp) return showAlert('globalAlert', 'Employee not found.', 'error');
-
-      const newPassword = prompt(`Enter new password for ${emp.email}:`);
-      if (newPassword === null) return;
-      if (String(newPassword).trim().length < 6) return showAlert('globalAlert', 'Password must be at least 6 characters.', 'error');
-
-      setLoading(true, 'Resetting employee password...');
-      const { data, error } = await supabase.functions.invoke(RESET_EMPLOYEE_PASSWORD_FUNCTION, {
-        body: { email: emp.email, password: String(newPassword).trim() }
-      });
-      setLoading(false);
-
-      if (error) return showAlert('globalAlert', error.message || 'Failed. Deploy admin-reset-employee-password Edge Function first.', 'error');
-      if (data?.error) return showAlert('globalAlert', data.error, 'error');
-
-      showAlert('globalAlert', `Password reset for ${emp.email}.`, 'success');
-    }
-
-    async function deleteEmployee(id) {
-      if (!requireAdmin()) return;
-      if (!confirm('Delete this employee metadata?')) return;
-
-      setLoading(true, 'Deleting employee...');
-      const { error } = await supabase.from('employees').delete().eq('id', id);
-      setLoading(false);
-
-      if (error) return showAlert('globalAlert', error.message || 'Failed to delete employee.', 'error');
-
-      await reloadAllData();
-      showAlert('globalAlert', 'Employee metadata deleted successfully.', 'success');
-    }
-
-    function getFilteredEmployees() {
-      const q = document.getElementById('employeeSearch')?.value?.trim().toLowerCase() || '';
-      const shopFilter = document.getElementById('employeeShopFilter')?.value || 'ALL';
-
-      return state.employees.filter(emp => {
-        const matchesQuery = !q || emp.name.toLowerCase().includes(q) || emp.email.toLowerCase().includes(q);
-        const matchesShop = shopFilter === 'ALL' || emp.shopName === shopFilter;
-        return matchesQuery && matchesShop;
-      });
-    }
-
-    function renderEmployeeStats() {
-      document.getElementById('statEmployeesTotal').textContent = state.employees.filter(e => e.isActive !== false).length;
-      document.getElementById('statEmployeesGakindu').textContent = state.employees.filter(e => e.shopName === 'Gakindu' && e.isActive !== false).length;
-      document.getElementById('statEmployeesOythaya').textContent = state.employees.filter(e => e.shopName === 'Oythaya' && e.isActive !== false).length;
-      document.getElementById('statEmployeesShopC').textContent = state.employees.filter(e => e.shopName === 'Shop C' && e.isActive !== false).length;
-    }
-
-    function renderEmployeeGroup(containerId, badgeId, shopName, filteredEmployees) {
-      const container = document.getElementById(containerId);
-      const badge = document.getElementById(badgeId);
-      const group = filteredEmployees.filter(emp => emp.shopName === shopName);
-      badge.textContent = `${group.length} employee${group.length === 1 ? '' : 's'}`;
-
-      if (!group.length) {
-        container.innerHTML = '<div class="empty-state">No employees in this view.</div>';
-        return;
-      }
-
-      container.innerHTML = group.map(emp => `
-        <div class="employee-pill">
-          <span>${escapeHtml(emp.name)}</span>
-          <span class="small muted">${escapeHtml(emp.email)}</span>
-        </div>`).join('');
-    }
-
-    function renderEmployees() {
-      renderEmployeeStats();
-      const filtered = getFilteredEmployees();
-      const table = document.getElementById('employeeTable');
-
-      renderEmployeeGroup('gakinduEmployeeGroup', 'gakinduEmployeeCountBadge', 'Gakindu', filtered);
-      renderEmployeeGroup('oythayaEmployeeGroup', 'oythayaEmployeeCountBadge', 'Oythaya', filtered);
-      renderEmployeeGroup('shopCEmployeeGroup', 'shopCEmployeeCountBadge', 'Shop C', filtered);
-
-      if (!filtered.length) {
-        table.innerHTML = '<tr><td colspan="6" class="muted center">No employees found.</td></tr>';
-        return;
-      }
-
-      table.innerHTML = filtered.map(emp => `
-        <tr>
-          <td>${escapeHtml(emp.name)}</td>
-          <td>${escapeHtml(emp.email)}</td>
-          <td>${escapeHtml(emp.shopName)}</td>
-          <td><span class="badge violet">${escapeHtml(capitalize(emp.role || 'employee'))}</span></td>
-          <td>${emp.isActive === false ? '<span class="badge danger">Inactive</span>' : '<span class="badge success">Active</span>'}</td>
-          <td style="display:flex; gap:8px; flex-wrap:wrap;"><button class="btn btn-warning" style="padding:8px 12px;" onclick="resetEmployeePassword('${emp.id}')">Reset Password</button><button class="btn btn-danger" style="padding:8px 12px;" onclick="deleteEmployee('${emp.id}')">Delete</button></td>
-        </tr>`).join('');
-    }
-
-
-    async function changeOwnPassword(event) {
-      event.preventDefault();
-      const currentPassword = document.getElementById('currentPassword').value.trim();
-      const newPassword = document.getElementById('newPassword').value.trim();
-      const confirmNewPassword = document.getElementById('confirmNewPassword').value.trim();
-
-      if (!state.currentUser?.email) return showAlert('globalAlert', 'You must be logged in.', 'error');
-      if (!currentPassword || !newPassword || !confirmNewPassword) return showAlert('globalAlert', 'Fill all password fields.', 'error');
-      if (newPassword.length < 6) return showAlert('globalAlert', 'New password must be at least 6 characters.', 'error');
-      if (newPassword !== confirmNewPassword) return showAlert('globalAlert', 'New passwords do not match.', 'error');
-
-      setLoading(true, 'Verifying current password...');
-      const verify = await supabase.auth.signInWithPassword({ email: state.currentUser.email, password: currentPassword });
-      if (verify.error) {
-        setLoading(false);
-        return showAlert('globalAlert', 'Current password is wrong.', 'error');
-      }
-
-      const { error } = await supabase.auth.updateUser({ password: newPassword });
-      setLoading(false);
-
-      if (error) return showAlert('globalAlert', error.message || 'Failed to change password.', 'error');
-
-      document.getElementById('changePasswordForm').reset();
-      showAlert('globalAlert', 'Password changed successfully.', 'success');
-    }
-
-    function handleSettingsSubmit(event) {
-      event.preventDefault();
-      state.settings.shopName = document.getElementById('shopName').value.trim() || 'SmartShop Pro Multi-Shop';
-      state.settings.currency = document.getElementById('shopCurrency').value.trim() || 'KSh';
-      state.settings.tagline = document.getElementById('shopTagline').value.trim() || 'Retail & Wholesale Shop';
-      saveLocalSettings();
-      document.title = state.settings.shopName;
-      renderAll();
-      showAlert('globalAlert', 'Local display settings updated.', 'success');
-    }
-
-    function togglePaymentReferenceLabel() {
-      const method = document.getElementById('paymentMethod')?.value || 'mpesa';
-      const label = document.getElementById('paymentReferenceLabel');
-      const input = document.getElementById('paymentReference');
-      if (!label || !input) return;
-
-      if (method === 'paypal') {
-        label.textContent = 'PayPal Transaction ID / Email';
-        input.placeholder = 'e.g. PAYID-12345 or buyer@email.com';
-      } else if (method === 'cash') {
-        label.textContent = 'Cash Reference';
-        input.placeholder = 'e.g. CASH-001 or Paid in cash';
-      } else {
-        label.textContent = 'Phone / Transaction Ref';
-        input.placeholder = 'e.g. 0712345678 or TXN123';
-      }
-    }
-
-    async function seedSampleData() {
-      if (!requireAdmin()) return;
-
-      const { count, error: countError } = await supabase.from('products').select('*', { count: 'exact', head: true });
-      if (countError) return showAlert('globalAlert', countError.message || 'Could not check products.', 'error');
-      if ((count || 0) > 0) return showAlert('globalAlert', 'Products already exist. Sample data was not added.', 'info');
-
-      const { data, error } = await supabase.from('products').insert([
-        { name: 'Coil', category: 'Hardware', barcode: '1001002001', cost_price: 250, marked_price: 500, retail_price: 450, wholesale_price: 400, unit: 'pcs', low_stock_threshold: 5, retail_discount: 0, wholesale_discount: 0, description: 'Electrical coil' },
-        { name: 'Socket', category: 'Hardware', barcode: '1001002002', cost_price: 80, marked_price: 180, retail_price: 150, wholesale_price: 130, unit: 'pcs', low_stock_threshold: 5, retail_discount: 0, wholesale_discount: 0, description: 'Power socket' }
-      ]).select();
-
-      if (error) return showAlert('globalAlert', error.message || 'Failed to add sample products.', 'error');
-
-      const coil = data.find(p => p.name === 'Coil');
-      const socket = data.find(p => p.name === 'Socket');
-
-      const stockRows = [
-        { product_id: coil.id, shop_name: 'Gakindu', stock: 60, low_stock_threshold: 5 },
-        { product_id: coil.id, shop_name: 'Oythaya', stock: 30, low_stock_threshold: 5 },
-        { product_id: coil.id, shop_name: 'Shop C', stock: 50, low_stock_threshold: 5 },
-        { product_id: socket.id, shop_name: 'Gakindu', stock: 20, low_stock_threshold: 5 },
-        { product_id: socket.id, shop_name: 'Oythaya', stock: 15, low_stock_threshold: 5 },
-        { product_id: socket.id, shop_name: 'Shop C', stock: 10, low_stock_threshold: 5 }
-      ];
-
-      const stockInsert = await supabase.from('shop_stock').insert(stockRows);
-      if (stockInsert.error) return showAlert('globalAlert', stockInsert.error.message || 'Failed to add sample stock.', 'error');
-
-      await reloadAllData();
-      showAlert('globalAlert', 'Sample multi-shop data added successfully.', 'success');
-    }
-
-    async function resetDashboardData() {
-      if (!requireAdmin()) return;
-      const sure = confirm('Reset dashboard to zero? This will delete sales, shop stock and products.');
-      if (!sure) return;
-
-      setLoading(true, 'Resetting dashboard...');
-      const salesDelete = await supabase.from('sales').delete().not('id', 'is', null);
-      const stockDelete = await supabase.from('shop_stock').delete().not('id', 'is', null);
-      const productDelete = await supabase.from('products').delete().not('id', 'is', null);
-      setLoading(false);
-
-      if (salesDelete.error || stockDelete.error || productDelete.error) {
-        return showAlert('globalAlert', salesDelete.error?.message || stockDelete.error?.message || productDelete.error?.message || 'Reset failed.', 'error');
-      }
-
-      state.cart = [];
-      await reloadAllData();
-      document.getElementById('receiptPrintArea').innerHTML = '';
-      showAlert('globalAlert', 'Dashboard reset complete.', 'success');
-    }
-
-    function renderAll() {
-      document.title = state.settings.shopName;
-      document.getElementById('brandNameSidebar').textContent = state.settings.shopName;
-      applyShopLockUI();
-      refreshCategoryOptions();
-      refreshStockProductOptions();
-      refreshSaleProductOptions();
-      renderProducts();
-      renderShopStockTable();
-      renderDashboard();
-      renderReceipts();
-      renderEmployees();
-      renderCart();
-      updateSalePricePreview();
-    }
-
-    document.getElementById('productForm')?.addEventListener('submit', handleProductSubmit);
-    document.getElementById('stockForm')?.addEventListener('submit', handleStockSubmit);
-    document.getElementById('saleForm')?.addEventListener('submit', handleSaleSubmit);
-    document.getElementById('employeeForm')?.addEventListener('submit', handleEmployeeSubmit);
-    document.getElementById('settingsForm')?.addEventListener('submit', handleSettingsSubmit);
-    document.getElementById('changePasswordForm')?.addEventListener('submit', changeOwnPassword);
-    document.getElementById('adminPassword')?.addEventListener('keydown', e => { if (e.key === 'Enter') loginUser(); });
-    document.getElementById('adminEmail')?.addEventListener('input', e => showLoginLockStatus(e.target.value));
-
-    window.loginUser = loginUser;
-    window.logout = logout;
-    window.showPage = showPage;
-    window.focusProductForm = focusProductForm;
-    window.setStockShop = setStockShop;
-    window.fillAdminEmail = fillAdminEmail;
-    window.reloadAllData = reloadAllData;
-    window.seedSampleData = seedSampleData;
-    window.resetDashboardData = resetDashboardData;
-    window.renderDashboard = renderDashboard;
-    window.renderProducts = renderProducts;
-    window.resetProductForm = resetProductForm;
-    window.editProduct = editProduct;
-    window.deleteProduct = deleteProduct;
-    window.togglePaymentReferenceLabel = togglePaymentReferenceLabel;
-    window.printReceipt = printReceipt;
-    window.addCurrentItemToCart = addCurrentItemToCart;
-    window.removeCartItem = removeCartItem;
-    window.updateSalePricePreview = updateSalePricePreview;
-    window.resetSaleLineInputs = resetSaleLineInputs;
-    window.resetSaleForm = resetSaleForm;
-    window.refreshSaleProductOptions = refreshSaleProductOptions;
-    window.refreshStockProductOptions = refreshStockProductOptions;
-    window.renderCart = renderCart;
-    window.deleteEmployee = deleteEmployee;
-    window.resetEmployeePassword = resetEmployeePassword;
-    window.changeOwnPassword = changeOwnPassword;
-    window.renderEmployees = renderEmployees;
-    window.resetStockForm = resetStockForm;
-    window.editStockRecord = editStockRecord;
-    window.deleteStockRecord = deleteStockRecord;
-    window.syncStockSearchWithSelection = syncStockSearchWithSelection;
-    window.syncSaleSearchWithSelection = syncSaleSearchWithSelection;
-
-    async function initApp() {
-      loadLocalSettings();
-      document.getElementById('adminEmail').value = ADMIN_EMAIL;
-
-      const { data } = await supabase.auth.getSession();
-      const session = data.session;
-      if (!session) return;
-
-      try {
-        const resolvedUser = await resolveCurrentUserFromSession(session);
-        if (!resolvedUser) {
-          await supabase.auth.signOut();
-          return;
-        }
-        state.currentUser = resolvedUser;
-        await reloadAllData();
-        showApp();
-      } catch (error) {
         console.error(error);
-        await supabase.auth.signOut();
+        setSessionBadge(false, "Session error");
+        return;
       }
+
+      const session = data.session;
+
+      if (!session || !session.user) {
+        document.getElementById("loginSection").classList.remove("hidden");
+        document.getElementById("adminSection").classList.add("hidden");
+        setSessionBadge(false, "Not logged in");
+        return;
+      }
+
+      document.getElementById("loginSection").classList.add("hidden");
+      document.getElementById("adminSection").classList.remove("hidden");
+
+      document.getElementById("currentAdminEmail").textContent = session.user.email || "No email";
+      document.getElementById("currentAdminId").textContent = session.user.id || "No ID";
+
+      setSessionBadge(true, "Logged in");
     }
 
-    initApp();
+    /************************************************************
+     * 4. ADMIN LOGIN
+     ************************************************************/
+
+    async function loginAdmin() {
+      hideMsg("loginMsg");
+
+      const email = document.getElementById("loginEmail").value.trim();
+      const password = document.getElementById("loginPassword").value.trim();
+
+      if (!email || !password) {
+        showMsg("loginMsg", "Enter email and password.", "error");
+        return;
+      }
+
+      const { data, error } = await supabaseClient.auth.signInWithPassword({
+        email,
+        password
+      });
+
+      if (error) {
+        console.error(error);
+        showMsg("loginMsg", "Login failed: " + error.message, "error");
+        return;
+      }
+
+      showMsg("loginMsg", "Login successful.", "success");
+      await checkSession();
+    }
+
+    /************************************************************
+     * 5. CHANGE LOGGED-IN ADMIN PASSWORD
+     ************************************************************/
+
+    async function changeAdminPassword() {
+      hideMsg("adminPasswordMsg");
+
+      const newPassword = document.getElementById("adminNewPassword").value.trim();
+      const confirmPassword = document.getElementById("adminConfirmPassword").value.trim();
+
+      if (!newPassword || !confirmPassword) {
+        showMsg("adminPasswordMsg", "Enter and confirm the new password.", "error");
+        return;
+      }
+
+      if (newPassword.length < 6) {
+        showMsg("adminPasswordMsg", "Password must be at least 6 characters.", "error");
+        return;
+      }
+
+      if (newPassword !== confirmPassword) {
+        showMsg("adminPasswordMsg", "Passwords do not match.", "error");
+        return;
+      }
+
+      const { data: sessionData, error: sessionError } = await supabaseClient.auth.getSession();
+
+      if (sessionError) {
+        console.error(sessionError);
+        showMsg("adminPasswordMsg", "Session error: " + sessionError.message, "error");
+        return;
+      }
+
+      if (!sessionData.session) {
+        showMsg("adminPasswordMsg", "You are not logged in. Login again first.", "error");
+        await checkSession();
+        return;
+      }
+
+      const { data, error } = await supabaseClient.auth.updateUser({
+        password: newPassword
+      });
+
+      if (error) {
+        console.error(error);
+        showMsg("adminPasswordMsg", "Password change failed: " + error.message, "error");
+        return;
+      }
+
+      clearPasswordForm();
+      showMsg("adminPasswordMsg", "Password changed successfully. Logout and login again with the new password.", "success");
+    }
+
+    /************************************************************
+     * 6. SEND PASSWORD RESET EMAIL
+     ************************************************************/
+
+    async function sendPasswordResetEmail() {
+      hideMsg("resetMsg");
+
+      const email = document.getElementById("resetEmail").value.trim();
+
+      if (!email) {
+        showMsg("resetMsg", "Enter admin email first.", "error");
+        return;
+      }
+
+      const { error } = await supabaseClient.auth.resetPasswordForEmail(email, {
+        redirectTo: window.location.href
+      });
+
+      if (error) {
+        console.error(error);
+        showMsg("resetMsg", "Reset email failed: " + error.message, "error");
+        return;
+      }
+
+      showMsg("resetMsg", "Password reset link sent. Check your email.", "success");
+    }
+
+    /************************************************************
+     * 7. REFRESH SESSION / LOGOUT
+     ************************************************************/
+
+    async function refreshSession() {
+      hideMsg("sessionMsg");
+      await checkSession();
+      showMsg("sessionMsg", "Session refreshed.", "success");
+    }
+
+    async function logoutAdmin() {
+      const { error } = await supabaseClient.auth.signOut();
+
+      if (error) {
+        console.error(error);
+        showMsg("sessionMsg", "Logout failed: " + error.message, "error");
+        return;
+      }
+
+      clearPasswordForm();
+      clearLoginForm();
+      await checkSession();
+    }
+
+    /************************************************************
+     * 8. AUTH STATE LISTENER
+     ************************************************************/
+
+    supabaseClient.auth.onAuthStateChange((_event, _session) => {
+      checkSession();
+    });
+
+    checkSession();
   </script>
 </body>
 </html>
