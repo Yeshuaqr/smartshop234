@@ -246,7 +246,12 @@
             <label for="adminPassword">Password</label>
             <input type="password" id="adminPassword" placeholder="Enter password" />
           </div>
+          <div class="form-group full">
+            <label for="unlockCode">Secret Unlock Code</label>
+            <input type="password" id="unlockCode" placeholder="Only use if account is locked" />
+          </div>
         </div>
+        <div id="loginLockStatus" class="quick-box small" style="display:none; margin-top:14px;"></div>
         <div style="display:flex; gap:10px; margin-top:16px; flex-wrap:wrap;">
           <button class="btn btn-primary" onclick="loginUser()">Login</button>
           <button class="btn btn-dark" onclick="fillAdminEmail()">Fill Admin Email</button>
@@ -573,19 +578,20 @@
 
           <div class="grid two-col" style="margin-top:18px;">
             <div class="card">
-              <div class="section-title"><h3>Add Employee Metadata</h3><span class="badge violet">Auth User Must Already Exist</span></div>
+              <div class="section-title"><h3>Create Employee Login</h3><span class="badge violet">Supabase Auth</span></div>
               <form id="employeeForm" class="form-grid">
                 <div class="form-group"><label for="employeeName">Full Name</label><input id="employeeName" placeholder="e.g. Jane Doe" /></div>
-                <div class="form-group"><label for="employeeEmail">Auth Email</label><input id="employeeEmail" type="email" placeholder="employee@shop.com" /></div>
+                <div class="form-group"><label for="employeeEmail">Employee Email</label><input id="employeeEmail" type="email" placeholder="employee@shop.com" /></div>
+                <div class="form-group"><label for="employeePassword">Create Password</label><input id="employeePassword" type="password" placeholder="Minimum 6 characters" /></div>
                 <div class="form-group"><label for="employeeShop">Assigned Shop</label>
                   <select id="employeeShop"><option value="Gakindu">Gakindu</option><option value="Oythaya">Oythaya</option><option value="Shop C">Shop C</option></select>
                 </div>
                 <div class="form-group"><label for="employeeRole">Role</label>
                   <select id="employeeRole"><option value="employee">Employee</option></select>
                 </div>
-                <div class="form-group full"><button type="submit" class="btn btn-primary">Save Employee Metadata</button></div>
+                <div class="form-group full"><button type="submit" class="btn btn-primary">Create Employee + Password</button></div>
               </form>
-              <div class="footer-note">Create the employee’s login account first in Supabase Authentication → Users, then add the same email here.</div>
+              <div class="footer-note">This uses a Supabase Edge Function called <b>admin-create-employee</b>. Do not put service role keys in HTML.</div>
             </div>
 
             <div class="card">
@@ -599,7 +605,7 @@
                   <option value="Shop C">Shop C</option>
                 </select>
               </div>
-              <div class="quick-box small">This page does not create passwords. Auth users must already exist in Supabase.</div>
+              <div class="quick-box small">Admin can create employee passwords here after you deploy the required Edge Function.</div>
             </div>
           </div>
 
@@ -642,12 +648,29 @@
               </form>
             </div>
             <div class="card">
+              <div class="section-title"><h3>Change My Password</h3><span class="badge success">Auth Security</span></div>
+              <form id="changePasswordForm" class="form-grid">
+                <div class="form-group full"><label for="currentPassword">Current Password</label><input id="currentPassword" type="password" placeholder="Enter current password" /></div>
+                <div class="form-group"><label for="newPassword">New Password</label><input id="newPassword" type="password" placeholder="Minimum 6 characters" /></div>
+                <div class="form-group"><label for="confirmNewPassword">Confirm New Password</label><input id="confirmNewPassword" type="password" placeholder="Repeat new password" /></div>
+                <div class="form-group full"><button type="submit" class="btn btn-success">Change Password</button></div>
+              </form>
+              <div class="footer-note">Works for admin and employee after login.</div>
+            </div>
+            <div class="card">
+              <div class="section-title"><h3>Login Security</h3><span class="badge warning">3 Attempts</span></div>
+              <div class="quick-box small" style="white-space:pre-wrap;line-height:1.5">Wrong password locks that email on this device for 1 hour after 3 attempts. Secret unlock code clears the timer.</div>
+              <div class="footer-note">Current secret code in this file: <b>SHOPMASTER2026</b></div>
+            </div>
+            <div class="card">
               <div class="section-title"><h3>Auth Notes</h3><span class="badge warning">Important</span></div>
               <div class="quick-box small" style="white-space:pre-wrap;line-height:1.5">
-1. Admin account must exist in Supabase Auth.
-2. Employee accounts must exist in Supabase Auth.
-3. employees table stores metadata only.
-4. Employee email in Auth must match employee email in employees table.
+1. Admin and employees use Supabase Auth.
+2. Admin password change works in this HTML.
+3. Employee creation/reset password requires Edge Functions:
+   - admin-create-employee
+   - admin-reset-employee-password
+4. Never place service role key in HTML.
               </div>
             </div>
           </div>
@@ -663,6 +686,11 @@
     const SUPABASE_URL = 'https://vzmhlhykafcahglkhljw.supabase.co';
     const SUPABASE_ANON_KEY = 'sb_publishable_AdW-VgSNHD2tjZ2kNhgtCA_N4WZcBva';
     const ADMIN_EMAIL = 'rinarichard3@gmail.com';
+    const MAX_LOGIN_ATTEMPTS = 3;
+    const LOCK_MINUTES = 60;
+    const SECRET_UNLOCK_CODE = 'SHOPMASTER2026';
+    const CREATE_EMPLOYEE_FUNCTION = 'admin-create-employee';
+    const RESET_EMPLOYEE_PASSWORD_FUNCTION = 'admin-reset-employee-password';
     const SHOPS = ['Gakindu', 'Oythaya', 'Shop C'];
 
     const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
@@ -846,6 +874,68 @@
       }
     }
 
+
+    function getLoginLockKey(email) {
+      return `smartshop_login_lock_${String(email || '').trim().toLowerCase()}`;
+    }
+
+    function getLoginLockInfo(email) {
+      try {
+        const raw = localStorage.getItem(getLoginLockKey(email));
+        return raw ? JSON.parse(raw) : { attempts: 0, lockedUntil: 0 };
+      } catch {
+        return { attempts: 0, lockedUntil: 0 };
+      }
+    }
+
+    function saveLoginLockInfo(email, info) {
+      localStorage.setItem(getLoginLockKey(email), JSON.stringify(info));
+    }
+
+    function clearLoginLock(email) {
+      localStorage.removeItem(getLoginLockKey(email));
+      const box = document.getElementById('loginLockStatus');
+      if (box) { box.style.display = 'none'; box.textContent = ''; }
+    }
+
+    function getRemainingLockMinutes(info) {
+      const remainingMs = Number(info.lockedUntil || 0) - Date.now();
+      return Math.max(0, Math.ceil(remainingMs / 60000));
+    }
+
+    function isLoginLocked(email) {
+      const info = getLoginLockInfo(email);
+      return Number(info.lockedUntil || 0) > Date.now();
+    }
+
+    function showLoginLockStatus(email) {
+      const box = document.getElementById('loginLockStatus');
+      if (!box) return;
+      const info = getLoginLockInfo(email);
+      if (Number(info.lockedUntil || 0) > Date.now()) {
+        box.style.display = 'block';
+        box.innerHTML = `🔒 This email is locked for about <b>${getRemainingLockMinutes(info)} minute(s)</b>. Enter the secret unlock code to continue.`;
+      } else if (Number(info.attempts || 0) > 0) {
+        box.style.display = 'block';
+        box.innerHTML = `⚠️ Wrong attempts: <b>${info.attempts}/${MAX_LOGIN_ATTEMPTS}</b>.`;
+      } else {
+        box.style.display = 'none';
+        box.textContent = '';
+      }
+    }
+
+    function registerFailedLogin(email) {
+      const info = getLoginLockInfo(email);
+      const attempts = Number(info.attempts || 0) + 1;
+      const next = { attempts, lockedUntil: 0 };
+      if (attempts >= MAX_LOGIN_ATTEMPTS) {
+        next.lockedUntil = Date.now() + LOCK_MINUTES * 60 * 1000;
+      }
+      saveLoginLockInfo(email, next);
+      showLoginLockStatus(email);
+      return next;
+    }
+
     async function resolveCurrentUserFromSession(session) {
       if (!session?.user?.email) return null;
 
@@ -894,9 +984,20 @@
       const expectedRole = document.getElementById('loginRole').value;
       const email = document.getElementById('adminEmail').value.trim().toLowerCase();
       const password = document.getElementById('adminPassword').value.trim();
+      const unlockCode = document.getElementById('unlockCode')?.value.trim() || '';
 
       if (!email || !password) {
         return showAlert('loginAlert', 'Email and password are required.', 'error');
+      }
+
+      if (isLoginLocked(email)) {
+        if (unlockCode === SECRET_UNLOCK_CODE) {
+          clearLoginLock(email);
+          showAlert('loginAlert', 'Secret code accepted. Timer cleared.', 'success');
+        } else {
+          showLoginLockStatus(email);
+          return showAlert('loginAlert', 'Too many wrong attempts. Wait 1 hour or enter the secret unlock code.', 'error');
+        }
       }
 
       setLoading(true, 'Signing in...');
@@ -904,8 +1005,14 @@
       setLoading(false);
 
       if (error || !data.session) {
-        return showAlert('loginAlert', error?.message || 'Login failed.', 'error');
+        const info = registerFailedLogin(email);
+        if (Number(info.lockedUntil || 0) > Date.now()) {
+          return showAlert('loginAlert', 'Wrong password 3 times. Login locked for 1 hour.', 'error');
+        }
+        return showAlert('loginAlert', `${error?.message || 'Login failed.'} Attempts: ${info.attempts}/${MAX_LOGIN_ATTEMPTS}`, 'error');
       }
+
+      clearLoginLock(email);
 
       try {
         setLoading(true, 'Loading profile...');
@@ -1945,27 +2052,54 @@
 
       const full_name = document.getElementById('employeeName').value.trim();
       const email = document.getElementById('employeeEmail').value.trim().toLowerCase();
+      const password = document.getElementById('employeePassword').value.trim();
       const role = document.getElementById('employeeRole').value;
       const shop_name = document.getElementById('employeeShop').value;
 
-      if (!full_name || !email || !shop_name) return showAlert('globalAlert', 'Fill all employee fields.', 'error');
+      if (!full_name || !email || !password || !shop_name) {
+        return showAlert('globalAlert', 'Fill name, email, password and shop.', 'error');
+      }
+      if (password.length < 6) return showAlert('globalAlert', 'Password must be at least 6 characters.', 'error');
       if (email === ADMIN_EMAIL.toLowerCase()) return showAlert('globalAlert', 'That email is reserved for admin.', 'error');
 
-      setLoading(true, 'Saving employee metadata...');
-      const { error } = await supabase.from('employees').insert([{
-        full_name,
-        email,
-        role,
-        shop_name,
-        is_active: true
-      }]);
+      setLoading(true, 'Creating employee login...');
+      const { data, error } = await supabase.functions.invoke(CREATE_EMPLOYEE_FUNCTION, {
+        body: { full_name, email, password, role, shop_name, is_active: true }
+      });
       setLoading(false);
 
-      if (error) return showAlert('globalAlert', error.message || 'Failed to save employee metadata.', 'error');
+      if (error) {
+        return showAlert('globalAlert', error.message || 'Failed. Deploy admin-create-employee Edge Function first.', 'error');
+      }
+      if (data?.error) {
+        return showAlert('globalAlert', data.error, 'error');
+      }
 
       document.getElementById('employeeForm').reset();
       await reloadAllData();
-      showAlert('globalAlert', 'Employee metadata added successfully.', 'success');
+      showAlert('globalAlert', 'Employee login created successfully.', 'success');
+    }
+
+
+    async function resetEmployeePassword(id) {
+      if (!requireAdmin()) return;
+      const emp = state.employees.find(e => String(e.id) === String(id));
+      if (!emp) return showAlert('globalAlert', 'Employee not found.', 'error');
+
+      const newPassword = prompt(`Enter new password for ${emp.email}:`);
+      if (newPassword === null) return;
+      if (String(newPassword).trim().length < 6) return showAlert('globalAlert', 'Password must be at least 6 characters.', 'error');
+
+      setLoading(true, 'Resetting employee password...');
+      const { data, error } = await supabase.functions.invoke(RESET_EMPLOYEE_PASSWORD_FUNCTION, {
+        body: { email: emp.email, password: String(newPassword).trim() }
+      });
+      setLoading(false);
+
+      if (error) return showAlert('globalAlert', error.message || 'Failed. Deploy admin-reset-employee-password Edge Function first.', 'error');
+      if (data?.error) return showAlert('globalAlert', data.error, 'error');
+
+      showAlert('globalAlert', `Password reset for ${emp.email}.`, 'success');
     }
 
     async function deleteEmployee(id) {
@@ -2039,8 +2173,36 @@
           <td>${escapeHtml(emp.shopName)}</td>
           <td><span class="badge violet">${escapeHtml(capitalize(emp.role || 'employee'))}</span></td>
           <td>${emp.isActive === false ? '<span class="badge danger">Inactive</span>' : '<span class="badge success">Active</span>'}</td>
-          <td><button class="btn btn-danger" style="padding:8px 12px;" onclick="deleteEmployee('${emp.id}')">Delete</button></td>
+          <td style="display:flex; gap:8px; flex-wrap:wrap;"><button class="btn btn-warning" style="padding:8px 12px;" onclick="resetEmployeePassword('${emp.id}')">Reset Password</button><button class="btn btn-danger" style="padding:8px 12px;" onclick="deleteEmployee('${emp.id}')">Delete</button></td>
         </tr>`).join('');
+    }
+
+
+    async function changeOwnPassword(event) {
+      event.preventDefault();
+      const currentPassword = document.getElementById('currentPassword').value.trim();
+      const newPassword = document.getElementById('newPassword').value.trim();
+      const confirmNewPassword = document.getElementById('confirmNewPassword').value.trim();
+
+      if (!state.currentUser?.email) return showAlert('globalAlert', 'You must be logged in.', 'error');
+      if (!currentPassword || !newPassword || !confirmNewPassword) return showAlert('globalAlert', 'Fill all password fields.', 'error');
+      if (newPassword.length < 6) return showAlert('globalAlert', 'New password must be at least 6 characters.', 'error');
+      if (newPassword !== confirmNewPassword) return showAlert('globalAlert', 'New passwords do not match.', 'error');
+
+      setLoading(true, 'Verifying current password...');
+      const verify = await supabase.auth.signInWithPassword({ email: state.currentUser.email, password: currentPassword });
+      if (verify.error) {
+        setLoading(false);
+        return showAlert('globalAlert', 'Current password is wrong.', 'error');
+      }
+
+      const { error } = await supabase.auth.updateUser({ password: newPassword });
+      setLoading(false);
+
+      if (error) return showAlert('globalAlert', error.message || 'Failed to change password.', 'error');
+
+      document.getElementById('changePasswordForm').reset();
+      showAlert('globalAlert', 'Password changed successfully.', 'success');
     }
 
     function handleSettingsSubmit(event) {
@@ -2147,7 +2309,9 @@
     document.getElementById('saleForm')?.addEventListener('submit', handleSaleSubmit);
     document.getElementById('employeeForm')?.addEventListener('submit', handleEmployeeSubmit);
     document.getElementById('settingsForm')?.addEventListener('submit', handleSettingsSubmit);
+    document.getElementById('changePasswordForm')?.addEventListener('submit', changeOwnPassword);
     document.getElementById('adminPassword')?.addEventListener('keydown', e => { if (e.key === 'Enter') loginUser(); });
+    document.getElementById('adminEmail')?.addEventListener('input', e => showLoginLockStatus(e.target.value));
 
     window.loginUser = loginUser;
     window.logout = logout;
@@ -2174,6 +2338,8 @@
     window.refreshStockProductOptions = refreshStockProductOptions;
     window.renderCart = renderCart;
     window.deleteEmployee = deleteEmployee;
+    window.resetEmployeePassword = resetEmployeePassword;
+    window.changeOwnPassword = changeOwnPassword;
     window.renderEmployees = renderEmployees;
     window.resetStockForm = resetStockForm;
     window.editStockRecord = editStockRecord;
