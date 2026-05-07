@@ -95,6 +95,19 @@
       width:100%;padding:12px 13px;border-radius:12px;border:1px solid rgba(255,255,255,.1);
       background:rgba(255,255,255,.06);color:var(--text);outline:none
     }
+    select{
+      background-color:#111827;
+      color:#f8fafc;
+      cursor:pointer;
+    }
+    select option{
+      background-color:#111827;
+      color:#f8fafc;
+    }
+    select option:hover,select option:checked{
+      background-color:#0284c7;
+      color:#ffffff;
+    }
     textarea{min-height:100px;resize:vertical}
     input::placeholder,textarea::placeholder{color:#94a3b8}
     table{width:100%;border-collapse:collapse;margin-top:12px}
@@ -166,6 +179,16 @@
     .footer-note{margin-top:10px;color:var(--muted);font-size:.85rem}
     .chart-wrap{position:relative;height:340px;margin-top:12px}
     .quick-box{border:1px solid rgba(255,255,255,.07);background:rgba(255,255,255,.03);border-radius:16px;padding:14px}
+
+    .danger-zone{
+      border:1px solid rgba(239,68,68,.35);
+      background:linear-gradient(180deg,rgba(127,29,29,.22),rgba(17,24,39,.86));
+    }
+    .danger-zone .section-title h3{color:#fecaca}
+    .danger-note{
+      padding:12px 14px;border-radius:14px;background:rgba(239,68,68,.12);
+      border:1px solid rgba(239,68,68,.22);color:#fecaca;line-height:1.45;margin-bottom:14px
+    }
     .loading-overlay{
       position:fixed;inset:0;background:rgba(2,6,23,.7);display:none;align-items:center;
       justify-content:center;z-index:1000;backdrop-filter:blur(6px)
@@ -305,7 +328,6 @@
               </select>
               <button class="btn btn-primary role-admin-only" onclick="seedSampleData()">Load Sample Data</button>
               <button class="btn btn-dark" onclick="reloadAllData()">Refresh From Database</button>
-              <button class="btn btn-danger role-admin-only" onclick="resetDashboardData()">Reset Dashboard To Zero</button>
             </div>
           </div>
 
@@ -570,10 +592,10 @@
 
           <div class="grid two-col" style="margin-top:18px;">
             <div class="card">
-              <div class="section-title"><h3>Add Employee Metadata</h3><span class="badge violet">Auth User Must Already Exist</span></div>
+              <div class="section-title"><h3>Add Employee Profile</h3><span class="badge violet">Staff Access</span></div>
               <form id="employeeForm" class="form-grid">
                 <div class="form-group"><label for="employeeName">Full Name</label><input id="employeeName" placeholder="e.g. Jane Doe" /></div>
-                <div class="form-group"><label for="employeeEmail">Auth Email</label><input id="employeeEmail" type="email" placeholder="employee@shop.com" /></div>
+                <div class="form-group"><label for="employeeEmail">Employee Email</label><input id="employeeEmail" type="email" placeholder="employee@shop.com" /></div>
                 <div class="form-group"><label for="employeeShop">Assigned Shop</label>
                   <select id="employeeShop"><option value="Gakindu">Gakindu</option><option value="Oythaya">Oythaya</option><option value="Shop C">Shop C</option></select>
                 </div>
@@ -582,7 +604,7 @@
                 </div>
                 <div class="form-group full"><button type="submit" class="btn btn-primary">Save Employee Metadata</button></div>
               </form>
-              <div class="footer-note">.</div>
+              <div class="footer-note"></div>
             </div>
 
             <div class="card">
@@ -616,7 +638,7 @@
           </div>
 
           <div class="card" style="margin-top:18px;">
-            <div class="section-title"><h3>All Employees Table</h3><span class="badge success">Metadata</span></div>
+            <div class="section-title"><h3>All Employees</h3><span class="badge success">Staff List</span></div>
             <div class="table-wrap">
               <table>
                 <thead><tr><th>Name</th><th>Email</th><th>Shop</th><th>Role</th><th>Status</th><th>Action</th></tr></thead>
@@ -646,6 +668,26 @@
                 <div class="form-group full"><button type="submit" class="btn btn-warning">Change Admin Password</button></div>
               </form>
             </div>
+          </div>
+
+          <div class="card danger-zone role-admin-only" style="margin-top:18px;">
+            <div class="section-title"><h3>Danger Zone</h3><span class="badge danger">Protected Reset</span></div>
+            <div class="danger-note">
+              This action clears products, shop stock, sales and receipts. It is kept here so it cannot be clicked by mistake.
+            </div>
+            <form id="dangerResetForm" class="form-grid">
+              <div class="form-group">
+                <label for="resetAdminPassword">Admin Password</label>
+                <input id="resetAdminPassword" type="password" placeholder="Enter admin password to confirm" autocomplete="current-password" />
+              </div>
+              <div class="form-group">
+                <label for="resetConfirmText">Type RESET EVERYTHING</label>
+                <input id="resetConfirmText" placeholder="RESET EVERYTHING" />
+              </div>
+              <div class="form-group full">
+                <button type="submit" class="btn btn-danger">Reset Dashboard To Zero</button>
+              </div>
+            </form>
           </div>
         </section>
       </main>
@@ -1978,6 +2020,63 @@
       showAlert('globalAlert', 'Employee metadata deleted successfully.', 'success');
     }
 
+    async function changeEmployeePassword(email) {
+      if (!requireAdmin()) return;
+
+      if (!email) {
+        alert('Employee email missing');
+        return;
+      }
+
+      const newPassword = prompt('Enter new password for ' + email);
+      if (!newPassword) return;
+
+      const cleanPassword = String(newPassword).trim();
+
+      if (cleanPassword.length < 6) {
+        alert('Password must be at least 6 characters');
+        return;
+      }
+
+      try {
+        setLoading(true, 'Changing employee password...');
+
+        const response = await fetch(
+          'https://vzmhlhykafcahglkhljw.supabase.co/functions/v1/hyper-function',
+          {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+              employee_email: email,
+              new_password: cleanPassword
+            })
+          }
+        );
+
+        const result = await response.json();
+        console.log('Password change response:', result);
+
+        setLoading(false);
+
+        if (!result.success) {
+          alert(result.message || 'Password change failed');
+          showAlert('globalAlert', result.message || 'Password change failed', 'error');
+          return;
+        }
+
+        alert('Employee password changed successfully');
+        showAlert('globalAlert', 'Employee password changed successfully.', 'success');
+
+      } catch (err) {
+        setLoading(false);
+        console.error(err);
+        alert(err.message || 'Password change failed');
+        showAlert('globalAlert', err.message || 'Password change failed', 'error');
+      }
+    }
+
     function getFilteredEmployees() {
       const q = document.getElementById('employeeSearch')?.value?.trim().toLowerCase() || '';
       const shopFilter = document.getElementById('employeeShopFilter')?.value || 'ALL';
@@ -2035,7 +2134,12 @@
           <td>${escapeHtml(emp.shopName)}</td>
           <td><span class="badge violet">${escapeHtml(capitalize(emp.role || 'employee'))}</span></td>
           <td>${emp.isActive === false ? '<span class="badge danger">Inactive</span>' : '<span class="badge success">Active</span>'}</td>
-          <td><button class="btn btn-danger" style="padding:8px 12px;" onclick="deleteEmployee('${emp.id}')">Delete</button></td>
+          <td>
+            <div style="display:flex; gap:8px; flex-wrap:wrap;">
+              <button class="btn btn-warning" style="padding:8px 12px;" onclick="changeEmployeePassword('${escapeHtml(emp.email)}')">Change Password</button>
+              <button class="btn btn-danger" style="padding:8px 12px;" onclick="deleteEmployee('${emp.id}')">Delete</button>
+            </div>
+          </td>
         </tr>`).join('');
     }
 
@@ -2103,8 +2207,39 @@
 
     async function resetDashboardData() {
       if (!requireAdmin()) return;
-      const sure = confirm('Reset dashboard to zero? This will delete sales, shop stock and products.');
-      if (!sure) return;
+      showPage('settingsPage');
+      document.getElementById('resetAdminPassword')?.focus();
+      showAlert('globalAlert', 'Dashboard reset has been moved to Settings → Danger Zone.', 'info');
+    }
+
+    async function handleDangerResetSubmit(e) {
+      e.preventDefault();
+      if (!requireAdmin()) return;
+
+      const password = document.getElementById('resetAdminPassword').value.trim();
+      const confirmText = document.getElementById('resetConfirmText').value.trim();
+
+      if (!password) {
+        return showAlert('globalAlert', 'Enter admin password before resetting.', 'error');
+      }
+
+      if (confirmText !== 'RESET EVERYTHING') {
+        return showAlert('globalAlert', 'Type RESET EVERYTHING exactly to confirm reset.', 'error');
+      }
+
+      const finalSure = confirm('Final warning: this will delete sales, receipts, shop stock and products. Continue?');
+      if (!finalSure) return;
+
+      setLoading(true, 'Verifying admin password...');
+      const { error: verifyError } = await supabase.auth.signInWithPassword({
+        email: state.currentUser.email,
+        password
+      });
+
+      if (verifyError) {
+        setLoading(false);
+        return showAlert('globalAlert', 'Admin password is wrong. Reset cancelled.', 'error');
+      }
 
       setLoading(true, 'Resetting dashboard...');
       const salesDelete = await supabase.from('sales').delete().not('id', 'is', null);
@@ -2116,6 +2251,8 @@
         return showAlert('globalAlert', salesDelete.error?.message || stockDelete.error?.message || productDelete.error?.message || 'Reset failed.', 'error');
       }
 
+      document.getElementById('resetAdminPassword').value = '';
+      document.getElementById('resetConfirmText').value = '';
       state.cart = [];
       await reloadAllData();
       document.getElementById('receiptPrintArea').innerHTML = '';
@@ -2183,6 +2320,7 @@
     document.getElementById('saleForm')?.addEventListener('submit', handleSaleSubmit);
     document.getElementById('employeeForm')?.addEventListener('submit', handleEmployeeSubmit);
     document.getElementById('settingsForm')?.addEventListener('submit', handleSettingsSubmit);
+    document.getElementById('dangerResetForm')?.addEventListener('submit', handleDangerResetSubmit);
     document.getElementById('adminPasswordForm')?.addEventListener('submit', handleAdminPasswordSubmit);
     document.getElementById('adminPassword')?.addEventListener('keydown', e => { if (e.key === 'Enter') loginUser(); });
 
@@ -2211,6 +2349,7 @@
     window.refreshStockProductOptions = refreshStockProductOptions;
     window.renderCart = renderCart;
     window.deleteEmployee = deleteEmployee;
+    window.changeEmployeePassword = changeEmployeePassword;
     window.renderEmployees = renderEmployees;
     window.resetStockForm = resetStockForm;
     window.editStockRecord = editStockRecord;
