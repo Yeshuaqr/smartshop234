@@ -315,8 +315,8 @@
         <div class="nav-menu">
           <button class="nav-btn active" data-page="dashboardPage" onclick="showPage('dashboardPage', this)">📊 Dashboard</button>
           <button class="nav-btn" data-page="productsPage" onclick="showPage('productsPage', this)">📦 Products</button>
-          <button class="nav-btn" data-page="stockPage" onclick="showPage('stockPage', this)">🏪 Shop Stock</button>
-          <button class="nav-btn role-admin-only" data-page="salesPage" onclick="showPage('salesPage', this)">🛒 Make Sale</button>
+          <button class="nav-btn role-admin-only" data-page="stockPage" onclick="showPage('stockPage', this)">🏪 Shop Stock</button>
+          <button class="nav-btn" data-page="salesPage" onclick="showPage('salesPage', this)">🛒 Make Sale</button>
           <button class="nav-btn" data-page="receiptsPage" onclick="showPage('receiptsPage', this)">🧾 Receipts</button>
           <button class="nav-btn role-admin-only" data-page="employeesPage" onclick="showPage('employeesPage', this)">👥 Employees</button>
           <button class="nav-btn" data-page="settingsPage" onclick="showPage('settingsPage', this)">⚙️ Settings</button>
@@ -325,8 +325,8 @@
         <div class="sidebar-footer">
           <div class="small muted">Quick Actions</div>
           <div style="display:grid; gap:14px; margin-top:12px;">
-            <button class="btn btn-success" onclick="showPage('productsPage'); focusProductForm()">+ Add Product</button>
-            <button class="btn btn-warning role-admin-only" onclick="showPage('salesPage')">+ New Sale</button>
+            <button class="btn btn-success role-admin-only" onclick="showPage('productsPage'); focusProductForm()">+ Add Product</button>
+            <button class="btn btn-warning" onclick="showPage('salesPage')">+ New Sale</button>
             <button class="btn btn-danger" onclick="logout()">Logout</button>
           </div>
         </div>
@@ -1017,8 +1017,7 @@
     }
 
     function canManageStockForShop(shopName) {
-      if (isAdmin()) return true;
-      return (getCurrentUserShop() || '') === (shopName || '');
+      return isAdmin();
     }
 
     function showApp() {
@@ -1042,7 +1041,7 @@
       document.querySelectorAll('.role-admin-only').forEach(el => {
         el.style.display = isAdmin() ? '' : 'none';
       });
-      if (!isAdmin() && !document.getElementById('salesPage').classList.contains('hidden')) {
+      if (!isAdmin() && !document.getElementById('stockPage').classList.contains('hidden')) {
         showPage('dashboardPage');
       }
     }
@@ -1071,8 +1070,8 @@
     }
 
     function showPage(pageId, el = null) {
-      if (pageId === 'salesPage' && !isAdmin()) {
-        showAlert('globalAlert', 'Only admin can add sales.', 'error');
+      if (pageId === 'stockPage' && !isAdmin()) {
+        showAlert('globalAlert', 'Only admin can manage stock.', 'error');
         pageId = 'dashboardPage';
       }
       document.querySelectorAll('.page').forEach(page => page.classList.add('hidden'));
@@ -1729,7 +1728,6 @@ This action cannot be undone.`);
     }
 
     function addCurrentItemToCart() {
-      if (!isAdmin()) return showAlert('globalAlert', 'Only admin can add sales.', 'error');
       const info = calculateSalePreview();
       if (!info) return showAlert('globalAlert', 'Choose a valid stocked product.', 'error');
       if (info.qty > info.stockRow.stock) return showAlert('globalAlert', 'Not enough stock in this shop.', 'error');
@@ -1816,7 +1814,6 @@ This action cannot be undone.`);
 
     async function handleSaleSubmit(event) {
       event.preventDefault();
-      if (!isAdmin()) return showAlert('globalAlert', 'Only admin can add sales.', 'error');
       const customerName = document.getElementById('customerName').value.trim();
       const customerPhone = document.getElementById('customerPhone').value.trim();
       const saleNotes = document.getElementById('saleNotes').value.trim();
@@ -1971,6 +1968,7 @@ This action cannot be undone.`);
 
     async function handleStockSubmit(event) {
       event.preventDefault();
+      if (!requireAdmin()) return;
 
       const productId = document.getElementById('stockProduct').value;
       const shopName = document.getElementById('stockShop').value;
@@ -1979,7 +1977,7 @@ This action cannot be undone.`);
 
       if (!productId || !shopName) return showAlert('globalAlert', 'Select a product and shop.', 'error');
       if (stockInput < 0) return showAlert('globalAlert', 'Stock cannot be negative.', 'error');
-      if (!canManageStockForShop(shopName)) return showAlert('globalAlert', 'You can only manage stock for your own assigned shop.', 'error');
+      if (!canManageStockForShop(shopName)) return showAlert('globalAlert', 'Only admin can manage stock.', 'error');
 
       setLoading(true, state.editingStockId ? 'Updating stock record...' : 'Adding stock...');
       let result;
@@ -1993,7 +1991,7 @@ This action cannot be undone.`);
 
         if (!canManageStockForShop(row.shopName)) {
           setLoading(false);
-          return showAlert('globalAlert', 'You can only edit stock for your own assigned shop.', 'error');
+          return showAlert('globalAlert', 'Only admin can edit stock.', 'error');
         }
 
         result = await supabase
@@ -2056,9 +2054,10 @@ This action cannot be undone.`);
     }
 
     function editStockRecord(stockId) {
+      if (!requireAdmin()) return;
       const row = state.shopStocks.find(item => String(item.id) === String(stockId));
       if (!row) return showAlert('globalAlert', 'Stock record not found.', 'error');
-      if (!canManageStockForShop(row.shopName)) return showAlert('globalAlert', 'You can only edit stock for your own assigned shop.', 'error');
+      if (!canManageStockForShop(row.shopName)) return showAlert('globalAlert', 'Only admin can edit stock.', 'error');
 
       state.editingStockId = row.id;
       document.getElementById('stockProduct').value = row.productId;
@@ -2083,9 +2082,10 @@ This action cannot be undone.`);
     }
 
     async function deleteStockRecord(stockId) {
+      if (!requireAdmin()) return;
       const row = state.shopStocks.find(item => String(item.id) === String(stockId));
       if (!row) return showAlert('globalAlert', 'Stock record not found.', 'error');
-      if (!canManageStockForShop(row.shopName)) return showAlert('globalAlert', 'You can only delete stock for your own assigned shop.', 'error');
+      if (!canManageStockForShop(row.shopName)) return showAlert('globalAlert', 'Only admin can delete stock.', 'error');
 
       const product = state.products.find(p => String(p.id) === String(row.productId));
       if (!confirm(`Delete ${product?.name || 'this product'} from ${row.shopName} stock records? This does not delete the main product.`)) return;
