@@ -358,8 +358,8 @@
             <div class="card stat-card"><h3>Total Shop Stocks</h3><div class="value" id="statStockRows">0</div><small>Stock rows in current view</small></div>
             <div class="card stat-card"><h3>Total Units</h3><div class="value" id="statStock">0</div><small>Units in current view</small></div>
             <div class="card stat-card"><h3>Total Revenue</h3><div class="value" id="statRevenue">KSh 0</div><small>Current view</small></div>
-            <div class="card stat-card"><h3>Total Profit</h3><div class="value" id="statProfit">KSh 0</div><small>Current view</small></div>
-            <div class="card stat-card"><h3>Avg Profit Margin</h3><div class="value" id="statProfitMargin">0%</div><small id="statProfitMarginLabel">Across current view</small></div>
+            <div class="card stat-card role-admin-only"><h3>Total Profit</h3><div class="value" id="statProfit">KSh 0</div><small>Current view</small></div>
+            <div class="card stat-card role-admin-only"><h3>Avg Profit Margin</h3><div class="value" id="statProfitMargin">0%</div><small id="statProfitMarginLabel">Across current view</small></div>
             <div class="card stat-card"><h3>Low Stock Records</h3><div class="value" id="statLowStock">0</div><small>Below threshold</small></div>
             <div class="card stat-card"><h3>Total Receipts</h3><div class="value" id="statReceipts">0</div><small>In current view</small></div>
           </div>
@@ -372,7 +372,7 @@
 
           <div class="card" style="margin-top:18px;">
             <div class="section-title">
-              <h3>Sales Performance & Profit</h3>
+              <h3>Sales Performance</h3>
               <div style="display:flex; gap:10px; flex-wrap:wrap; align-items:center;">
                 <span class="badge info">Day / Month / Year View</span>
                 <select id="chartViewType" onchange="renderDashboard()" style="min-width:160px;">
@@ -390,7 +390,7 @@
               <div class="section-title"><h3>Recent Sales</h3><span class="badge info">Latest Transactions</span></div>
               <div class="table-wrap">
                 <table>
-                  <thead><tr><th>Receipt</th><th>Customer</th><th>Shop</th><th>Items</th><th>Total</th><th>Profit</th><th>Margin</th><th>Date</th></tr></thead>
+                  <thead><tr><th>Receipt</th><th>Customer</th><th>Shop</th><th>Items</th><th>Total</th><th class="role-admin-only">Profit</th><th class="role-admin-only">Margin</th><th>Date</th></tr></thead>
                   <tbody id="recentSalesTable"></tbody>
                 </table>
               </div>
@@ -589,7 +589,7 @@
             <div class="section-title"><h3>All Receipts</h3><span class="badge pink">Printable</span></div>
             <div class="table-wrap">
               <table>
-                <thead><tr><th>Receipt No</th><th>Customer</th><th>Shop</th><th>Items</th><th>Total</th><th>Profit</th><th>Margin</th><th>Date</th><th>Action</th></tr></thead>
+                <thead><tr><th>Receipt No</th><th>Customer</th><th>Shop</th><th>Items</th><th>Total</th><th class="role-admin-only">Profit</th><th class="role-admin-only">Margin</th><th>Date</th><th>Action</th></tr></thead>
                 <tbody id="receiptsTable"></tbody>
               </table>
             </div>
@@ -1277,7 +1277,7 @@
             </div>
             <div class="product-meta">
               <div>Barcode: <b>${escapeHtml(product.barcode || '—')}</b></div>
-              <div>Cost Price: <b>${formatMoney(product.costPrice)}</b></div>
+              ${isAdmin() ? `<div>Cost Price: <b>${formatMoney(product.costPrice)}</b></div>` : ``}
               <div>Marked Price: <b>${formatMoney(product.markedPrice)}</b></div>
               <div>Retail Price: <b>${formatMoney(product.retailPrice)}</b></div>
               <div>Wholesale Price: <b>${formatMoney(product.wholesalePrice)}</b></div>
@@ -1415,11 +1415,15 @@
       salesChart = new Chart(canvas, {
         data: {
           labels,
-          datasets: [
-            { type: 'line', label: 'Revenue', data: revenueData, borderWidth: 3, tension: 0.3, fill: false, yAxisID: 'y' },
-            { type: 'line', label: 'Profit', data: profitData, borderWidth: 3, tension: 0.3, fill: false, yAxisID: 'y' },
-            { type: 'bar', label: 'Avg Margin %', data: marginData, borderWidth: 1, yAxisID: 'y1' }
-          ]
+          datasets: isAdmin()
+            ? [
+                { type: 'line', label: 'Revenue', data: revenueData, borderWidth: 3, tension: 0.3, fill: false, yAxisID: 'y' },
+                { type: 'line', label: 'Profit', data: profitData, borderWidth: 3, tension: 0.3, fill: false, yAxisID: 'y' },
+                { type: 'bar', label: 'Avg Margin %', data: marginData, borderWidth: 1, yAxisID: 'y1' }
+              ]
+            : [
+                { type: 'line', label: 'Sales', data: revenueData, borderWidth: 3, tension: 0.3, fill: false, yAxisID: 'y' }
+              ]
         },
         options: {
           responsive: true,
@@ -1440,7 +1444,7 @@
           scales: {
             x: { ticks: { color: '#cbd5e1' }, grid: { color: 'rgba(255,255,255,0.08)' } },
             y: { position: 'left', ticks: { color: '#cbd5e1', callback: value => formatMoney(value) }, grid: { color: 'rgba(255,255,255,0.08)' } },
-            y1: { position: 'right', beginAtZero: true, ticks: { color: '#cbd5e1', callback: value => value + '%' }, grid: { drawOnChartArea: false } }
+            y1: { display: isAdmin(), position: 'right', beginAtZero: true, ticks: { color: '#cbd5e1', callback: value => value + '%' }, grid: { drawOnChartArea: false } }
           }
         }
       });
@@ -1489,7 +1493,7 @@
 
       const recentSalesTable = document.getElementById('recentSalesTable');
       if (!filteredSales.length) {
-        recentSalesTable.innerHTML = '<tr><td colspan="8" class="muted center">No sales yet.</td></tr>';
+        recentSalesTable.innerHTML = `<tr><td colspan="${isAdmin() ? 8 : 6}" class="muted center">No sales yet.</td></tr>`;
       } else {
         recentSalesTable.innerHTML = filteredSales.slice(0, 6).map(sale => `
           <tr>
@@ -1498,8 +1502,8 @@
             <td>${escapeHtml(sale.shopName)}</td>
             <td>${sale.itemCount}</td>
             <td>${formatMoney(sale.total)}</td>
-            <td>${formatMoney(sale.totalProfit)}</td>
-            <td>${Number(sale.totalMargin || 0).toFixed(2)}%</td>
+            ${isAdmin() ? `<td>${formatMoney(sale.totalProfit)}</td>` : ``}
+            ${isAdmin() ? `<td>${Number(sale.totalMargin || 0).toFixed(2)}%</td>` : ``}
             <td>${formatDate(sale.createdAt)}</td>
           </tr>`).join('');
       }
@@ -1599,7 +1603,7 @@
       const table = document.getElementById('receiptsTable');
       const receipts = getVisibleReceipts();
       if (!receipts.length) {
-        table.innerHTML = '<tr><td colspan="9" class="muted center">No receipts available.</td></tr>';
+        table.innerHTML = `<tr><td colspan="${isAdmin() ? 9 : 7}" class="muted center">No receipts available.</td></tr>`;
         return;
       }
 
@@ -1610,8 +1614,8 @@
           <td>${escapeHtml(sale.shopName)}</td>
           <td>${sale.itemCount}</td>
           <td>${formatMoney(sale.total)}</td>
-          <td>${formatMoney(sale.totalProfit)}</td>
-          <td>${Number(sale.totalMargin || 0).toFixed(2)}%</td>
+          ${isAdmin() ? `<td>${formatMoney(sale.totalProfit)}</td>` : ``}
+          ${isAdmin() ? `<td>${Number(sale.totalMargin || 0).toFixed(2)}%</td>` : ``}
           <td>${formatDate(sale.createdAt)}</td>
           <td>
             <div style="display:flex; gap:8px; flex-wrap:wrap;">
@@ -1714,8 +1718,8 @@ This action cannot be undone.`);
           <div class="receipt-line"><span>Final Selling Price</span><strong>${formatMoney(info.finalUnitPrice)}</strong></div>
           <div class="receipt-line"><span>Quantity</span><strong>${info.qty}</strong></div>
           <div class="receipt-line"><span>Discount Given</span><strong>${formatMoney(info.discountGiven)}</strong></div>
-          <div class="receipt-line"><span>Profit Made</span><strong>${formatMoney(info.profitMade)}</strong></div>
-          <div class="receipt-line"><span>Profit Margin</span><strong>${info.profitMargin.toFixed(2)}%</strong></div>
+          ${isAdmin() ? `<div class="receipt-line"><span>Profit Made</span><strong>${formatMoney(info.profitMade)}</strong></div>` : ``}
+          ${isAdmin() ? `<div class="receipt-line"><span>Profit Margin</span><strong>${info.profitMargin.toFixed(2)}%</strong></div>` : ``}
           <div class="receipt-total">Item Total: ${formatMoney(info.finalTotal)}</div>
         </div>`;
     }
@@ -1787,7 +1791,7 @@ This action cannot be undone.`);
           <div class="small">${capitalize(item.saleType)} • ${item.qty} ${escapeHtml(item.unit)}</div>
           <div class="small">Unit Price: ${formatMoney(item.finalUnitPrice)}</div>
           <div class="small">Line Total: ${formatMoney(item.finalTotal)}</div>
-          <div class="small">Profit: ${formatMoney(item.profitMade)} • Margin: ${Number(item.profitMargin || 0).toFixed(2)}%</div>
+          ${isAdmin() ? `<div class="small">Profit: ${formatMoney(item.profitMade)} • Margin: ${Number(item.profitMargin || 0).toFixed(2)}%</div>` : ``}
           <div><button class="btn btn-danger" style="padding:8px 12px" onclick="removeCartItem(${index})">Remove</button></div>
         </div>`).join('');
 
@@ -1795,7 +1799,9 @@ This action cannot be undone.`);
       const profit = state.cart.reduce((sum, item) => sum + Number(item.profitMade || 0), 0);
       const items = state.cart.reduce((sum, item) => sum + Number(item.qty || 0), 0);
       const margin = total > 0 ? (profit / total) * 100 : 0;
-      cartTotals.innerHTML = `Items: <b>${items}</b><br>Total: <b>${formatMoney(total)}</b><br>Total Profit: <b>${formatMoney(profit)}</b><br>Margin: <b>${margin.toFixed(2)}%</b>`;
+      cartTotals.innerHTML = isAdmin()
+        ? `Items: <b>${items}</b><br>Total: <b>${formatMoney(total)}</b><br>Total Profit: <b>${formatMoney(profit)}</b><br>Margin: <b>${margin.toFixed(2)}%</b>`
+        : `Items: <b>${items}</b><br>Total: <b>${formatMoney(total)}</b>`;
     }
 
     function resetSaleForm() {
