@@ -217,10 +217,32 @@
       .big-title{font-size:1.6rem}
       .stats,.employee-stats{grid-template-columns:1fr}
     }
+
+    .receipt-document{
+      background:#fff;color:#111;border-radius:0;padding:38px 46px;margin-top:14px;
+      font-family:Arial,Helvetica,sans-serif;max-width:980px;margin-left:auto;margin-right:auto;
+      box-shadow:0 18px 45px rgba(0,0,0,.2);
+    }
+    .receipt-document h2{font-size:22px;margin-bottom:4px;color:#111}
+    .receipt-document .receipt-top{display:flex;justify-content:space-between;gap:24px;margin-bottom:26px}
+    .receipt-document .receipt-shop{text-align:right;color:#333;font-size:14px;line-height:1.45}
+    .receipt-document .customer-block{margin:18px 0 24px;color:#111;line-height:1.45}
+    .receipt-document table{width:100%;border-collapse:collapse;margin-top:10px;color:#111}
+    .receipt-document th{color:#111;font-weight:700;border-bottom:2px solid #e5e7eb;padding:9px 8px;text-align:left}
+    .receipt-document td{border-bottom:1px solid #eeeeee;padding:7px 8px;color:#111}
+    .receipt-document th.num,.receipt-document td.num{text-align:right;white-space:nowrap}
+    .receipt-document .receipt-divider{border:none;border-top:2px solid #555;margin:34px 0 20px}
+    .receipt-document .summary-grid{display:grid;grid-template-columns:1fr 1fr;gap:36px;align-items:start}
+    .receipt-document .total-due{display:flex;justify-content:space-between;border-top:1px solid #eee;padding-top:13px;font-weight:700}
+    .receipt-document .summary-line{display:flex;justify-content:space-between;border-bottom:1px solid #eee;padding:8px 0;gap:12px}
+    .receipt-document .summary-line.total{font-weight:700;border-bottom:none}
+    .receipt-document .thanks{text-align:center;margin-top:28px;color:#333;font-size:13px}
+
     @media print{
       body *{visibility:hidden}
       #receiptPrintArea,#receiptPrintArea *{visibility:visible}
       #receiptPrintArea{position:absolute;left:0;top:0;width:100%;background:white}
+      .receipt-document{box-shadow:none;margin:0;max-width:none;width:100%;padding:34px 46px}
     }
   </style>
 </head>
@@ -294,7 +316,7 @@
           <button class="nav-btn active" data-page="dashboardPage" onclick="showPage('dashboardPage', this)">📊 Dashboard</button>
           <button class="nav-btn" data-page="productsPage" onclick="showPage('productsPage', this)">📦 Products</button>
           <button class="nav-btn" data-page="stockPage" onclick="showPage('stockPage', this)">🏪 Shop Stock</button>
-          <button class="nav-btn" data-page="salesPage" onclick="showPage('salesPage', this)">🛒 Make Sale</button>
+          <button class="nav-btn role-admin-only" data-page="salesPage" onclick="showPage('salesPage', this)">🛒 Make Sale</button>
           <button class="nav-btn" data-page="receiptsPage" onclick="showPage('receiptsPage', this)">🧾 Receipts</button>
           <button class="nav-btn role-admin-only" data-page="employeesPage" onclick="showPage('employeesPage', this)">👥 Employees</button>
           <button class="nav-btn" data-page="settingsPage" onclick="showPage('settingsPage', this)">⚙️ Settings</button>
@@ -304,7 +326,7 @@
           <div class="small muted">Quick Actions</div>
           <div style="display:grid; gap:14px; margin-top:12px;">
             <button class="btn btn-success" onclick="showPage('productsPage'); focusProductForm()">+ Add Product</button>
-            <button class="btn btn-warning" onclick="showPage('salesPage')">+ New Sale</button>
+            <button class="btn btn-warning role-admin-only" onclick="showPage('salesPage')">+ New Sale</button>
             <button class="btn btn-danger" onclick="logout()">Logout</button>
           </div>
         </div>
@@ -660,7 +682,7 @@
                 <div class="form-group full"><button type="submit" class="btn btn-primary">Save Settings</button></div>
               </form>
             </div>
-            <div class="card">
+            <div class="card role-admin-only">
               <div class="section-title"><h3>Change Admin Password</h3><span class="badge warning">Account Security</span></div>
               <form id="adminPasswordForm" class="form-grid">
                 <div class="form-group full"><label for="newAdminPassword">New Admin Password</label><input id="newAdminPassword" type="password" placeholder="Enter new password" /></div>
@@ -1020,6 +1042,9 @@
       document.querySelectorAll('.role-admin-only').forEach(el => {
         el.style.display = isAdmin() ? '' : 'none';
       });
+      if (!isAdmin() && !document.getElementById('salesPage').classList.contains('hidden')) {
+        showPage('dashboardPage');
+      }
     }
 
     function applyShopLockUI() {
@@ -1046,6 +1071,10 @@
     }
 
     function showPage(pageId, el = null) {
+      if (pageId === 'salesPage' && !isAdmin()) {
+        showAlert('globalAlert', 'Only admin can add sales.', 'error');
+        pageId = 'dashboardPage';
+      }
       document.querySelectorAll('.page').forEach(page => page.classList.add('hidden'));
       const page = document.getElementById(pageId);
       if (page) page.classList.remove('hidden');
@@ -1493,20 +1522,70 @@
 
     function generateReceiptHTML(sale, autoPrint = false) {
       const area = document.getElementById('receiptPrintArea');
-      const itemsHtml = sale.items.map(item => `<div class="receipt-line"><span>${escapeHtml(item.productName)} x ${item.qty}</span><strong>${formatMoney(item.finalTotal)}</strong></div>`).join('');
+      const items = Array.isArray(sale.items) ? sale.items : [];
+      const rowsHtml = items.map(item => {
+        const qty = Number(item.qty || 0);
+        const unit = item.unit || 'Pcs';
+        const unitPrice = Number(item.finalUnitPrice || 0);
+        const lineTotal = Number(item.finalTotal || 0);
+        return `
+          <tr>
+            <td>${escapeHtml(item.productName)}</td>
+            <td class="num">${qty} ${escapeHtml(unit)}</td>
+            <td class="num">${unitPrice.toLocaleString(undefined, { maximumFractionDigits: 2 })}</td>
+            <td class="num">${lineTotal.toLocaleString(undefined, { maximumFractionDigits: 2 })}</td>
+          </tr>`;
+      }).join('');
+
       area.innerHTML = `
-        <div class="receipt-preview">
-          <div class="receipt-header">
-            <h2>${escapeHtml(state.settings.shopName)}</h2>
-            <div>${escapeHtml(state.settings.tagline)}</div>
-            <div class="small">Receipt No: <strong>${sale.receiptNo}</strong></div>
-            <div class="small">Date: ${formatDateTime(sale.createdAt)}</div>
+        <div class="receipt-document">
+          <div class="receipt-top">
+            <div>
+              <h2>${escapeHtml(state.settings.shopName)}</h2>
+              <div class="small">${escapeHtml(state.settings.tagline || '')}</div>
+              <div class="small">Receipt No: <strong>${escapeHtml(sale.receiptNo)}</strong></div>
+              <div class="small">Date: ${formatDateTime(sale.createdAt)}</div>
+            </div>
+            <div class="receipt-shop">
+              <strong>Shop:</strong> ${escapeHtml(sale.shopName || '')}<br>
+              <strong>Served By:</strong> ${escapeHtml(sale.createdBy || '')}
+            </div>
           </div>
-          <div class="receipt-line"><span>Name</span><strong>${escapeHtml(sale.customerName)}</strong></div>
-          <div class="receipt-line"><span>Shop</span><strong>${escapeHtml(sale.shopName)}</strong></div>
-          ${itemsHtml}
-          <div class="receipt-line"><span>Total</span><strong>${formatMoney(sale.total)}</strong></div>
-          <p class="center small" style="margin-top:20px;">Thank you for shopping with us.</p>
+
+          <div class="customer-block">
+            <strong>Customer</strong><br>
+            ${escapeHtml(sale.customerName || 'Walk-in Customer')}<br>
+            <strong>Mobile:</strong> ${escapeHtml(sale.customerPhone || '-')}
+          </div>
+
+          <table>
+            <thead>
+              <tr>
+                <th>Product</th>
+                <th class="num">Qty</th>
+                <th class="num">Price</th>
+                <th class="num">Total</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${rowsHtml || '<tr><td colspan="4" class="center">No items</td></tr>'}
+            </tbody>
+          </table>
+
+          <hr class="receipt-divider">
+
+          <div class="summary-grid">
+            <div class="total-due">
+              <span>Total Due</span>
+              <span>${state.settings.currency} ${Number(sale.total || 0).toLocaleString()}</span>
+            </div>
+            <div>
+              <div class="summary-line"><strong>Subtotal:</strong><span>${state.settings.currency} ${Number(sale.total || 0).toLocaleString()}</span></div>
+              <div class="summary-line total"><strong>Total:</strong><span>${state.settings.currency} ${Number(sale.total || 0).toLocaleString()}</span></div>
+            </div>
+          </div>
+
+          <div class="thanks">Thank you for shopping with us.</div>
         </div>`;
       if (autoPrint) setTimeout(() => window.print(), 250);
     }
@@ -1535,8 +1614,51 @@
           <td>${formatMoney(sale.totalProfit)}</td>
           <td>${Number(sale.totalMargin || 0).toFixed(2)}%</td>
           <td>${formatDate(sale.createdAt)}</td>
-          <td><button class="btn btn-primary" style="padding:8px 12px;" onclick="printReceipt('${sale.id}')">View / Print</button></td>
+          <td>
+            <div style="display:flex; gap:8px; flex-wrap:wrap;">
+              <button class="btn btn-primary" style="padding:8px 12px;" onclick="printReceipt('${sale.id}')">View / Print</button>
+              ${isAdmin() ? `<button class="btn btn-danger" style="padding:8px 12px;" onclick="deleteReceipt('${sale.id}')">Delete</button>` : ''}
+            </div>
+          </td>
         </tr>`).join('');
+    }
+
+
+    async function deleteReceipt(saleId) {
+      if (!requireAdmin()) return;
+
+      const sale = state.sales.find(s => String(s.id) === String(saleId));
+      if (!sale) {
+        return showAlert('globalAlert', 'Receipt not found.', 'error');
+      }
+
+      const sure = confirm(`Are you sure you want to delete receipt ${sale.receiptNo}?
+
+Customer: ${sale.customerName}
+Total: ${formatMoney(sale.total)}
+
+This action cannot be undone.`);
+      if (!sure) return;
+
+      try {
+        setLoading(true, 'Deleting receipt...');
+        const { error } = await supabase
+          .from('sales')
+          .delete()
+          .eq('id', saleId);
+
+        if (error) throw error;
+
+        state.sales = state.sales.filter(s => String(s.id) !== String(saleId));
+        document.getElementById('receiptPrintArea').innerHTML = '';
+        renderDashboard();
+        renderReceipts();
+        showAlert('globalAlert', 'Receipt deleted successfully.', 'success');
+      } catch (error) {
+        showAlert('globalAlert', error.message || 'Failed to delete receipt.', 'error');
+      } finally {
+        setLoading(false);
+      }
     }
 
     function calculateSalePreview() {
@@ -1607,6 +1729,7 @@
     }
 
     function addCurrentItemToCart() {
+      if (!isAdmin()) return showAlert('globalAlert', 'Only admin can add sales.', 'error');
       const info = calculateSalePreview();
       if (!info) return showAlert('globalAlert', 'Choose a valid stocked product.', 'error');
       if (info.qty > info.stockRow.stock) return showAlert('globalAlert', 'Not enough stock in this shop.', 'error');
@@ -1693,6 +1816,7 @@
 
     async function handleSaleSubmit(event) {
       event.preventDefault();
+      if (!isAdmin()) return showAlert('globalAlert', 'Only admin can add sales.', 'error');
       const customerName = document.getElementById('customerName').value.trim();
       const customerPhone = document.getElementById('customerPhone').value.trim();
       const saleNotes = document.getElementById('saleNotes').value.trim();
@@ -2340,6 +2464,7 @@
     window.deleteProduct = deleteProduct;
     window.togglePaymentReferenceLabel = togglePaymentReferenceLabel;
     window.printReceipt = printReceipt;
+    window.deleteReceipt = deleteReceipt;
     window.addCurrentItemToCart = addCurrentItemToCart;
     window.removeCartItem = removeCartItem;
     window.updateSalePricePreview = updateSalePricePreview;
