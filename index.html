@@ -3,232 +3,259 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>SmartShop Pro Multi-Shop</title>
+  <title>SmartShop Pro | Premium POS</title>
   <style>
     :root{
-      --bg:#0f172a; --panel:#111827; --panel2:#1f2937; --text:#f8fafc; --muted:#cbd5e1;
-      --primary:#38bdf8; --primary-dark:#0284c7; --success:#22c55e; --warning:#f59e0b;
-      --danger:#ef4444; --pink:#ec4899; --violet:#8b5cf6; --shadow:0 10px 25px rgba(0,0,0,.25);
-      --radius:18px;
+      --bg:#070b18;
+      --bg2:#0b1120;
+      --panel:rgba(15,23,42,.82);
+      --panel2:rgba(30,41,59,.72);
+      --card:rgba(15,23,42,.78);
+      --card2:rgba(255,255,255,.055);
+      --text:#f8fafc;
+      --muted:#a7b3c7;
+      --soft:#64748b;
+      --primary:#38bdf8;
+      --primary-dark:#0369a1;
+      --cyan:#22d3ee;
+      --success:#22c55e;
+      --warning:#f59e0b;
+      --danger:#ef4444;
+      --pink:#ec4899;
+      --violet:#8b5cf6;
+      --indigo:#6366f1;
+      --line:rgba(148,163,184,.18);
+      --line-strong:rgba(255,255,255,.12);
+      --shadow:0 22px 60px rgba(0,0,0,.38);
+      --shadow-soft:0 14px 35px rgba(15,23,42,.32);
+      --radius:22px;
+      --radius-sm:15px;
     }
+
     *{box-sizing:border-box;margin:0;padding:0}
+    html{scroll-behavior:smooth}
     body{
-      font-family:Arial,Helvetica,sans-serif;
-      background:linear-gradient(135deg,#020617,#0f172a,#111827);
-      color:var(--text); min-height:100vh;
+      font-family:Inter,Segoe UI,Arial,Helvetica,sans-serif;
+      min-height:100vh;
+      color:var(--text);
+      background:
+        radial-gradient(circle at 12% 8%, rgba(56,189,248,.20), transparent 30%),
+        radial-gradient(circle at 90% 5%, rgba(139,92,246,.22), transparent 34%),
+        radial-gradient(circle at 60% 95%, rgba(236,72,153,.14), transparent 35%),
+        linear-gradient(135deg,#020617 0%,#0b1120 45%,#111827 100%);
+      overflow-x:hidden;
+    }
+    body::before{
+      content:"";
+      position:fixed;
+      inset:0;
+      pointer-events:none;
+      z-index:-1;
+      background-image:
+        linear-gradient(rgba(255,255,255,.035) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,.035) 1px, transparent 1px);
+      background-size:42px 42px;
+      mask-image:linear-gradient(to bottom, rgba(0,0,0,.7), transparent 78%);
     }
     button,input,select,textarea{font:inherit}
+    button{user-select:none}
     .hidden{display:none!important}
-    .app-shell{display:grid;grid-template-columns:260px 1fr;min-height:100vh}
+
+    ::selection{background:rgba(56,189,248,.32);color:white}
+    ::-webkit-scrollbar{width:10px;height:10px}
+    ::-webkit-scrollbar-track{background:#07101f}
+    ::-webkit-scrollbar-thumb{background:linear-gradient(180deg,#38bdf8,#8b5cf6);border-radius:999px}
+
+    .app-shell{display:grid;grid-template-columns:292px 1fr;min-height:100vh}
     .sidebar{
-      background:rgba(17,24,39,.95); border-right:1px solid rgba(255,255,255,.08);
-      padding:24px 16px; position:sticky; top:0; height:100vh; backdrop-filter:blur(12px);
+      background:linear-gradient(180deg,rgba(2,6,23,.92),rgba(15,23,42,.82));
+      border-right:1px solid var(--line);
+      padding:24px 16px;
+      position:sticky;top:0;height:100vh;
+      backdrop-filter:blur(24px);
       overflow-y:auto;
-      display:flex;
-      flex-direction:column;
+      display:flex;flex-direction:column;
+      box-shadow:18px 0 50px rgba(0,0,0,.20);
     }
-    .brand{display:flex;align-items:center;gap:12px;margin-bottom:28px}
+    .brand{display:flex;align-items:center;gap:13px;margin-bottom:28px}
     .brand-logo{
-      width:48px;height:48px;border-radius:14px;
-      background:linear-gradient(135deg,var(--primary),var(--violet),var(--pink));
-      display:grid;place-items:center;font-size:22px;font-weight:bold;box-shadow:var(--shadow)
+      width:52px;height:52px;border-radius:18px;
+      background:linear-gradient(135deg,#38bdf8 0%,#6366f1 48%,#ec4899 100%);
+      display:grid;place-items:center;font-size:23px;font-weight:900;box-shadow:0 16px 35px rgba(56,189,248,.22);
+      border:1px solid rgba(255,255,255,.22);
     }
-    .brand h1{font-size:1.1rem}
-    .brand p{color:var(--muted);font-size:.88rem;margin-top:4px}
-    .nav-menu{
-      display:grid;
-      gap:10px;
-      margin-bottom:18px;
-    }
+    .brand h1{font-size:1.08rem;letter-spacing:.2px;line-height:1.1}
+    .brand p{color:var(--muted);font-size:.82rem;margin-top:5px}
+    .nav-menu{display:grid;gap:9px;margin-bottom:18px}
     .nav-btn{
-      width:100%;border:none;border-radius:14px;padding:14px 16px;text-align:left;
-      color:var(--text);background:rgba(255,255,255,.04);cursor:pointer;transition:.2s ease;
+      width:100%;border:1px solid transparent;border-radius:16px;padding:13px 15px;text-align:left;
+      color:#dbeafe;background:rgba(255,255,255,.035);cursor:pointer;transition:.22s ease;
+      display:flex;align-items:center;gap:8px;letter-spacing:.1px;
     }
-    .nav-btn:hover,.nav-btn.active{
-      background:linear-gradient(135deg,rgba(56,189,248,.25),rgba(139,92,246,.22));
-      transform:translateY(-1px)
+    .nav-btn:hover{
+      background:rgba(56,189,248,.10);border-color:rgba(56,189,248,.24);transform:translateX(3px)
+    }
+    .nav-btn.active{
+      background:linear-gradient(135deg,rgba(56,189,248,.24),rgba(99,102,241,.20));
+      border-color:rgba(125,211,252,.34);
+      box-shadow:inset 3px 0 0 #38bdf8, 0 12px 24px rgba(56,189,248,.10);
+      color:white;
     }
     .sidebar-footer{
-      margin-top:12px;
-      padding:16px;border-radius:16px;
-      background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.06);
+      margin-top:auto;
+      padding:16px;border-radius:20px;
+      background:linear-gradient(180deg,rgba(255,255,255,.075),rgba(255,255,255,.035));
+      border:1px solid var(--line);
+      box-shadow:var(--shadow-soft);
     }
-    .main{padding:24px}
-    .topbar{display:flex;justify-content:space-between;align-items:center;gap:16px;margin-bottom:22px;flex-wrap:wrap}
-    .topbar h2{font-size:1.8rem}
-    .topbar p{color:var(--muted);margin-top:5px}
-    .topbar-actions{display:flex;gap:10px;flex-wrap:wrap}
+
+    .main{padding:28px;min-width:0}
+    .topbar{display:flex;justify-content:space-between;align-items:flex-start;gap:16px;margin-bottom:24px;flex-wrap:wrap}
+    .topbar h2{font-size:2rem;letter-spacing:-.04em;line-height:1}
+    .topbar p{color:var(--muted);margin-top:8px;max-width:760px}
+    .topbar-actions{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+
     .btn{
-      border:none;border-radius:14px;padding:12px 16px;cursor:pointer;color:white;
-      transition:.2s ease;box-shadow:var(--shadow)
+      border:none;border-radius:15px;padding:12px 16px;cursor:pointer;color:white;
+      transition:.22s ease;box-shadow:0 14px 30px rgba(0,0,0,.26);font-weight:800;
+      border:1px solid rgba(255,255,255,.12);letter-spacing:.1px;
     }
-    .btn:hover{transform:translateY(-1px);opacity:.95}
-    .btn-primary{background:linear-gradient(135deg,var(--primary),var(--primary-dark))}
+    .btn:hover{transform:translateY(-2px);filter:brightness(1.05)}
+    .btn:active{transform:translateY(0) scale(.99)}
+    .btn-primary{background:linear-gradient(135deg,#38bdf8,#2563eb)}
     .btn-success{background:linear-gradient(135deg,#16a34a,#22c55e)}
     .btn-danger{background:linear-gradient(135deg,#dc2626,#ef4444)}
     .btn-warning{background:linear-gradient(135deg,#d97706,#f59e0b)}
-    .btn-dark{background:linear-gradient(135deg,#334155,#111827)}
+    .btn-dark{background:linear-gradient(135deg,#475569,#0f172a)}
     .btn-violet{background:linear-gradient(135deg,#7c3aed,#8b5cf6)}
-    .grid{display:grid;gap:18px}
+
+    .grid{display:grid;gap:20px}
     .stats{grid-template-columns:repeat(8,1fr)}
     .employee-stats{grid-template-columns:repeat(4,1fr)}
     .branch-stats{grid-template-columns:repeat(3,1fr)}
-    .two-col{grid-template-columns:1.1fr .9fr}
+    .two-col{grid-template-columns:1.08fr .92fr}
+
     .card{
-      background:rgba(17,24,39,.86); border:1px solid rgba(255,255,255,.07);
-      border-radius:var(--radius); box-shadow:var(--shadow); padding:18px; backdrop-filter:blur(10px);
+      position:relative;
+      background:linear-gradient(180deg,rgba(15,23,42,.86),rgba(15,23,42,.62));
+      border:1px solid var(--line);
+      border-radius:var(--radius);
+      box-shadow:var(--shadow);
+      padding:20px;
+      backdrop-filter:blur(20px);
+      overflow:hidden;
     }
-    .stat-card h3{color:var(--muted);font-size:.95rem;margin-bottom:8px}
-    .stat-card .value{font-size:1.45rem;font-weight:bold}
-    .stat-card small{display:block;margin-top:8px;color:#93c5fd}
-    .branch-card h4{font-size:1rem;margin-bottom:8px}
-    .branch-card .mini{display:grid;gap:6px;color:var(--muted);font-size:.9rem}
-    .section-title{
-      margin-bottom:14px;display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap
+    .card::before{
+      content:"";
+      position:absolute;inset:0 0 auto 0;height:1px;
+      background:linear-gradient(90deg,transparent,rgba(125,211,252,.45),rgba(196,181,253,.28),transparent);
+      pointer-events:none;
     }
-    .section-title h3{font-size:1.15rem}
-    .form-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}
+    .card:hover{border-color:rgba(125,211,252,.22)}
+    .stat-card{transition:.22s ease}
+    .stat-card:hover{transform:translateY(-3px)}
+    .stat-card h3{color:var(--muted);font-size:.86rem;margin-bottom:9px;text-transform:uppercase;letter-spacing:.08em}
+    .stat-card .value{font-size:1.55rem;font-weight:900;letter-spacing:-.03em}
+    .stat-card small{display:block;margin-top:8px;color:#93c5fd;font-size:.82rem}
+    .branch-card h4{font-size:1.02rem;margin-bottom:10px}
+    .branch-card .mini{display:grid;gap:7px;color:var(--muted);font-size:.92rem}
+
+    .section-title{margin-bottom:16px;display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+    .section-title h3{font-size:1.14rem;letter-spacing:-.02em}
+    .form-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:15px}
     .form-group{display:flex;flex-direction:column;gap:8px}
     .form-group.full{grid-column:1 / -1}
-    label{color:var(--muted);font-size:.92rem}
+    label{color:#cbd5e1;font-size:.88rem;font-weight:800;letter-spacing:.02em}
     input,select,textarea{
-      width:100%;padding:12px 13px;border-radius:12px;border:1px solid rgba(255,255,255,.1);
-      background:rgba(255,255,255,.06);color:var(--text);outline:none
+      width:100%;padding:13px 14px;border-radius:15px;border:1px solid var(--line);
+      background:rgba(2,6,23,.48);color:var(--text);outline:none;transition:.2s ease;
     }
-    select{
-      background-color:#111827;
-      color:#f8fafc;
-      cursor:pointer;
+    input:focus,select:focus,textarea:focus{
+      border-color:rgba(56,189,248,.55);
+      box-shadow:0 0 0 4px rgba(56,189,248,.12), inset 0 1px 0 rgba(255,255,255,.04);
+      background:rgba(2,6,23,.68);
     }
-    select option{
-      background-color:#111827;
-      color:#f8fafc;
-    }
-    select option:hover,select option:checked{
-      background-color:#0284c7;
-      color:#ffffff;
-    }
-    textarea{min-height:100px;resize:vertical}
-    input::placeholder,textarea::placeholder{color:#94a3b8}
-    table{width:100%;border-collapse:collapse;margin-top:12px}
-    th,td{
-      padding:12px 10px;text-align:left;border-bottom:1px solid rgba(255,255,255,.08);
-      font-size:.95rem;vertical-align:top
-    }
-    th{color:#93c5fd;font-weight:600}
-    .table-wrap{overflow-x:auto}
-    .badge{
-      display:inline-flex;align-items:center;padding:6px 10px;border-radius:999px;
-      font-size:.82rem;font-weight:bold
-    }
-    .badge.success{background:rgba(34,197,94,.18);color:#86efac}
-    .badge.warning{background:rgba(245,158,11,.18);color:#fcd34d}
-    .badge.danger{background:rgba(239,68,68,.18);color:#fca5a5}
-    .badge.info{background:rgba(56,189,248,.18);color:#7dd3fc}
-    .badge.pink{background:rgba(236,72,153,.18);color:#f9a8d4}
-    .badge.violet{background:rgba(139,92,246,.18);color:#c4b5fd}
-    .products-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:14px}
+    select{background-color:#0f172a;color:#f8fafc;cursor:pointer}
+    select option{background-color:#111827;color:#f8fafc}
+    select option:hover,select option:checked{background-color:#0284c7;color:#fff}
+    textarea{min-height:110px;resize:vertical}
+    input::placeholder,textarea::placeholder{color:#74839a}
+
+    table{width:100%;border-collapse:separate;border-spacing:0;margin-top:12px}
+    th,td{padding:13px 12px;text-align:left;border-bottom:1px solid rgba(255,255,255,.075);font-size:.92rem;vertical-align:top}
+    th{color:#7dd3fc;font-weight:900;text-transform:uppercase;letter-spacing:.055em;font-size:.75rem;background:rgba(56,189,248,.055)}
+    tbody tr{transition:.18s ease}
+    tbody tr:hover{background:rgba(255,255,255,.035)}
+    th:first-child{border-top-left-radius:12px}
+    th:last-child{border-top-right-radius:12px}
+    .table-wrap{overflow-x:auto;border-radius:16px}
+
+    .badge{display:inline-flex;align-items:center;padding:6px 10px;border-radius:999px;font-size:.78rem;font-weight:900;border:1px solid transparent;white-space:nowrap}
+    .badge.success{background:rgba(34,197,94,.16);color:#86efac;border-color:rgba(34,197,94,.25)}
+    .badge.warning{background:rgba(245,158,11,.16);color:#fcd34d;border-color:rgba(245,158,11,.25)}
+    .badge.danger{background:rgba(239,68,68,.16);color:#fca5a5;border-color:rgba(239,68,68,.25)}
+    .badge.info{background:rgba(56,189,248,.16);color:#7dd3fc;border-color:rgba(56,189,248,.25)}
+    .badge.pink{background:rgba(236,72,153,.16);color:#f9a8d4;border-color:rgba(236,72,153,.25)}
+    .badge.violet{background:rgba(139,92,246,.16);color:#c4b5fd;border-color:rgba(139,92,246,.25)}
+
+    .products-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:14px}
     .product-card{
-      border-radius:18px;background:linear-gradient(180deg,rgba(255,255,255,.06),rgba(255,255,255,.03));
-      border:1px solid rgba(255,255,255,.07);padding:16px
+      border-radius:22px;background:linear-gradient(180deg,rgba(255,255,255,.075),rgba(255,255,255,.03));
+      border:1px solid var(--line);padding:17px;transition:.22s ease;box-shadow:var(--shadow-soft);
     }
-    .product-card h4{font-size:1.12rem;margin-bottom:7px}
-    .product-meta{color:var(--muted);font-size:.9rem;margin-bottom:12px;display:grid;gap:6px}
+    .product-card:hover{transform:translateY(-4px);border-color:rgba(56,189,248,.30);box-shadow:0 24px 50px rgba(0,0,0,.30)}
+    .product-card h4{font-size:1.13rem;margin-bottom:8px;letter-spacing:-.02em}
+    .product-meta{color:var(--muted);font-size:.9rem;margin-bottom:12px;display:grid;gap:7px}
     .toolbar{display:grid;grid-template-columns:1.2fr .8fr .8fr .8fr;gap:12px;margin-bottom:14px}
     .employee-toolbar{display:grid;grid-template-columns:1.2fr .8fr;gap:12px;margin-bottom:14px}
-    .employee-pill{
-      display:inline-flex;align-items:center;gap:8px;padding:10px 12px;border-radius:12px;
-      background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.06);margin:6px 6px 0 0
-    }
-    .login-screen{min-height:100vh;display:grid;place-items:center;padding:18px}
+    .employee-pill{display:inline-flex;align-items:center;gap:8px;padding:10px 12px;border-radius:14px;background:rgba(255,255,255,.055);border:1px solid var(--line);margin:6px 6px 0 0}
+
+    .login-screen{min-height:100vh;display:grid;place-items:center;padding:22px}
     .login-card{
-      width:100%;max-width:1100px;display:grid;grid-template-columns:1.1fr .9fr;
-      background:rgba(17,24,39,.88);border:1px solid rgba(255,255,255,.08);border-radius:28px;
-      overflow:hidden;box-shadow:0 25px 50px rgba(0,0,0,.35)
+      width:100%;max-width:1160px;display:grid;grid-template-columns:1.1fr .9fr;
+      background:rgba(15,23,42,.72);border:1px solid var(--line);border-radius:34px;
+      overflow:hidden;box-shadow:0 35px 90px rgba(0,0,0,.45);backdrop-filter:blur(24px)
     }
-    .login-left{
-      padding:40px;
-      background:
-        radial-gradient(circle at top left, rgba(56,189,248,.25), transparent 35%),
-        radial-gradient(circle at bottom right, rgba(236,72,153,.18), transparent 35%),
-        linear-gradient(135deg, rgba(15,23,42,1), rgba(17,24,39,1));
-    }
-    .login-right{padding:34px}
-    .big-title{font-size:2.2rem;line-height:1.15;margin-bottom:12px}
+    .login-left{padding:46px;background:radial-gradient(circle at top left, rgba(56,189,248,.28), transparent 38%),radial-gradient(circle at bottom right, rgba(236,72,153,.20), transparent 36%),linear-gradient(135deg, rgba(15,23,42,.96), rgba(17,24,39,.96))}
+    .login-right{padding:38px;background:rgba(2,6,23,.20)}
+    .big-title{font-size:2.45rem;line-height:1.04;margin-bottom:14px;letter-spacing:-.055em}
     .muted{color:var(--muted)}
-    .feature-list{display:grid;gap:12px;margin-top:24px}
-    .feature-item{
-      padding:14px;border-radius:16px;background:rgba(255,255,255,.05);
-      border:1px solid rgba(255,255,255,.07)
-    }
-    .alert{padding:12px 14px;border-radius:14px;margin-bottom:14px;display:none}
+    .feature-list{display:grid;gap:12px;margin-top:26px}
+    .feature-item{padding:14px 15px;border-radius:18px;background:rgba(255,255,255,.06);border:1px solid var(--line);box-shadow:inset 0 1px 0 rgba(255,255,255,.05)}
+
+    .alert{padding:13px 15px;border-radius:16px;margin-bottom:14px;display:none;border:1px solid transparent;font-weight:700}
     .alert.show{display:block}
-    .alert.success{background:rgba(34,197,94,.18);color:#bbf7d0}
-    .alert.error{background:rgba(239,68,68,.18);color:#fecaca}
-    .alert.info{background:rgba(56,189,248,.18);color:#bae6fd}
+    .alert.success{background:rgba(34,197,94,.16);color:#bbf7d0;border-color:rgba(34,197,94,.25)}
+    .alert.error{background:rgba(239,68,68,.16);color:#fecaca;border-color:rgba(239,68,68,.25)}
+    .alert.info{background:rgba(56,189,248,.16);color:#bae6fd;border-color:rgba(56,189,248,.25)}
+
     .receipt-preview{background:white;color:black;border-radius:18px;padding:22px;margin-top:14px}
     .receipt-header{text-align:center;margin-bottom:16px}
     .receipt-line{display:flex;justify-content:space-between;gap:12px;padding:8px 0;border-bottom:1px dashed #bbb}
     .receipt-total{font-weight:bold;font-size:1.15rem;margin-top:14px}
     .small{font-size:.86rem}
     .center{text-align:center}
-    .empty-state{
-      padding:26px;text-align:center;color:var(--muted);background:rgba(255,255,255,.03);
-      border:1px dashed rgba(255,255,255,.12);border-radius:18px
-    }
+    .empty-state{padding:28px;text-align:center;color:var(--muted);background:rgba(255,255,255,.035);border:1px dashed rgba(255,255,255,.16);border-radius:20px}
     .footer-note{margin-top:10px;color:var(--muted);font-size:.85rem}
     .chart-wrap{position:relative;height:340px;margin-top:12px}
-    .quick-box{border:1px solid rgba(255,255,255,.07);background:rgba(255,255,255,.03);border-radius:16px;padding:14px}
+    .quick-box{border:1px solid var(--line);background:rgba(255,255,255,.045);border-radius:18px;padding:15px}
 
-    .danger-zone{
-      border:1px solid rgba(239,68,68,.35);
-      background:linear-gradient(180deg,rgba(127,29,29,.22),rgba(17,24,39,.86));
-    }
+    .danger-zone{border:1px solid rgba(239,68,68,.38);background:linear-gradient(180deg,rgba(127,29,29,.24),rgba(15,23,42,.76))}
     .danger-zone .section-title h3{color:#fecaca}
-    .danger-note{
-      padding:12px 14px;border-radius:14px;background:rgba(239,68,68,.12);
-      border:1px solid rgba(239,68,68,.22);color:#fecaca;line-height:1.45;margin-bottom:14px
-    }
-    .loading-overlay{
-      position:fixed;inset:0;background:rgba(2,6,23,.7);display:none;align-items:center;
-      justify-content:center;z-index:1000;backdrop-filter:blur(6px)
-    }
-    .loading-overlay.show{display:flex}
-    .loading-box{
-      background:rgba(17,24,39,.95);border:1px solid rgba(255,255,255,.08);border-radius:20px;
-      padding:18px 22px;box-shadow:var(--shadow)
-    }
-    .cart-item{
-      border:1px solid rgba(255,255,255,.08);border-radius:14px;padding:12px;
-      background:rgba(255,255,255,.03);display:grid;gap:6px;margin-bottom:12px
-    }
-    @media (max-width:1500px){.stats{grid-template-columns:repeat(4,1fr)} .branch-stats,.employee-stats{grid-template-columns:1fr}}
-    @media (max-width:1100px){
-      .two-col,.products-grid,.toolbar,.employee-toolbar,.login-card{grid-template-columns:1fr}
-      .app-shell{grid-template-columns:1fr}
-      .sidebar{position:relative;height:auto}
-      .sidebar-footer{position:relative;margin-top:16px}
-    }
-    @media (max-width:720px){
-      .form-grid{grid-template-columns:1fr}
-      .main{padding:16px}
-      .login-left,.login-right{padding:22px}
-      .topbar h2{font-size:1.35rem}
-      .big-title{font-size:1.6rem}
-      .stats,.employee-stats{grid-template-columns:1fr}
-    }
+    .danger-note{padding:12px 14px;border-radius:16px;background:rgba(239,68,68,.12);border:1px solid rgba(239,68,68,.26);color:#fecaca;line-height:1.45;margin-bottom:14px}
 
-    .receipt-document{
-      background:#fff;color:#111;border-radius:0;padding:38px 46px;margin-top:14px;
-      font-family:Arial,Helvetica,sans-serif;max-width:980px;margin-left:auto;margin-right:auto;
-      box-shadow:0 18px 45px rgba(0,0,0,.2);
-    }
+    .loading-overlay{position:fixed;inset:0;background:rgba(2,6,23,.72);display:none;align-items:center;justify-content:center;z-index:1000;backdrop-filter:blur(8px)}
+    .loading-overlay.show{display:flex}
+    .loading-box{background:rgba(15,23,42,.96);border:1px solid var(--line);border-radius:22px;padding:20px 24px;box-shadow:var(--shadow);font-weight:800}
+    .cart-item{border:1px solid var(--line);border-radius:18px;padding:13px;background:rgba(255,255,255,.045);display:grid;gap:7px;margin-bottom:12px}
+
+    .receipt-document{background:#fff;color:#111;border-radius:0;padding:38px 46px;margin-top:14px;font-family:Arial,Helvetica,sans-serif;max-width:980px;margin-left:auto;margin-right:auto;box-shadow:0 18px 45px rgba(0,0,0,.2)}
     .receipt-document h2{font-size:22px;margin-bottom:4px;color:#111}
     .receipt-document .receipt-top{display:flex;justify-content:space-between;gap:24px;margin-bottom:26px}
     .receipt-document .receipt-shop{text-align:right;color:#333;font-size:14px;line-height:1.45}
     .receipt-document .customer-block{margin:18px 0 24px;color:#111;line-height:1.45}
     .receipt-document table{width:100%;border-collapse:collapse;margin-top:10px;color:#111}
-    .receipt-document th{color:#111;font-weight:700;border-bottom:2px solid #e5e7eb;padding:9px 8px;text-align:left}
+    .receipt-document th{color:#111;font-weight:700;border-bottom:2px solid #e5e7eb;padding:9px 8px;text-align:left;background:white;text-transform:none;letter-spacing:0;font-size:14px}
     .receipt-document td{border-bottom:1px solid #eeeeee;padding:7px 8px;color:#111}
     .receipt-document th.num,.receipt-document td.num{text-align:right;white-space:nowrap}
     .receipt-document .receipt-divider{border:none;border-top:2px solid #555;margin:34px 0 20px}
@@ -238,12 +265,10 @@
     .receipt-document .summary-line.total{font-weight:700;border-bottom:none}
     .receipt-document .thanks{text-align:center;margin-top:28px;color:#333;font-size:13px}
 
-    @media print{
-      body *{visibility:hidden}
-      #receiptPrintArea,#receiptPrintArea *{visibility:visible}
-      #receiptPrintArea{position:absolute;left:0;top:0;width:100%;background:white}
-      .receipt-document{box-shadow:none;margin:0;max-width:none;width:100%;padding:34px 46px}
-    }
+    @media (max-width:1500px){.stats{grid-template-columns:repeat(4,1fr)} .branch-stats,.employee-stats{grid-template-columns:1fr}}
+    @media (max-width:1100px){.two-col,.products-grid,.toolbar,.employee-toolbar,.login-card{grid-template-columns:1fr}.app-shell{grid-template-columns:1fr}.sidebar{position:relative;height:auto}.sidebar-footer{position:relative;margin-top:16px}.main{padding:20px}}
+    @media (max-width:720px){.form-grid{grid-template-columns:1fr}.main{padding:16px}.login-left,.login-right{padding:24px}.topbar h2{font-size:1.45rem}.big-title{font-size:1.75rem}.stats,.employee-stats{grid-template-columns:1fr}.btn{width:100%}.topbar-actions{width:100%}.topbar-actions select{width:100%}}
+    @media print{body *{visibility:hidden}#receiptPrintArea,#receiptPrintArea *{visibility:visible}#receiptPrintArea{position:absolute;left:0;top:0;width:100%;background:white}.receipt-document{box-shadow:none;margin:0;max-width:none;width:100%;padding:34px 46px}.receipt-document .receipt-top{display:flex}}
   </style>
 </head>
 <body>
@@ -446,7 +471,7 @@
         </section>
 
         <section id="stockPage" class="page hidden">
-          <div class="topbar"><div><h2>Shop Stock</h2><p>Admin now has the three shops separated clearly. Employees can still add stock only to their own assigned shop.</p></div></div>
+          <div class="topbar"><div><h2>Shop Stock</h2><p>Stock is grouped by category and separated by shop.</p></div><div class="topbar-actions"><button class="btn btn-dark" onclick="reloadAllData()">Refresh Stock</button></div></div>
 
           <div class="grid branch-stats role-admin-only" style="margin-bottom:18px;">
             <div class="card branch-card">
@@ -537,7 +562,7 @@
         </section>
 
         <section id="salesPage" class="page hidden">
-          <div class="topbar"><div><h2>Make Sale</h2><p>Admin can choose any shop. Employee is locked to their assigned shop.</p></div></div>
+          <div class="topbar"><div><h2>Make Sale</h2><p>Admin can choose any shop. Employee is locked to their assigned shop.</p></div><div class="topbar-actions"><button class="btn btn-dark" onclick="refreshSaleStockNow()">Refresh Stock</button></div></div>
           <div class="grid two-col">
             <div class="card">
               <div class="section-title"><h3>Sale Entry</h3><span class="badge success">Multi-Item Sale</span></div>
@@ -1131,6 +1156,35 @@
       return state.shopStocks.find(row => String(row.productId) === String(productId) && row.shopName === shopName);
     }
 
+    function getCartReservedQty(productId, shopName) {
+      return state.cart
+        .filter(item => String(item.productId) === String(productId) && item.shopName === shopName)
+        .reduce((sum, item) => sum + Number(item.qty || 0), 0);
+    }
+
+    function getRemainingStock(productId, shopName) {
+      const row = getShopStock(productId, shopName);
+      if (!row) return 0;
+      return Math.max(0, Number(row.stock || 0) - getCartReservedQty(productId, shopName));
+    }
+
+    async function refreshSaleStockNow() {
+      try {
+        setLoading(true, 'Refreshing stock...');
+        await Promise.all([loadProductsFromSupabase(), loadShopStocksFromSupabase()]);
+        refreshSaleProductOptions();
+        updateSalePricePreview();
+        renderCart();
+        renderProducts();
+        renderShopStockTable();
+        showAlert('globalAlert', 'Stock refreshed successfully.', 'success');
+      } catch (error) {
+        showAlert('globalAlert', error.message || 'Failed to refresh stock.', 'error');
+      } finally {
+        setLoading(false);
+      }
+    }
+
     function getStockStatusRow(row) {
       if (!row || row.stock <= 0) return 'out';
       if (row.stock <= Number(row.lowStockThreshold || 0)) return 'low';
@@ -1204,13 +1258,18 @@
       const current = select.value;
       const query = normalizeSearch(searchInput?.value);
 
-      let rows = state.shopStocks.filter(row => row.shopName === shopName && row.stock > 0)
+      let rows = state.shopStocks.filter(row => row.shopName === shopName && getRemainingStock(row.productId, shopName) > 0)
         .map(row => {
           const product = state.products.find(p => String(p.id) === String(row.productId));
-          return product ? { row, product } : null;
+          return product ? { row, product, remaining: getRemainingStock(row.productId, shopName) } : null;
         })
         .filter(Boolean)
-        .sort((a, b) => String(a.product.name || '').localeCompare(String(b.product.name || '')));
+        .sort((a, b) => {
+          const categoryA = a.product.category || 'Uncategorized';
+          const categoryB = b.product.category || 'Uncategorized';
+          if (categoryA !== categoryB) return categoryA.localeCompare(categoryB);
+          return String(a.product.name || '').localeCompare(String(b.product.name || ''));
+        });
 
       if (query) {
         rows = rows.filter(({ product }) =>
@@ -1221,14 +1280,18 @@
       }
 
       if (!rows.length) {
-        select.innerHTML = '<option value="">No stocked products in this shop</option>';
+        select.innerHTML = '<option value="">No remaining stocked products in this shop</option>';
         updateSalePricePreview();
         return;
       }
 
-      select.innerHTML = rows.map(({ row, product }) =>
-        `<option value="${product.id}">${escapeHtml(product.name)} (${row.stock} ${escapeHtml(product.unit || 'pcs')} in ${escapeHtml(shopName)})</option>`
-      ).join('');
+      let currentCategory = '';
+      select.innerHTML = rows.map(({ product, remaining }) => {
+        const category = product.category || 'Uncategorized';
+        const groupLabel = currentCategory !== category ? `${category} — ` : '';
+        currentCategory = category;
+        return `<option value="${product.id}">${escapeHtml(groupLabel + product.name)} (${remaining} ${escapeHtml(product.unit || 'pcs')} remaining)</option>`;
+      }).join('');
 
       if (rows.some(({ product }) => String(product.id) === String(current))) select.value = current;
     }
@@ -1314,8 +1377,19 @@
         return `<tr><td colspan="${colspan}" class="muted center">No shop stock records yet.</td></tr>`;
       }
 
-      return rows.map(row => {
+      const sortedRows = [...rows].sort((a, b) => {
+        const productA = state.products.find(p => String(p.id) === String(a.productId));
+        const productB = state.products.find(p => String(p.id) === String(b.productId));
+        const categoryA = productA?.category || 'Uncategorized';
+        const categoryB = productB?.category || 'Uncategorized';
+        if (categoryA !== categoryB) return categoryA.localeCompare(categoryB);
+        return String(productA?.name || '').localeCompare(String(productB?.name || ''));
+      });
+
+      let currentCategory = '';
+      return sortedRows.map(row => {
         const product = state.products.find(p => String(p.id) === String(row.productId));
+        const category = product?.category || 'Uncategorized';
         const status = getStockStatusRow(row);
         const badge = status === 'out'
           ? '<span class="badge danger">Out</span>'
@@ -1331,7 +1405,12 @@
             </div>`
           : '<span class="badge warning">Locked</span>';
 
-        return includeShopColumn
+        const categoryHeader = currentCategory !== category
+          ? `<tr><td colspan="${colspan}" style="background:rgba(56,189,248,.14);color:#bae6fd;font-weight:bold;border-radius:12px;">📂 ${escapeHtml(category)}</td></tr>`
+          : '';
+        currentCategory = category;
+
+        const rowHtml = includeShopColumn
           ? `<tr>
               <td>${escapeHtml(product?.name || 'Unknown Product')}</td>
               <td>${escapeHtml(row.shopName)}</td>
@@ -1347,6 +1426,8 @@
               <td>${badge}</td>
               <td>${actions}</td>
             </tr>`;
+
+        return categoryHeader + rowHtml;
       }).join('');
     }
 
@@ -1677,6 +1758,10 @@ This action cannot be undone.`);
       const stockRow = getShopStock(productId, shopName);
       if (!product || !stockRow || qty <= 0) return null;
 
+      const cartReserved = getCartReservedQty(productId, shopName);
+      const remainingBeforeThisItem = Math.max(0, Number(stockRow.stock || 0) - cartReserved);
+      const remainingAfterThisItem = Math.max(0, remainingBeforeThisItem - qty);
+
       const markedPrice = Number(product.markedPrice || 0);
       const basePrice = saleType === 'wholesale' ? Number(product.wholesalePrice || 0) : Number(product.retailPrice || 0);
       const costPrice = Number(product.costPrice || 0);
@@ -1692,6 +1777,7 @@ This action cannot be undone.`);
 
       return {
         product, stockRow, shopName, saleType, qty, costPrice,
+        cartReserved, remainingBeforeThisItem, remainingAfterThisItem,
         finalUnitPrice, finalTotal, discountGiven, profitMade, profitMargin
       };
     }
@@ -1705,7 +1791,7 @@ This action cannot be undone.`);
         return;
       }
 
-      const enoughStock = info.stockRow.stock >= info.qty;
+      const enoughStock = info.remainingBeforeThisItem >= info.qty;
       preview.className = '';
       preview.innerHTML = `
         <div class="receipt-preview" style="background:rgba(255,255,255,.04); color:var(--text); border:1px solid rgba(255,255,255,.08);">
@@ -1714,7 +1800,10 @@ This action cannot be undone.`);
             ${enoughStock ? '<span class="badge success">Stock Available</span>' : '<span class="badge danger">Insufficient Stock</span>'}
           </div>
           <div class="receipt-line"><span>Shop</span><strong>${escapeHtml(info.shopName)}</strong></div>
-          <div class="receipt-line"><span>Available Stock</span><strong>${info.stockRow.stock} ${escapeHtml(info.product.unit || 'pcs')}</strong></div>
+          <div class="receipt-line"><span>Total Stock</span><strong>${info.stockRow.stock} ${escapeHtml(info.product.unit || 'pcs')}</strong></div>
+          <div class="receipt-line"><span>Already In Cart</span><strong>${info.cartReserved} ${escapeHtml(info.product.unit || 'pcs')}</strong></div>
+          <div class="receipt-line"><span>Remaining Before Add</span><strong>${info.remainingBeforeThisItem} ${escapeHtml(info.product.unit || 'pcs')}</strong></div>
+          <div class="receipt-line"><span>Remaining After Add</span><strong>${info.remainingAfterThisItem} ${escapeHtml(info.product.unit || 'pcs')}</strong></div>
           <div class="receipt-line"><span>Final Selling Price</span><strong>${formatMoney(info.finalUnitPrice)}</strong></div>
           <div class="receipt-line"><span>Quantity</span><strong>${info.qty}</strong></div>
           <div class="receipt-line"><span>Discount Given</span><strong>${formatMoney(info.discountGiven)}</strong></div>
@@ -1734,7 +1823,7 @@ This action cannot be undone.`);
     function addCurrentItemToCart() {
       const info = calculateSalePreview();
       if (!info) return showAlert('globalAlert', 'Choose a valid stocked product.', 'error');
-      if (info.qty > info.stockRow.stock) return showAlert('globalAlert', 'Not enough stock in this shop.', 'error');
+      if (info.qty > info.remainingBeforeThisItem) return showAlert('globalAlert', `Not enough remaining stock. Only ${info.remainingBeforeThisItem} left.`, 'error');
 
       const existing = state.cart.find(item =>
         String(item.productId) === String(info.product.id) &&
@@ -1743,9 +1832,7 @@ This action cannot be undone.`);
       );
 
       if (existing) {
-        const totalQty = existing.qty + info.qty;
-        if (totalQty > info.stockRow.stock) return showAlert('globalAlert', 'Combined cart quantity exceeds shop stock.', 'error');
-        existing.qty = totalQty;
+        existing.qty += info.qty;
         existing.finalTotal = existing.finalUnitPrice * existing.qty;
         existing.profitMade = (existing.finalUnitPrice - existing.costPrice) * existing.qty;
         existing.profitMargin = existing.finalTotal > 0 ? (existing.profitMade / existing.finalTotal) * 100 : 0;
@@ -1767,13 +1854,16 @@ This action cannot be undone.`);
       }
 
       renderCart();
+      refreshSaleProductOptions();
       resetSaleLineInputs();
-      showAlert('globalAlert', 'Item added to cart.', 'success');
+      showAlert('globalAlert', 'Item added to cart. Remaining stock updated.', 'success');
     }
 
     function removeCartItem(index) {
       state.cart.splice(index, 1);
       renderCart();
+      refreshSaleProductOptions();
+      updateSalePricePreview();
     }
 
     function renderCart() {
@@ -1785,15 +1875,22 @@ This action cannot be undone.`);
         return;
       }
 
-      cartList.innerHTML = state.cart.map((item, index) => `
+      cartList.innerHTML = state.cart.map((item, index) => {
+        const stockRow = getShopStock(item.productId, item.shopName);
+        const totalStock = Number(stockRow?.stock || 0);
+        const reserved = getCartReservedQty(item.productId, item.shopName);
+        const remaining = Math.max(0, totalStock - reserved);
+        return `
         <div class="cart-item">
           <div><b>${escapeHtml(item.productName)}</b> • ${escapeHtml(item.shopName)}</div>
           <div class="small">${capitalize(item.saleType)} • ${item.qty} ${escapeHtml(item.unit)}</div>
           <div class="small">Unit Price: ${formatMoney(item.finalUnitPrice)}</div>
           <div class="small">Line Total: ${formatMoney(item.finalTotal)}</div>
+          <div class="small">Stock: ${totalStock} • In Cart: ${reserved} • Remaining: ${remaining}</div>
           ${isAdmin() ? `<div class="small">Profit: ${formatMoney(item.profitMade)} • Margin: ${Number(item.profitMargin || 0).toFixed(2)}%</div>` : ``}
           <div><button class="btn btn-danger" style="padding:8px 12px" onclick="removeCartItem(${index})">Remove</button></div>
-        </div>`).join('');
+        </div>`;
+      }).join('');
 
       const total = state.cart.reduce((sum, item) => sum + Number(item.finalTotal || 0), 0);
       const profit = state.cart.reduce((sum, item) => sum + Number(item.profitMade || 0), 0);
